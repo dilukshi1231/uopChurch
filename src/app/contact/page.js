@@ -80,11 +80,11 @@ export default function ContactPage() {
       link: 'mailto:info@gracechurch.org'
     },
     {
-      icon: <FaMapMarkerAlt />,
-      title: 'Address',
-      content: '123 Faith Street, Your City, ST 12345',
-      link: 'https://maps.google.com/?q=123+Faith+Street'
-    }
+  icon: <FaMapMarkerAlt />,
+  title: 'Address',
+  content: 'University of Peradeniya Christian Chapel, Peradeniya, Sri Lanka',
+  link: 'https://maps.google.com/?q=University+of+Peradeniya+Christian+Chapel'
+}
   ];
 
   const officeHours = [
@@ -307,28 +307,31 @@ export default function ContactPage() {
               <div className="card p-0 overflow-hidden">
                 <div className="h-64 bg-gray-200">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.2219901290355!2d-74.00369368400567!3d40.71312937933185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a316b4b0e87%3A0x5c9a7cf3e1b5e3d8!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1635787654321!5m2!1sen!2s"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    title="Church Location"
-                  ></iframe>
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d989.4731888816851!2d80.60396089999999!3d7.253045199999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae36f3343ee380d%3A0x5f97c525652981f0!2sChurch%20of%20Christ%20The%20Risen%20Lord!5e0!3m2!1sen!2slk!4v1769243180844!5m2!1sen!2slk"
+  width="100%"
+  height="100%"
+  style={{ border: 0 }}
+  allowFullScreen=""
+  loading="lazy"
+  referrerpolicy="no-referrer-when-downgrade"
+  title="University of Peradeniya Christian Chapel Location"
+></iframe>
+
                 </div>
                 <div className="p-6">
                   <h3 className="font-semibold mb-2">Get Directions</h3>
                   <p className="text-gray-600 text-sm mb-4">
-                    123 Faith Street, Your City, ST 12345
+                    University of Peradeniya Christian Chapel<br />
+                  Peradeniya, Sri Lanka
                   </p>
                   <a
-                    href="https://maps.google.com/?q=123+Faith+Street"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary w-full text-center block"
-                  >
-                    Open in Google Maps
-                  </a>
+                    href="https://maps.google.com/?q=University+of+Peradeniya+Christian+Chapel"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="btn-primary w-full text-center block"
+>
+  Open in Google Maps
+</a>
                 </div>
               </div>
 
