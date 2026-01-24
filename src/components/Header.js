@@ -18,6 +18,7 @@ export default function Header() {
     { name: 'About', href: '/about' },
     { name: 'Sermons', href: '/sermons' },
     { name: 'Events', href: '/events' },
+    { name: 'Plan Visit', href: '/plan-visit' },
     { name: 'Ministries', href: '/ministries' },
     { name: 'Contact', href: '/contact' },
   ];

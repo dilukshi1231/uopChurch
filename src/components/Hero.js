@@ -49,7 +49,7 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in mb-12">
-            <Link href="/events" className="group">
+            <Link href="/plan-visit" className="group">
               <button className="bg-white text-primary px-10 py-5 rounded-xl font-bold text-lg 
                                hover:bg-gray-100 transition-all duration-300 shadow-2xl hover:shadow-3xl 
                                transform hover:-translate-y-1 flex items-center gap-3 w-full sm:w-auto justify-center">
