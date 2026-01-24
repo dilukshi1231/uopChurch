@@ -1,3 +1,4 @@
+// src/components/Hero.js
 import Link from 'next/link';
 import { FaPlay, FaCalendarAlt } from 'react-icons/fa';
 
@@ -14,15 +15,13 @@ export default function Hero() {
       >
         <source src="/videos/chapel.mp4" type="video/mp4" />
         <source src="/videos/chapel.webm" type="video/webm" />
-        {/* Fallback for browsers that don't support video */}
-        Your browser does not support the video tag.
       </video>
 
-      {/* Dark Overlay for text readability */}
+      {/* Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70"></div>
 
-      {/* Optional: Animated gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-900/40 via-transparent to-blue-900/40"></div>
+      {/* Olive Green overlay accent */}
+      <div className="absolute inset-0 bg-gradient-to-r from-secondary/40 via-transparent to-secondary/40"></div>
 
       {/* Content */}
       <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
@@ -37,13 +36,13 @@ export default function Hero() {
           {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 slide-in-left leading-tight drop-shadow-2xl">
             Growing in Faith
-            <span className="block mt-2 bg-gradient-to-r from-amber-400 to-amber-200 bg-clip-text text-transparent">
+            <span className="block mt-2 bg-gradient-to-r from-secondary-400 to-secondary-200 bg-clip-text text-transparent">
               Together
             </span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-xl md:text-2xl lg:text-3xl mb-10 text-blue-100 slide-in-right leading-relaxed max-w-3xl mx-auto drop-shadow-lg">
+          <p className="text-xl md:text-2xl lg:text-3xl mb-10 text-gray-200 slide-in-right leading-relaxed max-w-3xl mx-auto drop-shadow-lg">
             A place where faith comes alive and community grows stronger. 
             <span className="block mt-2 font-semibold text-white">Join us this Sunday!</span>
           </p>
@@ -51,16 +50,16 @@ export default function Hero() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in mb-12">
             <Link href="/events" className="group">
-              <button className="bg-white text-blue-900 px-10 py-5 rounded-xl font-bold text-lg 
-                               hover:bg-blue-50 transition-all duration-300 shadow-2xl hover:shadow-3xl 
+              <button className="bg-white text-primary px-10 py-5 rounded-xl font-bold text-lg 
+                               hover:bg-gray-100 transition-all duration-300 shadow-2xl hover:shadow-3xl 
                                transform hover:-translate-y-1 flex items-center gap-3 w-full sm:w-auto justify-center">
                 <FaCalendarAlt className="group-hover:scale-110 transition-transform" />
                 Plan Your Visit
               </button>
             </Link>
             <Link href="/sermons" className="group">
-              <button className="bg-white/10 backdrop-blur-md border-2 border-white px-10 py-5 rounded-xl font-bold text-lg 
-                               hover:bg-white hover:text-blue-900 transition-all duration-300 
+              <button className="bg-secondary text-white border-2 border-secondary px-10 py-5 rounded-xl font-bold text-lg 
+                               hover:bg-secondary-700 transition-all duration-300 
                                transform hover:-translate-y-1 flex items-center gap-3 w-full sm:w-auto justify-center shadow-xl">
                 <FaPlay className="group-hover:scale-110 transition-transform" />
                 Watch Online
@@ -71,12 +70,12 @@ export default function Hero() {
           {/* Service Times Info */}
           <div className="inline-flex items-center gap-6 bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/20 shadow-xl">
             <div className="text-center">
-              <p className="text-sm text-blue-200 mb-1">Sunday Services</p>
+              <p className="text-sm text-gray-300 mb-1">Sunday Services</p>
               <p className="text-2xl font-bold">9:00 AM</p>
             </div>
             <div className="w-px h-12 bg-white/30"></div>
             <div className="text-center">
-              <p className="text-sm text-blue-200 mb-1">& Also at</p>
+              <p className="text-sm text-gray-300 mb-1">& Also at</p>
               <p className="text-2xl font-bold">11:00 AM</p>
             </div>
           </div>

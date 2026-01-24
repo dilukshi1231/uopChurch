@@ -1,3 +1,4 @@
+// src/components/ServiceTimes.js
 import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function ServiceTimes() {
@@ -30,11 +31,11 @@ export default function ServiceTimes() {
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {services.map((service, index) => (
             <div key={index} className="card text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaClock className="text-3xl text-blue-900" />
+              <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FaClock className="text-3xl text-secondary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-              <p className="text-blue-900 font-bold text-lg mb-2">{service.time}</p>
+              <p className="text-secondary font-bold text-lg mb-2">{service.time}</p>
               <p className="text-gray-600 text-sm">{service.description}</p>
             </div>
           ))}
@@ -42,7 +43,7 @@ export default function ServiceTimes() {
 
         <div className="text-center mt-12">
           <div className="inline-flex items-center gap-2 text-gray-700">
-            <FaMapMarkerAlt className="text-blue-900" />
+            <FaMapMarkerAlt className="text-secondary" />
             <span>123 Faith Street, Your City, ST 12345</span>
           </div>
         </div>
