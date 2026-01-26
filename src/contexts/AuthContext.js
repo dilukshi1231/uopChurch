@@ -1,4 +1,4 @@
-// src/contexts/AuthContext.js
+// src/contexts/AuthContext.js - UPDATED VERSION
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 import { 
@@ -21,16 +21,29 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Fetch additional user data from Firestore
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        setUser({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          ...userDoc.data()
-        });
+    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
+      if (authUser) {
+        try {
+          // Fetch additional user data from Firestore
+          const userDoc = await getDoc(doc(db, 'users', authUser.uid));
+          const userData = userDoc.data();
+          
+          setUser({
+            uid: authUser.uid,
+            email: authUser.email,
+            displayName: authUser.displayName || userData?.displayName,
+            role: userData?.role || 'member', // Default role is 'member'
+            ...userData
+          });
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          setUser({
+            uid: authUser.uid,
+            email: authUser.email,
+            displayName: authUser.displayName,
+            role: 'member'
+          });
+        }
       } else {
         setUser(null);
       }
@@ -51,7 +64,8 @@ export const AuthProvider = ({ children }) => {
       displayName,
       email,
       createdAt: new Date(),
-      role: 'member'
+      role: 'member', // Default role for new users
+      isActive: true
     });
 
     return userCredential;
@@ -69,13 +83,25 @@ export const AuthProvider = ({ children }) => {
     return sendPasswordResetEmail(auth, email);
   };
 
+  // Check if user has admin role
+  const isAdmin = () => {
+    return user?.role === 'admin';
+  };
+
+  // Check if user has staff role (staff or admin)
+  const isStaff = () => {
+    return user?.role === 'admin' || user?.role === 'staff';
+  };
+
   const value = {
     user,
     loading,
     signup,
     login,
     logout,
-    resetPassword
+    resetPassword,
+    isAdmin,
+    isStaff
   };
 
   return (

@@ -4,20 +4,16 @@ import { FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 export default function ServiceTimes() {
   const services = [
     {
-      name: 'Sunday Morning Worship',
-      time: '9:00 AM & 11:00 AM',
+      name: 'Sunday Worship',
+      time: '4.00 PM',
       description: 'Join us for inspiring worship and biblical teaching',
     },
     {
       name: 'Wednesday Prayer Meeting',
-      time: '7:00 PM',
+      time: '5:00 PM',
       description: 'Midweek prayer and fellowship',
     },
-    {
-      name: 'Youth Group',
-      time: 'Friday 6:30 PM',
-      description: 'For teens in grades 6-12',
-    },
+    
   ];
 
   return (
@@ -44,7 +40,7 @@ export default function ServiceTimes() {
         <div className="text-center mt-12">
           <div className="inline-flex items-center gap-2 text-gray-700">
             <FaMapMarkerAlt className="text-secondary" />
-            <span>123 Faith Street, Your City, ST 12345</span>
+            <span>University Park, Udaperadeniya Road, Peradeniya, Sri Lanka.</span>
           </div>
         </div>
       </div>

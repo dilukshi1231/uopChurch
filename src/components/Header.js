@@ -16,13 +16,27 @@ export default function Header() {
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
-    { name: 'Sermons', href: '/sermons' },
     { name: 'Events', href: '/events' },
     { name: 'Plan Visit', href: '/plan-visit' },
-    { name: 'Ministries', href: '/ministries' },
     { name: 'Contact', href: '/contact' },
   ];
-
+{user && (user.role === 'admin' || user.role === 'staff') && (
+  <Link
+    href="/admin"
+    className="text-gray-700 hover:text-secondary font-medium transition-colors text-sm xl:text-base"
+  >
+    Admin Panel
+  </Link>
+)}
+{user && (user.role === 'admin' || user.role === 'staff') && (
+  <Link
+    href="/admin"
+    className="text-gray-700 hover:text-secondary font-medium py-2 px-3 rounded-lg hover:bg-gray-50 transition-all"
+    onClick={() => setIsMenuOpen(false)}
+  >
+    Admin Panel
+  </Link>
+)}
   const handleLogout = async () => {
     try {
       await logout();
@@ -48,11 +62,11 @@ export default function Header() {
               </div>
               <div className="hidden sm:flex items-center gap-2">
                 <FaMapMarkerAlt className="text-xs flex-shrink-0" />
-                <span className="whitespace-nowrap">123 Faith Street, Your City, ST 12345</span>
+                <span className="whitespace-nowrap">University Park, Udaperadeniya Road, Peradeniya, Sri Lanka.</span>
               </div>
             </div>
             <div className="text-xs md:text-sm whitespace-nowrap">
-              Service Times: Sun 9AM & 11AM
+              Service Times: Sun 4PM
             </div>
           </div>
         </div>
@@ -64,11 +78,11 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-              <span className="text-white font-bold text-xl">GC</span>
+              <span className="text-white font-bold text-xl"></span>
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">Grace Church</h1>
-              <p className="text-xs text-gray-600 hidden sm:block">Growing in Faith Together</p>
+              <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">The Chapel of Christ the Risen Lord</h1>
+              <p className="text-xs text-gray-600 hidden sm:block">Gal Palliya</p>
             </div>
           </Link>
 

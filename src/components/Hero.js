@@ -29,7 +29,7 @@ export default function Hero() {
           {/* Welcome Badge */}
           <div className="inline-block mb-6 fade-in">
             <span className="bg-white/20 backdrop-blur-md px-6 py-2 rounded-full text-sm font-semibold border border-white/30 shadow-lg">
-              ✨ Welcome to Grace Church
+              ✨ Welcome to The Church of Christ the Risen Lord ✨
             </span>
           </div>
 
@@ -57,27 +57,16 @@ export default function Hero() {
                 Plan Your Visit
               </button>
             </Link>
-            <Link href="/sermons" className="group">
-              <button className="bg-secondary text-white border-2 border-secondary px-10 py-5 rounded-xl font-bold text-lg 
-                               hover:bg-secondary-700 transition-all duration-300 
-                               transform hover:-translate-y-1 flex items-center gap-3 w-full sm:w-auto justify-center shadow-xl">
-                <FaPlay className="group-hover:scale-110 transition-transform" />
-                Watch Online
-              </button>
-            </Link>
+            
           </div>
 
           {/* Service Times Info */}
           <div className="inline-flex items-center gap-6 bg-white/10 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/20 shadow-xl">
             <div className="text-center">
               <p className="text-sm text-gray-300 mb-1">Sunday Services</p>
-              <p className="text-2xl font-bold">9:00 AM</p>
+              <p className="text-2xl font-bold">@4:00 PM</p>
             </div>
-            <div className="w-px h-12 bg-white/30"></div>
-            <div className="text-center">
-              <p className="text-sm text-gray-300 mb-1">& Also at</p>
-              <p className="text-2xl font-bold">11:00 AM</p>
-            </div>
+          
           </div>
         </div>
       </div>
