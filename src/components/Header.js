@@ -19,24 +19,9 @@ export default function Header() {
     { name: 'Events', href: '/events' },
     { name: 'Plan Visit', href: '/plan-visit' },
     { name: 'Contact', href: '/contact' },
+    { name: 'Give', href: '/giving' },
   ];
-{user && (user.role === 'admin' || user.role === 'staff') && (
-  <Link
-    href="/admin"
-    className="text-gray-700 hover:text-secondary font-medium transition-colors text-sm xl:text-base"
-  >
-    Admin Panel
-  </Link>
-)}
-{user && (user.role === 'admin' || user.role === 'staff') && (
-  <Link
-    href="/admin"
-    className="text-gray-700 hover:text-secondary font-medium py-2 px-3 rounded-lg hover:bg-gray-50 transition-all"
-    onClick={() => setIsMenuOpen(false)}
-  >
-    Admin Panel
-  </Link>
-)}
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -62,11 +47,11 @@ export default function Header() {
               </div>
               <div className="hidden sm:flex items-center gap-2">
                 <FaMapMarkerAlt className="text-xs flex-shrink-0" />
-                <span className="whitespace-nowrap">University Park, Udaperadeniya Road, Peradeniya, Sri Lanka.</span>
+                <span className="whitespace-nowrap">123 Faith Street, Your City, ST 12345</span>
               </div>
             </div>
             <div className="text-xs md:text-sm whitespace-nowrap">
-              Service Times: Sun 4PM
+              Service Times: Sun 9AM & 11AM
             </div>
           </div>
         </div>
@@ -78,11 +63,11 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-              <span className="text-white font-bold text-xl"></span>
+              <span className="text-white font-bold text-xl">GC</span>
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">The Chapel of Christ the Risen Lord</h1>
-              <p className="text-xs text-gray-600 hidden sm:block">Gal Palliya</p>
+              <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">Grace Church</h1>
+              <p className="text-xs text-gray-600 hidden sm:block">Growing in Faith Together</p>
             </div>
           </Link>
 
@@ -137,12 +122,6 @@ export default function Header() {
                 </button>
               </Link>
             )}
-            
-            <Link href="/giving">
-              <button className="bg-primary text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-primary-800 transition-colors text-sm xl:text-base whitespace-nowrap">
-                Give
-              </button>
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -205,12 +184,6 @@ export default function Header() {
                   </button>
                 </Link>
               )}
-              
-              <Link href="/giving" onClick={() => setIsMenuOpen(false)}>
-                <button className="w-full bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-800 transition-colors">
-                  Give
-                </button>
-              </Link>
             </div>
           </div>
         )}

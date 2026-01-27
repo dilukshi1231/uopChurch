@@ -1,7 +1,6 @@
 // src/app/page.js
 import Hero from '@/components/Hero';
 import ServiceTimes from '@/components/ServiceTimes';
-import UpcomingEvents from '@/components/UpcomingEvents';
 import Link from 'next/link';
 import { FaBible, FaHandsHelping, FaPrayingHands, FaUsers } from 'react-icons/fa';
 
@@ -86,7 +85,6 @@ export default function Home() {
       </section>
 
       <ServiceTimes />
-      <UpcomingEvents />
 
       {/* Call to Action */}
       <section className="py-16 bg-primary text-white">
