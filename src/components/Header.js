@@ -1,6 +1,7 @@
 // src/components/Header.js
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { FaBars, FaTimes, FaPhone, FaMapMarkerAlt, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
@@ -62,11 +63,18 @@ export default function Header() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-            <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
-              <span className="text-white font-bold text-xl">GC</span>
+            <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden bg-white">
+              <Image 
+                src="/images/logo.png" 
+                alt="Grace Church Logo" 
+                width={48} 
+                height={48}
+                className="object-contain"
+                priority
+              />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">Grace Church</h1>
+              <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">The Church of Christ the Risen Lord</h1>
               <p className="text-xs text-gray-600 hidden sm:block">Growing in Faith Together</p>
             </div>
           </Link>
