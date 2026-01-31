@@ -54,11 +54,11 @@ export default function AboutPage() {
 
   return (
     <div className="relative">
-      {/* Background Image with Overlay */}
-      <div className="fixed inset-0 z-0">
+      {/* Background Image with Overlay - CHANGED FROM FIXED TO ABSOLUTE */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-900/30 via-white/95 to-white/98 z-10"></div>
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
+          className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073')",
             backgroundBlendMode: 'overlay'
