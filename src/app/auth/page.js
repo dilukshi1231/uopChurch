@@ -1,8 +1,6 @@
-// src/app/auth/page.js
 'use client';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
 import { FaUser, FaEnvelope, FaLock, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 
 export default function AuthPage() {
@@ -20,7 +18,6 @@ export default function AuthPage() {
   const [resetMessage, setResetMessage] = useState('');
 
   const { login, signup, resetPassword } = useAuth();
-  const router = useRouter();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,8 +30,10 @@ export default function AuthPage() {
 
     try {
       if (isLogin) {
+        console.log('🔐 Attempting login...');
+        // DON'T redirect here - let AuthContext handle it based on role
         await login(formData.email, formData.password);
-        router.push('/');
+        // AuthContext will redirect to /admin or /dashboard based on role
       } else {
         if (formData.password !== formData.confirmPassword) {
           setError('Passwords do not match');
@@ -46,14 +45,17 @@ export default function AuthPage() {
           setLoading(false);
           return;
         }
+        console.log('📝 Attempting signup...');
+        // DON'T redirect here - let AuthContext handle it
         await signup(formData.email, formData.password, formData.displayName);
-        router.push('/');
+        // AuthContext will redirect to appropriate dashboard
       }
     } catch (err) {
+      console.error('❌ Auth error:', err);
       setError(err.message);
-    } finally {
       setLoading(false);
     }
+    // Don't set loading to false on success - the redirect will happen
   };
 
   const handleReset = async (e) => {
@@ -75,15 +77,15 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-primary-800 to-primary-900 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full">
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-20 h-20 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
             <span className="text-white font-bold text-3xl">GC</span>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Grace Church</h1>
-          <p className="text-gray-300">Welcome back to our community</p>
+          <p className="text-blue-200">Welcome back to our community</p>
         </div>
 
         {/* Auth Card */}
@@ -96,8 +98,8 @@ export default function AuthPage() {
                   onClick={() => setIsLogin(true)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
                     isLogin
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-600 hover:text-primary'
+                      ? 'bg-blue-900 text-white shadow-md'
+                      : 'text-gray-600 hover:text-blue-900'
                   }`}
                 >
                   <FaSignInAlt className="inline mr-2" />
@@ -107,8 +109,8 @@ export default function AuthPage() {
                   onClick={() => setIsLogin(false)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
                     !isLogin
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-600 hover:text-primary'
+                      ? 'bg-blue-900 text-white shadow-md'
+                      : 'text-gray-600 hover:text-blue-900'
                   }`}
                 >
                   <FaUserPlus className="inline mr-2" />
@@ -128,7 +130,7 @@ export default function AuthPage() {
                 {!isLogin && (
                   <div>
                     <label className="block text-gray-700 font-medium mb-2">
-                      <FaUser className="inline mr-2 text-secondary" />
+                      <FaUser className="inline mr-2 text-amber-600" />
                       Full Name
                     </label>
                     <input
@@ -137,7 +139,7 @@ export default function AuthPage() {
                       value={formData.displayName}
                       onChange={handleChange}
                       required={!isLogin}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
                       placeholder="John Doe"
                     />
                   </div>
@@ -145,7 +147,7 @@ export default function AuthPage() {
 
                 <div>
                   <label className="block text-gray-700 font-medium mb-2">
-                    <FaEnvelope className="inline mr-2 text-secondary" />
+                    <FaEnvelope className="inline mr-2 text-amber-600" />
                     Email Address
                   </label>
                   <input
@@ -154,14 +156,14 @@ export default function AuthPage() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
                     placeholder="john@example.com"
                   />
                 </div>
 
                 <div>
                   <label className="block text-gray-700 font-medium mb-2">
-                    <FaLock className="inline mr-2 text-secondary" />
+                    <FaLock className="inline mr-2 text-amber-600" />
                     Password
                   </label>
                   <input
@@ -170,7 +172,7 @@ export default function AuthPage() {
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
                     placeholder="••••••••"
                   />
                 </div>
@@ -178,7 +180,7 @@ export default function AuthPage() {
                 {!isLogin && (
                   <div>
                     <label className="block text-gray-700 font-medium mb-2">
-                      <FaLock className="inline mr-2 text-secondary" />
+                      <FaLock className="inline mr-2 text-amber-600" />
                       Confirm Password
                     </label>
                     <input
@@ -187,7 +189,7 @@ export default function AuthPage() {
                       value={formData.confirmPassword}
                       onChange={handleChange}
                       required={!isLogin}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
                       placeholder="••••••••"
                     />
                   </div>
@@ -198,7 +200,7 @@ export default function AuthPage() {
                     <button
                       type="button"
                       onClick={() => setShowReset(true)}
-                      className="text-secondary hover:underline text-sm font-medium"
+                      className="text-amber-600 hover:underline text-sm font-medium"
                     >
                       Forgot Password?
                     </button>
@@ -208,7 +210,7 @@ export default function AuthPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-secondary text-white py-4 rounded-lg font-bold text-lg hover:bg-secondary-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                  className="w-full bg-amber-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-amber-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center">
@@ -230,7 +232,7 @@ export default function AuthPage() {
               <div className="mb-6">
                 <button
                   onClick={() => setShowReset(false)}
-                  className="text-secondary hover:underline text-sm font-medium mb-4"
+                  className="text-amber-600 hover:underline text-sm font-medium mb-4"
                 >
                   ← Back to Login
                 </button>
@@ -253,7 +255,7 @@ export default function AuthPage() {
               <form onSubmit={handleReset} className="space-y-6">
                 <div>
                   <label className="block text-gray-700 font-medium mb-2">
-                    <FaEnvelope className="inline mr-2 text-secondary" />
+                    <FaEnvelope className="inline mr-2 text-amber-600" />
                     Email Address
                   </label>
                   <input
@@ -261,14 +263,14 @@ export default function AuthPage() {
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary/20"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20"
                     placeholder="john@example.com"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-secondary text-white py-4 rounded-lg font-bold text-lg hover:bg-secondary-700 transition-colors shadow-lg hover:shadow-xl"
+                  className="w-full bg-amber-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-amber-700 transition-colors shadow-lg hover:shadow-xl"
                 >
                   Send Reset Link
                 </button>
@@ -282,7 +284,7 @@ export default function AuthPage() {
               {isLogin ? "Don't have an account? " : "Already have an account? "}
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-secondary font-semibold hover:underline"
+                className="text-amber-600 font-semibold hover:underline"
               >
                 {isLogin ? 'Create one' : 'Sign in'}
               </button>
@@ -291,9 +293,9 @@ export default function AuthPage() {
         </div>
 
         {/* Help Text */}
-        <p className="text-center text-gray-300 text-sm mt-6">
+        <p className="text-center text-blue-200 text-sm mt-6">
           Need help? Contact us at{' '}
-          <a href="mailto:info@gracechurch.org" className="text-secondary-400 hover:underline font-semibold">
+          <a href="mailto:info@gracechurch.org" className="text-amber-400 hover:underline font-semibold">
             info@gracechurch.org
           </a>
         </p>

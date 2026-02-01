@@ -1,10 +1,9 @@
-// src/middleware/withAuth.js - CORRECTED VERSION
 'use client';
 import { useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
-export function withAuth(Component, allowedRoles = []) {
+export default function withAuth(Component, allowedRoles = []) {
   return function ProtectedRoute(props) {
     const { user, loading } = useAuth();
     const router = useRouter();
@@ -19,11 +18,22 @@ export function withAuth(Component, allowedRoles = []) {
         if (!user) {
           console.log('❌ No user - redirecting to /auth');
           router.push('/auth');
+        } else if (user.isActive === false) {
+          console.log('❌ User account deactivated - redirecting to /');
+          router.push('/');
         } else if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-          console.log('❌ User role not allowed - redirecting to /');
+          console.log('❌ User role not allowed - redirecting based on role');
           console.log('   User has role:', user.role);
           console.log('   Allowed roles:', allowedRoles);
-          router.push('/');
+          
+          // Redirect based on user's actual role
+          if (user.role === 'admin') {
+            console.log('🔀 Redirecting admin to /admin');
+            router.push('/admin');
+          } else {
+            console.log('🔀 Redirecting user to /dashboard');
+            router.push('/dashboard');
+          }
         } else {
           console.log('✅ User authorized for this route');
         }
@@ -32,10 +42,10 @@ export function withAuth(Component, allowedRoles = []) {
 
     if (loading) {
       return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-amber-50">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading...</p>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-900 mx-auto mb-4"></div>
+            <p className="text-gray-600 text-lg">Loading...</p>
           </div>
         </div>
       );
@@ -46,8 +56,13 @@ export function withAuth(Component, allowedRoles = []) {
       return null;
     }
 
+    if (user.isActive === false) {
+      console.log('⏳ Account deactivated - waiting for redirect...');
+      return null;
+    }
+
     if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-      console.log('⏳ Waiting for redirect to /...');
+      console.log('⏳ Waiting for role-based redirect...');
       return null;
     }
 
