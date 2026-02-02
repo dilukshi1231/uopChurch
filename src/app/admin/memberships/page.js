@@ -36,6 +36,380 @@ import {
   FaIdCard
 } from 'react-icons/fa';
 
+// ✅ MOVED OUTSIDE - Component declared outside to prevent recreation
+const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMember, actionLoading }) => {
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-green-900 to-green-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold mb-1">Add New Member</h2>
+            <p className="text-green-200 text-sm">Manually add a member to the church</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+          >
+            <FaTimes className="text-2xl" />
+          </button>
+        </div>
+
+        <form onSubmit={handleAddMember} className="p-6 space-y-6">
+          {/* Personal Information */}
+          <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <FaIdCard className="text-blue-600" />
+              Personal Information
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  First Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newMemberData.firstName}
+                  onChange={(e) => setNewMemberData(prev => ({...prev, firstName: e.target.value}))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="John"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Last Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newMemberData.lastName}
+                  onChange={(e) => setNewMemberData(prev => ({...prev, lastName: e.target.value}))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Doe"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Date of Birth
+                </label>
+                <input
+                  type="date"
+                  value={newMemberData.dateOfBirth}
+                  onChange={(e) => setNewMemberData(prev => ({...prev, dateOfBirth: e.target.value}))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <FaEnvelope className="text-green-600" />
+              Contact Information
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={newMemberData.email}
+                  onChange={(e) => setNewMemberData(prev => ({...prev, email: e.target.value}))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="john@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Phone <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  required
+                  value={newMemberData.phone}
+                  onChange={(e) => setNewMemberData(prev => ({...prev, phone: e.target.value}))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Address */}
+          <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <FaMapMarkerAlt className="text-purple-600" />
+              Address
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Street Address</label>
+                <input
+                  type="text"
+                  value={newMemberData.address}
+                  onChange={(e) => setNewMemberData(prev => ({...prev, address: e.target.value}))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="123 Main St"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">City</label>
+                  <input
+                    type="text"
+                    value={newMemberData.city}
+                    onChange={(e) => setNewMemberData(prev => ({...prev, city: e.target.value}))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="City"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
+                  <input
+                    type="text"
+                    value={newMemberData.state}
+                    onChange={(e) => setNewMemberData(prev => ({...prev, state: e.target.value}))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="ST"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">ZIP Code</label>
+                  <input
+                    type="text"
+                    value={newMemberData.zipCode}
+                    onChange={(e) => setNewMemberData(prev => ({...prev, zipCode: e.target.value}))}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="12345"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Notes */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
+            <textarea
+              value={newMemberData.message}
+              onChange={(e) => setNewMemberData(prev => ({...prev, message: e.target.value}))}
+              rows="3"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Any additional information..."
+            />
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 pt-4 border-t">
+            <button
+              type="submit"
+              disabled={actionLoading}
+              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {actionLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  Adding...
+                </>
+              ) : (
+                <>
+                  <FaUserPlus />
+                  Add Member
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// ✅ MOVED OUTSIDE - Component declared outside to prevent recreation
+const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, deleteMembership, actionLoading, getStatusBadge }) => {
+  if (!membership) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between z-10">
+          <div>
+            <h2 className="text-2xl font-bold mb-1">{membership.firstName} {membership.lastName}</h2>
+            <p className="text-blue-200 text-sm">Membership Request Details</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+          >
+            <FaTimes className="text-2xl" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* Status */}
+          <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl border border-blue-100">
+            <span className="text-gray-700 font-semibold">Current Status:</span>
+            {getStatusBadge(membership.status)}
+          </div>
+
+          {/* Personal Information */}
+          <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <FaIdCard className="text-blue-600" />
+              Personal Information
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600 font-semibold mb-1">First Name</p>
+                <p className="text-gray-900 font-medium">{membership.firstName}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-semibold mb-1">Last Name</p>
+                <p className="text-gray-900 font-medium">{membership.lastName}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-semibold mb-1 flex items-center gap-2">
+                  <FaBirthdayCake className="text-amber-600" />
+                  Date of Birth
+                </p>
+                <p className="text-gray-900 font-medium">{membership.dateOfBirth || 'Not provided'}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <FaEnvelope className="text-green-600" />
+              Contact Information
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-600 font-semibold mb-1 flex items-center gap-2">
+                  <FaEnvelope className="text-green-600" />
+                  Email
+                </p>
+                <p className="text-gray-900 font-medium">{membership.email}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 font-semibold mb-1 flex items-center gap-2">
+                  <FaPhone className="text-green-600" />
+                  Phone
+                </p>
+                <p className="text-gray-900 font-medium">{membership.phone}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Address */}
+          {(membership.address || membership.city || membership.state) && (
+            <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FaMapMarkerAlt className="text-purple-600" />
+                Address
+              </h3>
+              <div className="space-y-2">
+                {membership.address && <p className="text-gray-900 font-medium">{membership.address}</p>}
+                <p className="text-gray-900 font-medium">
+                  {[membership.city, membership.state, membership.zipCode].filter(Boolean).join(', ')}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Message */}
+          {membership.message && (
+            <div className="bg-gradient-to-br from-amber-50 to-white rounded-xl p-6 border border-amber-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Additional Information</h3>
+              <p className="text-gray-700 leading-relaxed">{membership.message}</p>
+            </div>
+          )}
+
+          {/* Submission Date */}
+          <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-4 border border-gray-200">
+            <div className="flex items-center gap-2 text-gray-600">
+              <FaCalendarAlt />
+              <span className="text-sm">
+                Submitted on: <span className="font-semibold text-gray-900">{membership.createdAt?.toLocaleString()}</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-4 border-t">
+            {membership.status === 'pending' && (
+              <>
+                <button
+                  onClick={() => updateMembershipStatus(membership.id, 'approved')}
+                  disabled={actionLoading}
+                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {actionLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    <>
+                      <FaCheckCircle />
+                      Approve
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => updateMembershipStatus(membership.id, 'rejected')}
+                  disabled={actionLoading}
+                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {actionLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    <>
+                      <FaTimesCircle />
+                      Reject
+                    </>
+                  )}
+                </button>
+              </>
+            )}
+            {membership.status !== 'pending' && (
+              <button
+                onClick={() => updateMembershipStatus(membership.id, 'pending')}
+                disabled={actionLoading}
+                className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {actionLoading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                ) : (
+                  <>
+                    <FaClock />
+                    Set to Pending
+                  </>
+                )}
+              </button>
+            )}
+            <button
+              onClick={() => deleteMembership(membership.id)}
+              disabled={actionLoading}
+              className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-xl font-semibold hover:from-gray-800 hover:to-gray-900 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <FaTrash />
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function MembershipsPage() {
   const [memberships, setMemberships] = useState([]);
   const [filteredMemberships, setFilteredMemberships] = useState([]);
@@ -265,397 +639,6 @@ function MembershipsPage() {
     );
   };
 
-  const AddMemberModal = ({ onClose }) => {
-    return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 bg-gradient-to-r from-green-900 to-green-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold mb-1">Add New Member</h2>
-              <p className="text-green-200 text-sm">Manually add a member to the church</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-            >
-              <FaTimes className="text-2xl" />
-            </button>
-          </div>
-
-          <form onSubmit={handleAddMember} className="p-6 space-y-6">
-            {/* Personal Information */}
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FaIdCard className="text-blue-600" />
-                Personal Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    First Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newMemberData.firstName}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setNewMemberData(prev => ({...prev, firstName: value}));
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="John"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Last Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={newMemberData.lastName}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setNewMemberData(prev => ({...prev, lastName: value}));
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Doe"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    value={newMemberData.dateOfBirth}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setNewMemberData(prev => ({...prev, dateOfBirth: value}));
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FaEnvelope className="text-green-600" />
-                Contact Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={newMemberData.email}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setNewMemberData(prev => ({...prev, email: value}));
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="john@example.com"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Phone <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={newMemberData.phone}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setNewMemberData(prev => ({...prev, phone: value}));
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="(555) 123-4567"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Address */}
-            <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FaMapMarkerAlt className="text-purple-600" />
-                Address
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Street Address</label>
-                  <input
-                    type="text"
-                    value={newMemberData.address}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setNewMemberData(prev => ({...prev, address: value}));
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="123 Main St"
-                  />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">City</label>
-                    <input
-                      type="text"
-                      value={newMemberData.city}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setNewMemberData(prev => ({...prev, city: value}));
-                      }}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="City"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
-                    <input
-                      type="text"
-                      value={newMemberData.state}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setNewMemberData(prev => ({...prev, state: value}));
-                      }}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="ST"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">ZIP Code</label>
-                    <input
-                      type="text"
-                      value={newMemberData.zipCode}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setNewMemberData(prev => ({...prev, zipCode: value}));
-                      }}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="12345"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Notes */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
-              <textarea
-                value={newMemberData.message}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setNewMemberData(prev => ({...prev, message: value}));
-                }}
-                rows="3"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Any additional information..."
-              />
-            </div>
-
-            {/* Buttons */}
-            <div className="flex gap-3 pt-4 border-t">
-              <button
-                type="submit"
-                disabled={actionLoading}
-                className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {actionLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    Adding...
-                  </>
-                ) : (
-                  <>
-                    <FaUserPlus />
-                    Add Member
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  };
-
-  const MembershipDetailModal = ({ membership, onClose }) => {
-    if (!membership) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold mb-1">Membership Details</h2>
-              <p className="text-blue-200 text-sm">Review and manage membership request</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-            >
-              <FaTimes className="text-2xl" />
-            </button>
-          </div>
-
-          <div className="p-6 space-y-6">
-            {/* Status Badge */}
-            <div className="flex items-center justify-between">
-              {getStatusBadge(membership.status)}
-              <span className="text-sm text-gray-500 flex items-center gap-2">
-                <FaCalendarAlt />
-                Submitted {membership.createdAt?.toLocaleDateString()}
-              </span>
-            </div>
-
-            {/* Personal Information */}
-            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FaUsers className="text-blue-600" />
-                Personal Information
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-semibold text-gray-600">Full Name</label>
-                  <p className="text-gray-900 font-medium">{membership.firstName} {membership.lastName}</p>
-                </div>
-                {membership.dateOfBirth && (
-                  <div>
-                    <label className="text-sm font-semibold text-gray-600">Date of Birth</label>
-                    <p className="text-gray-900 font-medium flex items-center gap-2">
-                      <FaBirthdayCake className="text-pink-500" />
-                      {membership.dateOfBirth}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
-              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FaEnvelope className="text-green-600" />
-                Contact Information
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <FaEnvelope className="text-gray-400" />
-                  <div>
-                    <label className="text-sm font-semibold text-gray-600">Email</label>
-                    <p className="text-gray-900 font-medium">{membership.email}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <FaPhone className="text-gray-400" />
-                  <div>
-                    <label className="text-sm font-semibold text-gray-600">Phone</label>
-                    <p className="text-gray-900 font-medium">{membership.phone}</p>
-                  </div>
-                </div>
-                {membership.address && (
-                  <div className="flex items-start gap-3">
-                    <FaMapMarkerAlt className="text-gray-400 mt-1" />
-                    <div>
-                      <label className="text-sm font-semibold text-gray-600">Address</label>
-                      <p className="text-gray-900 font-medium">
-                        {membership.address}
-                        {membership.city && `, ${membership.city}`}
-                        {membership.state && `, ${membership.state}`}
-                        {membership.zipCode && ` ${membership.zipCode}`}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Additional Information */}
-            {membership.message && (
-              <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Additional Message</h3>
-                <p className="text-gray-700 leading-relaxed">{membership.message}</p>
-              </div>
-            )}
-
-            {/* Actions */}
-            <div className="flex gap-3 pt-4 border-t">
-              {membership.status === 'pending' && (
-                <>
-                  <button
-                    onClick={() => updateMembershipStatus(membership.id, 'approved')}
-                    disabled={actionLoading}
-                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {actionLoading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <FaCheckCircle />
-                        Approve Membership
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => updateMembershipStatus(membership.id, 'rejected')}
-                    disabled={actionLoading}
-                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {actionLoading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <FaTimesCircle />
-                        Reject Request
-                      </>
-                    )}
-                  </button>
-                </>
-              )}
-              {membership.status !== 'pending' && (
-                <button
-                  onClick={() => updateMembershipStatus(membership.id, 'pending')}
-                  disabled={actionLoading}
-                  className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {actionLoading ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  ) : (
-                    <>
-                      <FaClock />
-                      Mark as Pending
-                    </>
-                  )}
-                </button>
-              )}
-              <button
-                onClick={() => deleteMembership(membership.id)}
-                disabled={actionLoading}
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <FaTrash />
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   if (loading) {
     return (
       <AdminLayout>
@@ -835,6 +818,10 @@ function MembershipsPage() {
               setShowModal(false);
               setSelectedMembership(null);
             }}
+            updateMembershipStatus={updateMembershipStatus}
+            deleteMembership={deleteMembership}
+            actionLoading={actionLoading}
+            getStatusBadge={getStatusBadge}
           />
         )}
 
@@ -855,6 +842,10 @@ function MembershipsPage() {
                 message: ''
               });
             }}
+            newMemberData={newMemberData}
+            setNewMemberData={setNewMemberData}
+            handleAddMember={handleAddMember}
+            actionLoading={actionLoading}
           />
         )}
       </div>

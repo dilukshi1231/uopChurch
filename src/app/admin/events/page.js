@@ -27,46 +27,8 @@ import {
   FaSave
 } from 'react-icons/fa';
 
-function EventsPage() {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [editingEvent, setEditingEvent] = useState(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    date: '',
-    time: '',
-    location: '',
-    category: 'service',
-    image: '',
-    capacity: ''
-  });
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const eventsRef = collection(db, 'events');
-      const q = query(eventsRef, orderBy('date', 'desc'));
-      const snapshot = await getDocs(q);
-      
-      const eventsData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-
-      setEvents(eventsData);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      setLoading(false);
-    }
-  };
-
+// ✅ MOVED OUTSIDE - Component declared outside to prevent recreation
+const EventModal = ({ showModal, setShowModal, editingEvent, formData, setFormData, handleSubmit, resetForm }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -75,103 +37,7 @@ function EventsPage() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      if (editingEvent) {
-        // Update existing event
-        const eventRef = doc(db, 'events', editingEvent.id);
-        await updateDoc(eventRef, {
-          ...formData,
-          updatedAt: new Date()
-        });
-        alert('Event updated successfully!');
-      } else {
-        // Create new event
-        await addDoc(collection(db, 'events'), {
-          ...formData,
-          createdAt: new Date(),
-          attendees: 0
-        });
-        alert('Event created successfully!');
-      }
-      
-      resetForm();
-      setShowModal(false);
-      await fetchEvents();
-    } catch (error) {
-      console.error('Error saving event:', error);
-      alert('Failed to save event');
-    }
-  };
-
-  const handleEdit = (event) => {
-    setEditingEvent(event);
-    setFormData({
-      title: event.title,
-      description: event.description,
-      date: event.date,
-      time: event.time,
-      location: event.location,
-      category: event.category,
-      image: event.image || '',
-      capacity: event.capacity || ''
-    });
-    setShowModal(true);
-  };
-
-  const handleDelete = async (eventId) => {
-    if (!confirm('Are you sure you want to delete this event?')) {
-      return;
-    }
-
-    try {
-      await deleteDoc(doc(db, 'events', eventId));
-      await fetchEvents();
-      alert('Event deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting event:', error);
-      alert('Failed to delete event');
-    }
-  };
-
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      description: '',
-      date: '',
-      time: '',
-      location: '',
-      category: 'service',
-      image: '',
-      capacity: ''
-    });
-    setEditingEvent(null);
-  };
-
-  const getCategoryBadge = (category) => {
-    const badges = {
-      service: 'bg-blue-100 text-blue-800 border-blue-300',
-      bible_study: 'bg-purple-100 text-purple-800 border-purple-300',
-      youth: 'bg-green-100 text-green-800 border-green-300',
-      prayer: 'bg-pink-100 text-pink-800 border-pink-300',
-      community: 'bg-amber-100 text-amber-800 border-amber-300',
-      special: 'bg-red-100 text-red-800 border-red-300'
-    };
-
-    return (
-      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${badges[category] || 'bg-gray-100 text-gray-800'}`}>
-        {category.replace('_', ' ').toUpperCase()}
-      </span>
-    );
-  };
-
-  const isUpcoming = (date) => {
-    return new Date(date) > new Date();
-  };
-
-  const EventModal = () => (
+  return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
@@ -343,6 +209,143 @@ function EventsPage() {
       </div>
     </div>
   );
+};
+
+function EventsPage() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    date: '',
+    time: '',
+    location: '',
+    category: 'service',
+    image: '',
+    capacity: ''
+  });
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const eventsRef = collection(db, 'events');
+      const q = query(eventsRef, orderBy('date', 'desc'));
+      const snapshot = await getDocs(q);
+      
+      const eventsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setEvents(eventsData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      if (editingEvent) {
+        // Update existing event
+        const eventRef = doc(db, 'events', editingEvent.id);
+        await updateDoc(eventRef, {
+          ...formData,
+          updatedAt: new Date()
+        });
+        alert('Event updated successfully!');
+      } else {
+        // Create new event
+        await addDoc(collection(db, 'events'), {
+          ...formData,
+          createdAt: new Date(),
+          attendees: 0
+        });
+        alert('Event created successfully!');
+      }
+      
+      resetForm();
+      setShowModal(false);
+      await fetchEvents();
+    } catch (error) {
+      console.error('Error saving event:', error);
+      alert('Failed to save event');
+    }
+  };
+
+  const handleEdit = (event) => {
+    setEditingEvent(event);
+    setFormData({
+      title: event.title,
+      description: event.description,
+      date: event.date,
+      time: event.time,
+      location: event.location,
+      category: event.category,
+      image: event.image || '',
+      capacity: event.capacity || ''
+    });
+    setShowModal(true);
+  };
+
+  const handleDelete = async (eventId) => {
+    if (!confirm('Are you sure you want to delete this event?')) {
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, 'events', eventId));
+      await fetchEvents();
+      alert('Event deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      alert('Failed to delete event');
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+      date: '',
+      time: '',
+      location: '',
+      category: 'service',
+      image: '',
+      capacity: ''
+    });
+    setEditingEvent(null);
+  };
+
+  const getCategoryBadge = (category) => {
+    const badges = {
+      service: 'bg-blue-100 text-blue-800 border-blue-300',
+      bible_study: 'bg-purple-100 text-purple-800 border-purple-300',
+      youth: 'bg-green-100 text-green-800 border-green-300',
+      prayer: 'bg-pink-100 text-pink-800 border-pink-300',
+      community: 'bg-amber-100 text-amber-800 border-amber-300',
+      special: 'bg-red-100 text-red-800 border-red-300'
+    };
+
+    return (
+      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${badges[category] || 'bg-gray-100 text-gray-800'}`}>
+        {category.replace('_', ' ').toUpperCase()}
+      </span>
+    );
+  };
+
+  const isUpcoming = (date) => {
+    return new Date(date) > new Date();
+  };
 
   if (loading) {
     return (
@@ -540,7 +543,17 @@ function EventsPage() {
         </div>
 
         {/* Modal */}
-        {showModal && <EventModal />}
+        {showModal && (
+          <EventModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            editingEvent={editingEvent}
+            formData={formData}
+            setFormData={setFormData}
+            handleSubmit={handleSubmit}
+            resetForm={resetForm}
+          />
+        )}
       </div>
     </AdminLayout>
   );
