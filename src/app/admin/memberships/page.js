@@ -2,7 +2,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import AdminLayout from '@/components/AdminLayout';
-import { withAuth } from '@/middleware/withAuth';
+import withAuth from '@/components/withAuth';
 import { db } from '@/lib/firebase';
 import { 
   collection, 
@@ -12,7 +12,8 @@ import {
   deleteDoc, 
   query, 
   orderBy,
-  where 
+  Timestamp,
+  addDoc
 } from 'firebase/firestore';
 import { 
   FaUsers, 
@@ -28,7 +29,11 @@ import {
   FaPhone,
   FaMapMarkerAlt,
   FaBirthdayCake,
-  FaTimes
+  FaTimes,
+  FaPlus,
+  FaUserPlus,
+  FaCalendarAlt,
+  FaIdCard
 } from 'react-icons/fa';
 
 function MembershipsPage() {
@@ -39,6 +44,22 @@ function MembershipsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedMembership, setSelectedMembership] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  // Add new membership form data
+  const [newMemberData, setNewMemberData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    message: ''
+  });
 
   useEffect(() => {
     fetchMemberships();
@@ -58,7 +79,7 @@ function MembershipsPage() {
       const membershipData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate()
+        createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt)
       }));
 
       setMemberships(membershipData);
@@ -80,7 +101,7 @@ function MembershipsPage() {
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(m => 
-        m.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        `${m.firstName} ${m.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.phone?.includes(searchTerm)
       );
@@ -91,60 +112,136 @@ function MembershipsPage() {
 
   const updateMembershipStatus = async (membershipId, newStatus) => {
     try {
+      setActionLoading(true);
       const membershipRef = doc(db, 'memberships', membershipId);
       await updateDoc(membershipRef, {
         status: newStatus,
-        updatedAt: new Date()
+        updatedAt: Timestamp.now()
       });
       
       await fetchMemberships();
-      alert(`Membership ${newStatus} successfully!`);
+      
+      // Show success message
+      const statusMessages = {
+        approved: 'Membership approved successfully! 🎉',
+        rejected: 'Membership request rejected.',
+        pending: 'Status changed to pending.'
+      };
+      
+      alert(statusMessages[newStatus] || 'Status updated successfully!');
       setShowModal(false);
     } catch (error) {
       console.error('Error updating membership:', error);
-      alert('Failed to update membership status');
+      alert('Failed to update membership status. Please try again.');
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const deleteMembership = async (membershipId) => {
-    if (!confirm('Are you sure you want to delete this membership request?')) {
+    if (!confirm('Are you sure you want to delete this membership request? This action cannot be undone.')) {
       return;
     }
 
     try {
+      setActionLoading(true);
       await deleteDoc(doc(db, 'memberships', membershipId));
       await fetchMemberships();
       alert('Membership deleted successfully!');
       setShowModal(false);
     } catch (error) {
       console.error('Error deleting membership:', error);
-      alert('Failed to delete membership');
+      alert('Failed to delete membership. Please try again.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    
+    try {
+      setActionLoading(true);
+      
+      // Validate required fields
+      if (!newMemberData.firstName || !newMemberData.lastName || !newMemberData.email || !newMemberData.phone) {
+        alert('Please fill in all required fields.');
+        setActionLoading(false);
+        return;
+      }
+
+      // Add to Firestore
+      await addDoc(collection(db, 'memberships'), {
+        firstName: newMemberData.firstName,
+        lastName: newMemberData.lastName,
+        email: newMemberData.email,
+        phone: newMemberData.phone,
+        dateOfBirth: newMemberData.dateOfBirth,
+        address: newMemberData.address,
+        city: newMemberData.city,
+        state: newMemberData.state,
+        zipCode: newMemberData.zipCode,
+        message: newMemberData.message,
+        status: 'approved', // Manually added members are auto-approved
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
+      });
+
+      // Reset form
+      setNewMemberData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        dateOfBirth: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        message: ''
+      });
+
+      alert('Member added successfully! 🎉');
+      setShowAddModal(false);
+      await fetchMemberships();
+    } catch (error) {
+      console.error('Error adding member:', error);
+      alert('Failed to add member. Please try again.');
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const exportToCSV = () => {
-    const headers = ['Name', 'Email', 'Phone', 'Date of Birth', 'Address', 'Status', 'Created At'];
+    const headers = ['First Name', 'Last Name', 'Email', 'Phone', 'Date of Birth', 'Address', 'City', 'State', 'ZIP', 'Status', 'Created At'];
     const csvData = filteredMemberships.map(m => [
-      m.name,
-      m.email,
-      m.phone,
-      m.dateOfBirth,
-      m.address,
-      m.status,
-      m.createdAt?.toLocaleDateString()
+      m.firstName || '',
+      m.lastName || '',
+      m.email || '',
+      m.phone || '',
+      m.dateOfBirth || '',
+      m.address || '',
+      m.city || '',
+      m.state || '',
+      m.zipCode || '',
+      m.status || '',
+      m.createdAt?.toLocaleDateString() || ''
     ]);
 
     const csv = [
       headers.join(','),
-      ...csvData.map(row => row.join(','))
+      ...csvData.map(row => row.map(cell => `"${cell}"`).join(','))
     ].join('\n');
 
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `memberships-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   };
 
   const getStatusBadge = (status) => {
@@ -163,8 +260,236 @@ function MembershipsPage() {
     return (
       <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold border ${badges[status] || 'bg-gray-100 text-gray-800'}`}>
         {icons[status]}
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+        {status?.charAt(0).toUpperCase() + status?.slice(1) || 'Unknown'}
       </span>
+    );
+  };
+
+  const AddMemberModal = ({ onClose }) => {
+    return (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-gradient-to-r from-green-900 to-green-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold mb-1">Add New Member</h2>
+              <p className="text-green-200 text-sm">Manually add a member to the church</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            >
+              <FaTimes className="text-2xl" />
+            </button>
+          </div>
+
+          <form onSubmit={handleAddMember} className="p-6 space-y-6">
+            {/* Personal Information */}
+            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FaIdCard className="text-blue-600" />
+                Personal Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    First Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newMemberData.firstName}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewMemberData(prev => ({...prev, firstName: value}));
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="John"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Last Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newMemberData.lastName}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewMemberData(prev => ({...prev, lastName: value}));
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Doe"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    value={newMemberData.dateOfBirth}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewMemberData(prev => ({...prev, dateOfBirth: value}));
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FaEnvelope className="text-green-600" />
+                Contact Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={newMemberData.email}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewMemberData(prev => ({...prev, email: value}));
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="john@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Phone <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={newMemberData.phone}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewMemberData(prev => ({...prev, phone: value}));
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FaMapMarkerAlt className="text-purple-600" />
+                Address
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Street Address</label>
+                  <input
+                    type="text"
+                    value={newMemberData.address}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setNewMemberData(prev => ({...prev, address: value}));
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="123 Main St"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">City</label>
+                    <input
+                      type="text"
+                      value={newMemberData.city}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setNewMemberData(prev => ({...prev, city: value}));
+                      }}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="City"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
+                    <input
+                      type="text"
+                      value={newMemberData.state}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setNewMemberData(prev => ({...prev, state: value}));
+                      }}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="ST"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">ZIP Code</label>
+                    <input
+                      type="text"
+                      value={newMemberData.zipCode}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setNewMemberData(prev => ({...prev, zipCode: value}));
+                      }}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="12345"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Notes */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Additional Notes</label>
+              <textarea
+                value={newMemberData.message}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setNewMemberData(prev => ({...prev, message: value}));
+                }}
+                rows="3"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Any additional information..."
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex gap-3 pt-4 border-t">
+              <button
+                type="submit"
+                disabled={actionLoading}
+                className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {actionLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    Adding...
+                  </>
+                ) : (
+                  <>
+                    <FaUserPlus />
+                    Add Member
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     );
   };
 
@@ -191,7 +516,8 @@ function MembershipsPage() {
             {/* Status Badge */}
             <div className="flex items-center justify-between">
               {getStatusBadge(membership.status)}
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-500 flex items-center gap-2">
+                <FaCalendarAlt />
                 Submitted {membership.createdAt?.toLocaleDateString()}
               </span>
             </div>
@@ -205,15 +531,17 @@ function MembershipsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-semibold text-gray-600">Full Name</label>
-                  <p className="text-gray-900 font-medium">{membership.name}</p>
+                  <p className="text-gray-900 font-medium">{membership.firstName} {membership.lastName}</p>
                 </div>
-                <div>
-                  <label className="text-sm font-semibold text-gray-600">Date of Birth</label>
-                  <p className="text-gray-900 font-medium flex items-center gap-2">
-                    <FaBirthdayCake className="text-pink-500" />
-                    {membership.dateOfBirth}
-                  </p>
-                </div>
+                {membership.dateOfBirth && (
+                  <div>
+                    <label className="text-sm font-semibold text-gray-600">Date of Birth</label>
+                    <p className="text-gray-900 font-medium flex items-center gap-2">
+                      <FaBirthdayCake className="text-pink-500" />
+                      {membership.dateOfBirth}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -238,13 +566,20 @@ function MembershipsPage() {
                     <p className="text-gray-900 font-medium">{membership.phone}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <FaMapMarkerAlt className="text-gray-400 mt-1" />
-                  <div>
-                    <label className="text-sm font-semibold text-gray-600">Address</label>
-                    <p className="text-gray-900 font-medium">{membership.address}</p>
+                {membership.address && (
+                  <div className="flex items-start gap-3">
+                    <FaMapMarkerAlt className="text-gray-400 mt-1" />
+                    <div>
+                      <label className="text-sm font-semibold text-gray-600">Address</label>
+                      <p className="text-gray-900 font-medium">
+                        {membership.address}
+                        {membership.city && `, ${membership.city}`}
+                        {membership.state && `, ${membership.state}`}
+                        {membership.zipCode && ` ${membership.zipCode}`}
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -262,32 +597,54 @@ function MembershipsPage() {
                 <>
                   <button
                     onClick={() => updateMembershipStatus(membership.id, 'approved')}
-                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                    disabled={actionLoading}
+                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <FaCheckCircle />
-                    Approve Membership
+                    {actionLoading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      <>
+                        <FaCheckCircle />
+                        Approve Membership
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={() => updateMembershipStatus(membership.id, 'rejected')}
-                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                    disabled={actionLoading}
+                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <FaTimesCircle />
-                    Reject Request
+                    {actionLoading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      <>
+                        <FaTimesCircle />
+                        Reject Request
+                      </>
+                    )}
                   </button>
                 </>
               )}
               {membership.status !== 'pending' && (
                 <button
                   onClick={() => updateMembershipStatus(membership.id, 'pending')}
-                  className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                  disabled={actionLoading}
+                  className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <FaClock />
-                  Mark as Pending
+                  {actionLoading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    <>
+                      <FaClock />
+                      Mark as Pending
+                    </>
+                  )}
                 </button>
               )}
               <button
                 onClick={() => deleteMembership(membership.id)}
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2"
+                disabled={actionLoading}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <FaTrash />
                 Delete
@@ -321,36 +678,36 @@ function MembershipsPage() {
 
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-white">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white shadow-2xl">
-          <div className="p-8">
-            <h1 className="text-4xl font-bold mb-2 flex items-center gap-3">
-              <FaUsers className="text-amber-400" />
+        <div className="bg-white border-b">
+          <div className="container mx-auto px-4 py-6">
+            <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
+              <FaUsers className="text-blue-600" />
               Membership Management
             </h1>
-            <p className="text-blue-200 text-lg">
+            <p className="text-gray-600 text-lg mt-1">
               Review and manage church membership requests
             </p>
           </div>
         </div>
 
-        <div className="p-8">
+        <div className="container mx-auto px-4 py-8">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-600">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-600 hover:shadow-xl transition-shadow">
               <p className="text-gray-600 text-sm font-semibold mb-1">Total Requests</p>
               <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-amber-600">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-amber-600 hover:shadow-xl transition-shadow">
               <p className="text-gray-600 text-sm font-semibold mb-1">Pending Review</p>
               <p className="text-3xl font-bold text-amber-600">{stats.pending}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600 hover:shadow-xl transition-shadow">
               <p className="text-gray-600 text-sm font-semibold mb-1">Approved</p>
               <p className="text-3xl font-bold text-green-600">{stats.approved}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-600">
+            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-600 hover:shadow-xl transition-shadow">
               <p className="text-gray-600 text-sm font-semibold mb-1">Rejected</p>
               <p className="text-3xl font-bold text-red-600">{stats.rejected}</p>
             </div>
@@ -381,6 +738,13 @@ function MembershipsPage() {
                   <option value="rejected">Rejected</option>
                 </select>
                 <button
+                  onClick={() => setShowAddModal(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all flex items-center gap-2 shadow-lg"
+                >
+                  <FaPlus />
+                  Add Member
+                </button>
+                <button
                   onClick={exportToCSV}
                   className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center gap-2 shadow-lg"
                 >
@@ -407,21 +771,24 @@ function MembershipsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredMemberships.length > 0 ? (
-                    filteredMemberships.map((membership, index) => (
+                    filteredMemberships.map((membership) => (
                       <tr 
                         key={membership.id}
                         className="hover:bg-blue-50 transition-colors"
                       >
                         <td className="px-6 py-4">
-                          <p className="font-semibold text-gray-900">{membership.name}</p>
-                          <p className="text-sm text-gray-500">{membership.address}</p>
+                          <p className="font-semibold text-gray-900">{membership.firstName} {membership.lastName}</p>
+                          <p className="text-sm text-gray-500">
+                            {membership.address && `${membership.address}, `}
+                            {membership.city && `${membership.city}`}
+                          </p>
                         </td>
                         <td className="px-6 py-4">
                           <p className="text-sm text-gray-900">{membership.email}</p>
                           <p className="text-sm text-gray-500">{membership.phone}</p>
                         </td>
                         <td className="px-6 py-4 text-gray-900">
-                          {membership.dateOfBirth}
+                          {membership.dateOfBirth || 'N/A'}
                         </td>
                         <td className="px-6 py-4">
                           {getStatusBadge(membership.status)}
@@ -460,7 +827,7 @@ function MembershipsPage() {
           </div>
         </div>
 
-        {/* Modal */}
+        {/* Modals */}
         {showModal && (
           <MembershipDetailModal
             membership={selectedMembership}
@@ -470,10 +837,29 @@ function MembershipsPage() {
             }}
           />
         )}
+
+        {showAddModal && (
+          <AddMemberModal
+            onClose={() => {
+              setShowAddModal(false);
+              setNewMemberData({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                dateOfBirth: '',
+                address: '',
+                city: '',
+                state: '',
+                zipCode: '',
+                message: ''
+              });
+            }}
+          />
+        )}
       </div>
     </AdminLayout>
   );
 }
 
 export default withAuth(MembershipsPage, ['admin', 'staff']);
-
