@@ -501,16 +501,8 @@ function AdminDashboard() {
                   <p className="font-medium">Manage Users</p>
                   <p className="text-sm text-blue-100">Add or edit user roles</p>
                 </a>
-                <a href="/admin/reports" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 text-left transition-colors block">
-                  <FaChartLine className="text-2xl mb-2" />
-                  <p className="font-medium">View Reports</p>
-                  <p className="text-sm text-blue-100">Detailed analytics</p>
-                </a>
-                <a href="/admin/sermons" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 text-left transition-colors block">
-                  <FaBook className="text-2xl mb-2" />
-                  <p className="font-medium">Upload Sermon</p>
-                  <p className="text-sm text-blue-100">Add new content</p>
-                </a>
+                
+                
               </div>
             </div>
           )}

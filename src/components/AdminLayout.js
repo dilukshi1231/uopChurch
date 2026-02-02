@@ -19,14 +19,13 @@ export default function AdminLayout({ children }) {
     { name: 'Events', href: '/admin/events', icon: <FaCalendar /> },
     { name: 'Prayer Requests', href: '/admin/prayers', icon: <FaPrayingHands /> },
     { name: 'Contacts', href: '/admin/contacts', icon: <FaEnvelope /> },
-    { name: 'Sermons', href: '/admin/sermons', icon: <FaBook /> },
   ];
 
   // Admin-only navigation
   if (user?.role === 'admin') {
     navigation.push(
-      { name: 'Users', href: '/admin/users', icon: <FaUsersCog /> },
-      { name: 'Reports', href: '/admin/reports', icon: <FaChartLine /> }
+      { name: 'Users', href: '/admin/users', icon: <FaUsersCog /> }
+      //{ name: 'Reports', href: '/admin/reports', icon: <FaChartLine /> }
     );
   }
 
