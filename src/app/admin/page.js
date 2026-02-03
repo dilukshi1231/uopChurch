@@ -1,3 +1,4 @@
+// src/app/admin/page.js
 'use client';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,8 +9,10 @@ import { collection, getDocs, query, where, orderBy, limit, Timestamp } from 'fi
 import { 
   FaUsers, FaCalendar, FaPrayingHands, FaEnvelope, 
   FaBook, FaChartLine, FaCheckCircle, FaExclamationCircle,
-  FaUserCheck, FaUserClock, FaArrowUp, FaArrowDown
+  FaUserCheck, FaUserClock, FaArrowUp, FaArrowDown,
+  FaClock, FaEye
 } from 'react-icons/fa';
+import Link from 'next/link';
 
 function AdminDashboard() {
   const { user } = useAuth();
@@ -23,7 +26,7 @@ function AdminDashboard() {
     prayerRequests: 0,
     pendingPrayers: 0,
     contacts: 0,
-    unreadContacts: 0,
+    newContacts: 0,
     sermons: 0,
     users: 0,
     activeUsers: 0
@@ -81,23 +84,23 @@ function AdminDashboard() {
       const events = eventsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
       const upcomingEvents = events.filter(e => {
-        const eventDate = e.date?.toDate?.() || new Date(e.date);
+        const eventDate = new Date(e.date);
         return eventDate >= now;
       }).length;
 
       const thisWeekEvents = events.filter(e => {
-        const eventDate = e.date?.toDate?.() || new Date(e.date);
+        const eventDate = new Date(e.date);
         return eventDate >= startOfWeek && eventDate < new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000);
       }).length;
 
       // Calculate monthly trend for events
       const thisMonthEvents = events.filter(e => {
-        const eventDate = e.date?.toDate?.() || new Date(e.date);
+        const eventDate = new Date(e.date);
         return eventDate >= startOfMonth;
       }).length;
 
       const lastMonthEvents = events.filter(e => {
-        const eventDate = e.date?.toDate?.() || new Date(e.date);
+        const eventDate = new Date(e.date);
         return eventDate >= lastMonth && eventDate < startOfMonth;
       }).length;
 
@@ -106,7 +109,7 @@ function AdminDashboard() {
         : thisMonthEvents > 0 ? 100 : 0;
 
       // Fetch Prayer Requests
-      const prayersRef = collection(db, 'prayers');
+      const prayersRef = collection(db, 'prayerRequests');
       const prayersSnapshot = await getDocs(prayersRef);
       const prayers = prayersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
@@ -132,9 +135,7 @@ function AdminDashboard() {
       const contactsSnapshot = await getDocs(contactsRef);
       const contacts = contactsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
-      const unreadContacts = contacts.filter(c => !c.read).length;
-
-      
+      const newContacts = contacts.filter(c => c.status === 'new' || !c.status).length;
 
       // Fetch Users (admin only)
       let totalUsers = 0;
@@ -157,7 +158,7 @@ function AdminDashboard() {
         prayerRequests: prayersSnapshot.size,
         pendingPrayers,
         contacts: contactsSnapshot.size,
-        unreadContacts,
+        newContacts,
         users: totalUsers,
         activeUsers
       });
@@ -184,26 +185,8 @@ function AdminDashboard() {
         activities.push({
           type: 'membership',
           message: `New membership application from ${m.firstName} ${m.lastName}`,
-          time: getTimeAgo(m.createdAt?.toDate?.() || new Date(m.createdAt)),
-          status: m.status || 'pending'
-        });
-      });
-
-      // Recent events
-      const recentEvents = events
-        .sort((a, b) => {
-          const dateA = a.createdAt?.toDate?.() || new Date(a.createdAt || a.date);
-          const dateB = b.createdAt?.toDate?.() || new Date(b.createdAt || b.date);
-          return dateB - dateA;
-        })
-        .slice(0, 2);
-
-      recentEvents.forEach(e => {
-        activities.push({
-          type: 'event',
-          message: `Event "${e.title}" scheduled`,
-          time: getTimeAgo(e.createdAt?.toDate?.() || new Date(e.createdAt || e.date)),
-          status: 'completed'
+          time: m.createdAt?.toDate?.().toLocaleString() || 'Recent',
+          status: m.status
         });
       });
 
@@ -214,13 +197,13 @@ function AdminDashboard() {
           const dateB = b.createdAt?.toDate?.() || new Date(b.createdAt);
           return dateB - dateA;
         })
-        .slice(0, 2);
+        .slice(0, 3);
 
       recentPrayers.forEach(p => {
         activities.push({
           type: 'prayer',
-          message: `New prayer request from ${p.name}`,
-          time: getTimeAgo(p.createdAt?.toDate?.() || new Date(p.createdAt)),
+          message: `Prayer request from ${p.name}`,
+          time: p.createdAt?.toDate?.().toLocaleString() || 'Recent',
           status: p.status || 'pending'
         });
       });
@@ -228,8 +211,8 @@ function AdminDashboard() {
       // Recent contacts
       const recentContacts = contacts
         .sort((a, b) => {
-          const dateA = a.createdAt?.toDate?.() || new Date(a.createdAt);
-          const dateB = b.createdAt?.toDate?.() || new Date(b.createdAt);
+          const dateA = a.timestamp?.toDate?.() || new Date(a.timestamp);
+          const dateB = b.timestamp?.toDate?.() || new Date(b.timestamp);
           return dateB - dateA;
         })
         .slice(0, 2);
@@ -237,93 +220,22 @@ function AdminDashboard() {
       recentContacts.forEach(c => {
         activities.push({
           type: 'contact',
-          message: `Contact form submission from ${c.name}`,
-          time: getTimeAgo(c.createdAt?.toDate?.() || new Date(c.createdAt)),
-          status: c.read ? 'completed' : 'pending'
+          message: `New contact message from ${c.name}`,
+          time: c.timestamp?.toDate?.().toLocaleString() || 'Recent',
+          status: c.status || 'new'
         });
       });
 
       // Sort all activities by time
-      activities.sort((a, b) => {
-        return 0;
-      });
-
+      activities.sort((a, b) => new Date(b.time) - new Date(a.time));
       setRecentActivities(activities.slice(0, 8));
 
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-    } finally {
       setLoading(false);
     }
   };
-
-  const getTimeAgo = (date) => {
-    if (!date) return 'Unknown';
-    
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} week${Math.floor(diffDays / 7) > 1 ? 's' : ''} ago`;
-    return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) > 1 ? 's' : ''} ago`;
-  };
-
-  const statCards = [
-    {
-      title: 'Total Members',
-      value: stats.totalMembers.toString(),
-      icon: <FaUsers className="text-4xl" />,
-      color: 'bg-blue-500',
-      change: `${stats.pendingMembers} pending`,
-      trend: monthlyTrend.members,
-      subStats: [
-        { label: 'Approved', value: stats.approvedMembers, icon: <FaUserCheck /> },
-        { label: 'Pending', value: stats.pendingMembers, icon: <FaUserClock /> }
-      ]
-    },
-    {
-      title: 'Upcoming Events',
-      value: stats.upcomingEvents.toString(),
-      icon: <FaCalendar className="text-4xl" />,
-      color: 'bg-green-500',
-      change: `${stats.thisWeekEvents} this week`,
-      trend: monthlyTrend.events
-    },
-    {
-      title: 'Prayer Requests',
-      value: stats.prayerRequests.toString(),
-      icon: <FaPrayingHands className="text-4xl" />,
-      color: 'bg-purple-500',
-      change: `${stats.pendingPrayers} pending`,
-      trend: monthlyTrend.prayers
-    },
-    {
-      title: 'Messages',
-      value: stats.contacts.toString(),
-      icon: <FaEnvelope className="text-4xl" />,
-      color: 'bg-amber-500',
-      change: `${stats.unreadContacts} unread`
-    }
-  ];
-
-  // Add admin-only stats
-  if (user?.role === 'admin') {
-    statCards.push(
-      {
-        title: 'Total Users',
-        value: stats.users.toString(),
-        icon: <FaUsers className="text-4xl" />,
-        color: 'bg-indigo-500',
-        change: `${stats.activeUsers} active`
-      }
-    );
-  }
 
   if (loading) {
     return (
@@ -331,7 +243,7 @@ function AdminDashboard() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600 text-lg">Loading dashboard analytics...</p>
+            <p className="text-gray-600 text-lg">Loading dashboard...</p>
           </div>
         </div>
       </AdminLayout>
@@ -340,159 +252,290 @@ function AdminDashboard() {
 
   return (
     <AdminLayout>
+      {/* MATCHING MEMBERSHIP PAGE STRUCTURE */}
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
+        {/* Header - Same as Other Pages */}
         <div className="bg-white border-b">
           <div className="container mx-auto px-4 py-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Welcome back, {user?.displayName || user?.email}!
             </h1>
             <p className="text-gray-600">
-              {user?.role === 'admin' ? 'Administrator Dashboard' : 'Staff Dashboard'} - Real-time Analytics
+              {user?.role === 'admin' ? 'Administrator Dashboard' : 'Staff Dashboard'} - Overview & Analytics
             </p>
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="container mx-auto px-4 py-8">
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-            {statCards.map((stat, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`${stat.color} text-white p-3 rounded-lg`}>
-                    {stat.icon}
+          {/* Primary Stats Cards - MATCHING MEMBERSHIP LAYOUT */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Memberships */}
+            <Link href="/admin/memberships" className="block">
+              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-blue-100 rounded-lg">
+                    <FaUsers className="text-2xl text-blue-600" />
                   </div>
-                  {stat.trend !== undefined && (
-                    <div className={`flex items-center gap-1 text-sm font-semibold ${
-                      stat.trend >= 0 ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {stat.trend >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                      {Math.abs(stat.trend)}%
-                    </div>
-                  )}
+                  <div>
+                    <p className="text-gray-600 text-sm">Total Members</p>
+                    <p className="text-2xl font-bold">{stats.totalMembers}</p>
+                  </div>
                 </div>
-                <h3 className="text-gray-600 text-sm font-medium mb-1">{stat.title}</h3>
-                <p className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</p>
-                <p className="text-sm text-gray-500">{stat.change}</p>
-                
-                {stat.subStats && (
-                  <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between">
-                    {stat.subStats.map((sub, idx) => (
-                      <div key={idx} className="flex items-center gap-2">
-                        <span className="text-gray-400">{sub.icon}</span>
-                        <div>
-                          <p className="text-xs text-gray-500">{sub.label}</p>
-                          <p className="text-sm font-semibold text-gray-700">{sub.value}</p>
-                        </div>
-                      </div>
-                    ))}
+                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                  <div className="flex items-center gap-1 text-amber-600">
+                    <FaClock />
+                    <span>{stats.pendingMembers} pending</span>
                   </div>
-                )}
+                  <div className="flex items-center gap-1 text-green-600">
+                    <FaCheckCircle />
+                    <span>{stats.approvedMembers} approved</span>
+                  </div>
+                </div>
               </div>
-            ))}
+            </Link>
+
+            {/* Events */}
+            <Link href="/admin/events" className="block">
+              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-green-100 rounded-lg">
+                    <FaCalendar className="text-2xl text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-gray-600 text-sm">Total Events</p>
+                    <p className="text-2xl font-bold">{stats.upcomingEvents}</p>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                  <div className="flex items-center gap-1 text-blue-600">
+                    <FaCalendar />
+                    <span>{stats.thisWeekEvents} this week</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-green-600">
+                    <FaCheckCircle />
+                    <span>upcoming</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Prayer Requests */}
+            <Link href="/admin/prayers" className="block">
+              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-purple-100 rounded-lg">
+                    <FaPrayingHands className="text-2xl text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-gray-600 text-sm">Prayer Requests</p>
+                    <p className="text-2xl font-bold">{stats.prayerRequests}</p>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                  <div className="flex items-center gap-1 text-amber-600">
+                    <FaClock />
+                    <span>{stats.pendingPrayers} pending</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-green-600">
+                    <FaCheckCircle />
+                    <span>{stats.prayerRequests - stats.pendingPrayers} answered</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Contacts */}
+            <Link href="/admin/contacts" className="block">
+              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-amber-100 rounded-lg">
+                    <FaEnvelope className="text-2xl text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="text-gray-600 text-sm">Contact Messages</p>
+                    <p className="text-2xl font-bold">{stats.contacts}</p>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                  <div className="flex items-center gap-1 text-amber-600">
+                    <FaExclamationCircle />
+                    <span>{stats.newContacts} new</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-green-600">
+                    <FaCheckCircle />
+                    <span>{stats.contacts - stats.newContacts} replied</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Activity */}
-            <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
-                <button 
-                  onClick={fetchDashboardData}
-                  className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-2"
-                >
-                  <FaChartLine />
-                  Refresh
-                </button>
+          {/* Monthly Trends - MATCHING STYLE */}
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-600">Membership Growth</h3>
+                <span className={`flex items-center gap-1 text-sm font-semibold ${
+                  monthlyTrend.members >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {monthlyTrend.members >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+                  {Math.abs(monthlyTrend.members)}%
+                </span>
               </div>
-              
-              <div className="space-y-4">
-                {recentActivities.length > 0 ? (
-                  recentActivities.map((activity, index) => (
-                    <div key={index} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                        activity.status === 'pending' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'
-                      }`}>
-                        {activity.status === 'pending' ? <FaExclamationCircle /> : <FaCheckCircle />}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-gray-900 font-medium mb-1">{activity.message}</p>
-                        <p className="text-sm text-gray-500">{activity.time}</p>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        activity.status === 'pending' 
-                          ? 'bg-amber-100 text-amber-700' 
-                          : 'bg-green-100 text-green-700'
-                      }`}>
-                        {activity.status}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No recent activity</p>
-                )}
-              </div>
+              <p className="text-2xl font-bold text-gray-900">This Month</p>
+              <p className="text-sm text-gray-500 mt-1">vs last month</p>
             </div>
 
-            {/* Quick Stats Summary */}
-            <div className="bg-gradient-to-br from-blue-900 to-blue-700 rounded-lg shadow-md p-6 text-white">
-              <h2 className="text-xl font-bold mb-6">Monthly Summary</h2>
-              <div className="space-y-4">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-blue-100">New Members</span>
-                    <span className={`flex items-center gap-1 text-sm font-semibold ${
-                      monthlyTrend.members >= 0 ? 'text-green-300' : 'text-red-300'
-                    }`}>
-                      {monthlyTrend.members >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                      {Math.abs(monthlyTrend.members)}%
-                    </span>
-                  </div>
-                  <p className="text-2xl font-bold">This Month</p>
-                </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-blue-100">Events</span>
-                    <span className={`flex items-center gap-1 text-sm font-semibold ${
-                      monthlyTrend.events >= 0 ? 'text-green-300' : 'text-red-300'
-                    }`}>
-                      {monthlyTrend.events >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                      {Math.abs(monthlyTrend.events)}%
-                    </span>
-                  </div>
-                  <p className="text-2xl font-bold">Growth Rate</p>
-                </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-blue-100">Prayer Requests</span>
-                    <span className={`flex items-center gap-1 text-sm font-semibold ${
-                      monthlyTrend.prayers >= 0 ? 'text-green-300' : 'text-red-300'
-                    }`}>
-                      {monthlyTrend.prayers >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                      {Math.abs(monthlyTrend.prayers)}%
-                    </span>
-                  </div>
-                  <p className="text-2xl font-bold">Comparison</p>
-                </div>
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-600">Events Trend</h3>
+                <span className={`flex items-center gap-1 text-sm font-semibold ${
+                  monthlyTrend.events >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {monthlyTrend.events >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+                  {Math.abs(monthlyTrend.events)}%
+                </span>
               </div>
+              <p className="text-2xl font-bold text-gray-900">Growth Rate</p>
+              <p className="text-sm text-gray-500 mt-1">monthly comparison</p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-600">Prayer Requests</h3>
+                <span className={`flex items-center gap-1 text-sm font-semibold ${
+                  monthlyTrend.prayers >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {monthlyTrend.prayers >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+                  {Math.abs(monthlyTrend.prayers)}%
+                </span>
+              </div>
+              <p className="text-2xl font-bold text-gray-900">Activity</p>
+              <p className="text-sm text-gray-500 mt-1">monthly change</p>
+            </div>
+          </div>
+
+          {/* Recent Activity Table - MATCHING MEMBERSHIP TABLE STYLE */}
+          <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
+              <button 
+                onClick={fetchDashboardData}
+                className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-2"
+              >
+                <FaChartLine />
+                Refresh
+              </button>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Activity
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Time
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {recentActivities.length > 0 ? (
+                    recentActivities.map((activity, index) => (
+                      <tr key={index} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                              activity.status === 'pending' || activity.status === 'new'
+                                ? 'bg-amber-100 text-amber-600' 
+                                : 'bg-green-100 text-green-600'
+                            }`}>
+                              {activity.status === 'pending' || activity.status === 'new' 
+                                ? <FaExclamationCircle /> 
+                                : <FaCheckCircle />
+                              }
+                            </div>
+                            <div className="text-sm text-gray-900">{activity.message}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                          {activity.time}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
+                            activity.status === 'pending' || activity.status === 'new'
+                              ? 'bg-amber-100 text-amber-800' 
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            {activity.status === 'pending' || activity.status === 'new' 
+                              ? <FaClock /> 
+                              : <FaCheckCircle />
+                            }
+                            {activity.status.toUpperCase()}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="px-6 py-12 text-center">
+                        <div className="text-gray-400">
+                          <FaChartLine className="text-6xl mx-auto mb-4 opacity-20" />
+                          <p className="text-lg font-semibold">No recent activity</p>
+                          <p className="text-sm">Activity will appear here as it happens</p>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
 
           {/* Quick Actions - Admin Only */}
           {user?.role === 'admin' && (
-            <div className="mt-8 bg-gradient-to-br from-indigo-900 to-indigo-700 rounded-lg shadow-md p-6 text-white">
-              <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <a href="/admin/users" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg p-4 text-left transition-colors block">
-                  <FaUsers className="text-2xl mb-2" />
-                  <p className="font-medium">Manage Users</p>
-                  <p className="text-sm text-blue-100">Add or edit user roles</p>
-                </a>
+                <Link href="/admin/users" className="p-4 border-2 border-blue-200 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-blue-100 rounded-lg">
+                      <FaUsers className="text-xl text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Manage Users</p>
+                      <p className="text-sm text-gray-600">{stats.users} total users</p>
+                    </div>
+                  </div>
+                </Link>
                 
-                
+                <Link href="/admin/memberships" className="p-4 border-2 border-green-200 rounded-lg hover:border-green-400 hover:bg-green-50 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-green-100 rounded-lg">
+                      <FaUserCheck className="text-xl text-green-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Review Members</p>
+                      <p className="text-sm text-gray-600">{stats.pendingMembers} pending</p>
+                    </div>
+                  </div>
+                </Link>
+
+                <Link href="/admin/prayers" className="p-4 border-2 border-purple-200 rounded-lg hover:border-purple-400 hover:bg-purple-50 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 bg-purple-100 rounded-lg">
+                      <FaPrayingHands className="text-xl text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900">Prayer Requests</p>
+                      <p className="text-sm text-gray-600">{stats.pendingPrayers} to review</p>
+                    </div>
+                  </div>
+                </Link>
               </div>
             </div>
           )}
