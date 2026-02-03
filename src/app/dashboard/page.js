@@ -1,7 +1,8 @@
+// src/app/dashboard/page.js
 'use client';
 import { useAuth } from '@/contexts/AuthContext';
 import withAuth from '@/components/withAuth';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { 
@@ -18,7 +19,7 @@ function UserDashboard() {
       description: 'View and manage your prayer requests',
       icon: <FaPrayingHands className="text-4xl" />,
       color: 'from-purple-500 to-purple-600',
-      href: '/prayers'
+      href: '/prayer'
     },
     {
       title: 'Upcoming Events',
@@ -32,20 +33,20 @@ function UserDashboard() {
       description: 'Watch recent sermon recordings',
       icon: <FaBook className="text-4xl" />,
       color: 'from-amber-500 to-amber-600',
-      href: '/sermons'
+      href: '/about'
     },
     {
-      title: 'My Groups',
+      title: 'Small Groups',
       description: 'Connect with your small groups',
       icon: <FaUsers className="text-4xl" />,
       color: 'from-green-500 to-green-600',
-      href: '/groups'
+      href: '/small-groups'
     }
   ];
 
   return (
     <>
-      <Navbar />
+      <Header />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-amber-50">
         <div className="container mx-auto px-4 py-12">
           {/* Welcome Section */}
@@ -71,11 +72,11 @@ function UserDashboard() {
               </div>
               <div className="text-center">
                 <p className="text-gray-600 text-sm mb-1">Prayer Requests</p>
-                <p className="text-lg font-semibold text-gray-900">3 Active</p>
+                <p className="text-lg font-semibold text-gray-900">Active</p>
               </div>
               <div className="text-center">
                 <p className="text-gray-600 text-sm mb-1">Events Attended</p>
-                <p className="text-lg font-semibold text-gray-900">12 Total</p>
+                <p className="text-lg font-semibold text-gray-900">Welcome!</p>
               </div>
             </div>
           </div>
@@ -111,25 +112,25 @@ function UserDashboard() {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Announcements</h2>
             <div className="space-y-4">
               <div className="border-l-4 border-blue-600 pl-4 py-2">
-                <h3 className="font-semibold text-gray-900 mb-1">Easter Service Schedule</h3>
+                <h3 className="font-semibold text-gray-900 mb-1">Welcome to Grace Church!</h3>
                 <p className="text-gray-600 text-sm mb-2">
-                  Join us for special Easter services - Good Friday at 7 PM and Easter Sunday at 9 AM & 11 AM
+                  We're glad you're here. Join us for our Sunday services and connect with our community.
                 </p>
-                <p className="text-xs text-gray-500">Posted 2 days ago</p>
+                <p className="text-xs text-gray-500">Posted recently</p>
               </div>
               <div className="border-l-4 border-green-600 pl-4 py-2">
-                <h3 className="font-semibold text-gray-900 mb-1">New Bible Study Groups Starting</h3>
+                <h3 className="font-semibold text-gray-900 mb-1">Small Groups Starting</h3>
                 <p className="text-gray-600 text-sm mb-2">
-                  Sign up for our spring Bible study groups beginning next month
+                  Sign up for our small groups and connect with other believers in a more intimate setting
                 </p>
-                <p className="text-xs text-gray-500">Posted 5 days ago</p>
+                <p className="text-xs text-gray-500">Posted this week</p>
               </div>
               <div className="border-l-4 border-purple-600 pl-4 py-2">
                 <h3 className="font-semibold text-gray-900 mb-1">Community Outreach Event</h3>
                 <p className="text-gray-600 text-sm mb-2">
-                  Join us in serving the community this Saturday at the local food bank
+                  Join us in serving the community and making a difference together
                 </p>
-                <p className="text-xs text-gray-500">Posted 1 week ago</p>
+                <p className="text-xs text-gray-500">Coming soon</p>
               </div>
             </div>
           </div>
@@ -148,9 +149,9 @@ function UserDashboard() {
                   Explore Ministries
                 </button>
               </Link>
-              <Link href="/volunteer">
+              <Link href="/small-groups">
                 <button className="bg-blue-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                  Volunteer Opportunities
+                  Join a Small Group
                 </button>
               </Link>
             </div>

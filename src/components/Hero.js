@@ -116,27 +116,12 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Additional Info Tags */}
-          <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <span className="bg-white/10 backdrop-blur-md px-6 py-2 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
-              🎵 Live Worship
-            </span>
-            <span className="bg-white/10 backdrop-blur-md px-6 py-2 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
-              📖 Biblical Teaching
-            </span>
-            <span className="bg-white/10 backdrop-blur-md px-6 py-2 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
-              👨‍👩‍👧‍👦 Family Friendly
-            </span>
-            <span className="bg-white/10 backdrop-blur-md px-6 py-2 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
-              🤝 Warm Community
-            </span>
-          </div>
         </div>
       </div>
       
-      {/* Enhanced Decorative Wave with Gradient */}
+      {/* ENHANCED WAVE WITH INCREASED CURVATURE */}
       <div className="absolute bottom-0 w-full z-20">
-        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto drop-shadow-2xl">
+        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto drop-shadow-2xl">
           <defs>
             <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" style={{stopColor: '#ffffff', stopOpacity: 1}} />
@@ -144,7 +129,8 @@ export default function Hero() {
               <stop offset="100%" style={{stopColor: '#ffffff', stopOpacity: 1}} />
             </linearGradient>
           </defs>
-          <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 80C1200 80 1320 70 1380 65L1440 60V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" 
+          {/* Increased curvature - deeper waves with more pronounced curves */}
+          <path d="M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 140C1248 130 1344 120 1392 115L1440 110V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z" 
                 fill="url(#waveGradient)"/>
         </svg>
       </div>

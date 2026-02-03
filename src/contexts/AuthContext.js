@@ -1,3 +1,4 @@
+// src/contexts/AuthContext.js - CORRECTED VERSION
 'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { 
@@ -6,8 +7,8 @@ import {
   signOut,
   createUserWithEmailAndPassword 
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 
 const AuthContext = createContext({});
@@ -20,50 +21,36 @@ export function AuthProvider({ children }) {
   const router = useRouter();
 
   useEffect(() => {
+    console.log('🔄 AuthProvider mounted - setting up auth listener');
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      console.log('🔥 Auth State Changed:', firebaseUser?.email);
+      console.log('🔔 Auth state changed:', firebaseUser?.email);
       
       if (firebaseUser) {
         try {
-          // Fetch user data from Firestore
           const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
           
           if (userDoc.exists()) {
-            const userData = userDoc.data();
-            console.log('📄 User Data from Firestore:', userData);
-            
-            setUser({
+            const userData = {
               uid: firebaseUser.uid,
               email: firebaseUser.email,
-              displayName: userData.displayName || firebaseUser.displayName,
-              role: userData.role || 'user',
-              isActive: userData.isActive !== undefined ? userData.isActive : true,
-              ...userData
-            });
-          } else {
-            // If user document doesn't exist, create it with default role
-            const newUserData = {
-              displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
-              email: firebaseUser.email,
-              role: 'user',
-              isActive: true,
-              createdAt: new Date()
+              ...userDoc.data()
             };
-            
-            await setDoc(doc(db, 'users', firebaseUser.uid), newUserData);
-            
-            setUser({
-              uid: firebaseUser.uid,
-              email: firebaseUser.email,
-              ...newUserData
+            console.log('✅ User data loaded:', { 
+              email: userData.email, 
+              role: userData.role,
+              isActive: userData.isActive 
             });
+            setUser(userData);
+          } else {
+            console.warn('⚠️ User document not found in Firestore');
+            setUser(null);
           }
         } catch (error) {
           console.error('❌ Error fetching user data:', error);
           setUser(null);
         }
       } else {
-        console.log('👤 No authenticated user');
+        console.log('👤 No user logged in');
         setUser(null);
       }
       
@@ -92,12 +79,12 @@ export function AuthProvider({ children }) {
         }
         
         // Redirect based on role
-        if (userData.role === 'admin') {
+        if (userData.role === 'admin' || userData.role === 'staff') {
           console.log('🔀 Redirecting to admin dashboard');
           router.push('/admin');
         } else {
-          console.log('🔀 Redirecting to user dashboard');
-          router.push('/dashboard');
+          console.log('🔀 Redirecting regular user to home page');
+          router.push('/'); // CHANGED: Redirect regular users to home page
         }
         
         return { success: true, role: userData.role };
@@ -134,7 +121,8 @@ export function AuthProvider({ children }) {
         createdAt: new Date()
       });
 
-      router.push('/dashboard');
+      // CHANGED: Redirect new users to home page instead of dashboard
+      router.push('/');
       return { success: true };
     } catch (error) {
       console.error('Signup error:', error);
