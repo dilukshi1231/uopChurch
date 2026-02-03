@@ -25,7 +25,6 @@ export default function AdminLayout({ children }) {
   if (user?.role === 'admin') {
     navigation.push(
       { name: 'Users', href: '/admin/users', icon: <FaUsersCog /> }
-      //{ name: 'Reports', href: '/admin/reports', icon: <FaChartLine /> }
     );
   }
 
@@ -87,12 +86,10 @@ export default function AdminLayout({ children }) {
         </div>
       </aside>
 
-      {/* Main Content - NO FOOTER, NO USER NAVBAR */}
-      <div className={`transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-20'}`}>
-        <div className="min-h-screen">
-          {children}
-        </div>
-      </div>
+      {/* Main Content - FIXED: Removed unnecessary nested div */}
+      <main className={`transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-20'}`}>
+        {children}
+      </main>
     </div>
   );
 }

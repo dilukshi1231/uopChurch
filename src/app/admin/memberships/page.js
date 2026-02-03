@@ -18,7 +18,6 @@ import {
 import { 
   FaUsers, 
   FaSearch, 
-  FaFilter, 
   FaCheckCircle, 
   FaTimesCircle,
   FaClock,
@@ -33,30 +32,31 @@ import {
   FaPlus,
   FaUserPlus,
   FaCalendarAlt,
-  FaIdCard
+  FaIdCard,
+  FaEdit
 } from 'react-icons/fa';
 
 // ✅ MOVED OUTSIDE - Component declared outside to prevent recreation
 const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMember, actionLoading }) => {
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-gradient-to-r from-green-900 to-green-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-blue-600 text-white p-6 rounded-t-lg flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold mb-1">Add New Member</h2>
-            <p className="text-green-200 text-sm">Manually add a member to the church</p>
+            <h2 className="text-2xl font-bold">Add New Member</h2>
+            <p className="text-blue-100 text-sm mt-1">Manually add a member to the church</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            className="p-2 hover:bg-blue-700 rounded transition-colors"
           >
-            <FaTimes className="text-2xl" />
+            <FaTimes className="text-xl" />
           </button>
         </div>
 
         <form onSubmit={handleAddMember} className="p-6 space-y-6">
           {/* Personal Information */}
-          <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
+          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
               <FaIdCard className="text-blue-600" />
               Personal Information
@@ -103,9 +103,9 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
           </div>
 
           {/* Contact Information */}
-          <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
+          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaEnvelope className="text-green-600" />
+              <FaEnvelope className="text-blue-600" />
               Contact Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -139,9 +139,9 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
           </div>
 
           {/* Address */}
-          <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
+          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaMapMarkerAlt className="text-purple-600" />
+              <FaMapMarkerAlt className="text-blue-600" />
               Address
             </h3>
             <div className="space-y-4">
@@ -207,7 +207,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
             <button
               type="submit"
               disabled={actionLoading}
-              className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {actionLoading ? (
                 <>
@@ -224,7 +224,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
             >
               Cancel
             </button>
@@ -240,30 +240,30 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
   if (!membership) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between z-10">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-blue-600 text-white p-6 rounded-t-lg flex items-center justify-between z-10">
           <div>
-            <h2 className="text-2xl font-bold mb-1">{membership.firstName} {membership.lastName}</h2>
-            <p className="text-blue-200 text-sm">Membership Request Details</p>
+            <h2 className="text-2xl font-bold">{membership.firstName} {membership.lastName}</h2>
+            <p className="text-blue-100 text-sm mt-1">Membership Request Details</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            className="p-2 hover:bg-blue-700 rounded transition-colors"
           >
-            <FaTimes className="text-2xl" />
+            <FaTimes className="text-xl" />
           </button>
         </div>
 
         <div className="p-6 space-y-6">
           {/* Status */}
-          <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-white p-4 rounded-xl border border-blue-100">
+          <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200">
             <span className="text-gray-700 font-semibold">Current Status:</span>
             {getStatusBadge(membership.status)}
           </div>
 
           {/* Personal Information */}
-          <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl p-6 border border-blue-100">
+          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
               <FaIdCard className="text-blue-600" />
               Personal Information
@@ -279,7 +279,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
               </div>
               <div>
                 <p className="text-sm text-gray-600 font-semibold mb-1 flex items-center gap-2">
-                  <FaBirthdayCake className="text-amber-600" />
+                  <FaBirthdayCake className="text-blue-600" />
                   Date of Birth
                 </p>
                 <p className="text-gray-900 font-medium">{membership.dateOfBirth || 'Not provided'}</p>
@@ -288,22 +288,22 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
           </div>
 
           {/* Contact Information */}
-          <div className="bg-gradient-to-br from-green-50 to-white rounded-xl p-6 border border-green-100">
+          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaEnvelope className="text-green-600" />
+              <FaEnvelope className="text-blue-600" />
               Contact Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-600 font-semibold mb-1 flex items-center gap-2">
-                  <FaEnvelope className="text-green-600" />
+                  <FaEnvelope className="text-blue-600" />
                   Email
                 </p>
                 <p className="text-gray-900 font-medium">{membership.email}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 font-semibold mb-1 flex items-center gap-2">
-                  <FaPhone className="text-green-600" />
+                  <FaPhone className="text-blue-600" />
                   Phone
                 </p>
                 <p className="text-gray-900 font-medium">{membership.phone}</p>
@@ -313,9 +313,9 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
 
           {/* Address */}
           {(membership.address || membership.city || membership.state) && (
-            <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl p-6 border border-purple-100">
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FaMapMarkerAlt className="text-purple-600" />
+                <FaMapMarkerAlt className="text-blue-600" />
                 Address
               </h3>
               <div className="space-y-2">
@@ -329,14 +329,14 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
 
           {/* Message */}
           {membership.message && (
-            <div className="bg-gradient-to-br from-amber-50 to-white rounded-xl p-6 border border-amber-100">
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
               <h3 className="text-lg font-bold text-gray-900 mb-3">Additional Information</h3>
               <p className="text-gray-700 leading-relaxed">{membership.message}</p>
             </div>
           )}
 
           {/* Submission Date */}
-          <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-4 border border-gray-200">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
             <div className="flex items-center gap-2 text-gray-600">
               <FaCalendarAlt />
               <span className="text-sm">
@@ -352,7 +352,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
                 <button
                   onClick={() => updateMembershipStatus(membership.id, 'approved')}
                   disabled={actionLoading}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {actionLoading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -366,7 +366,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
                 <button
                   onClick={() => updateMembershipStatus(membership.id, 'rejected')}
                   disabled={actionLoading}
-                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {actionLoading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -383,7 +383,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
               <button
                 onClick={() => updateMembershipStatus(membership.id, 'pending')}
                 disabled={actionLoading}
-                className="flex-1 bg-gradient-to-r from-amber-600 to-amber-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {actionLoading ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -398,7 +398,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
             <button
               onClick={() => deleteMembership(membership.id)}
               disabled={actionLoading}
-              className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-xl font-semibold hover:from-gray-800 hover:to-gray-900 transition-all flex items-center gap-2 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FaTrash />
               Delete
@@ -497,7 +497,7 @@ function MembershipsPage() {
       
       // Show success message
       const statusMessages = {
-        approved: 'Membership approved successfully! 🎉',
+        approved: 'Membership approved successfully!',
         rejected: 'Membership request rejected.',
         pending: 'Status changed to pending.'
       };
@@ -575,7 +575,7 @@ function MembershipsPage() {
         message: ''
       });
 
-      alert('Member added successfully! 🎉');
+      alert('Member added successfully!');
       setShowAddModal(false);
       await fetchMemberships();
     } catch (error) {
@@ -620,9 +620,9 @@ function MembershipsPage() {
 
   const getStatusBadge = (status) => {
     const badges = {
-      pending: 'bg-amber-100 text-amber-800 border-amber-300',
-      approved: 'bg-green-100 text-green-800 border-green-300',
-      rejected: 'bg-red-100 text-red-800 border-red-300'
+      pending: 'bg-amber-100 text-amber-800',
+      approved: 'bg-green-100 text-green-800',
+      rejected: 'bg-red-100 text-red-800'
     };
 
     const icons = {
@@ -632,7 +632,7 @@ function MembershipsPage() {
     };
 
     return (
-      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold border ${badges[status] || 'bg-gray-100 text-gray-800'}`}>
+      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold ${badges[status] || 'bg-gray-100 text-gray-800'}`}>
         {icons[status]}
         {status?.charAt(0).toUpperCase() + status?.slice(1) || 'Unknown'}
       </span>
@@ -642,15 +642,15 @@ function MembershipsPage() {
   if (loading) {
     return (
       <AdminLayout>
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-900 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600 text-lg">Loading memberships...</p>
           </div>
         </div>
       </AdminLayout>
     );
-  }
+  };
 
   const stats = {
     total: memberships.length,
@@ -661,43 +661,47 @@ function MembershipsPage() {
 
   return (
     <AdminLayout>
-      <div className="min-h-screen bg-gray-50">
+      <div className="bg-gray-50 p-4 md:p-6">
         {/* Header */}
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-6">
-            <h1 className="text-4xl font-bold text-gray-900 flex items-center gap-3">
-              <FaUsers className="text-blue-600" />
-              Membership Management
-            </h1>
-            <p className="text-gray-600 text-lg mt-1">
-              Review and manage church membership requests
-            </p>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Membership Management</h1>
+          <p className="text-gray-600">Review and manage church membership requests</p>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-600 hover:shadow-xl transition-shadow">
-              <p className="text-gray-600 text-sm font-semibold mb-1">Total Requests</p>
+            <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-4">
+                <FaUsers className="text-3xl text-blue-600" />
+              </div>
+              <p className="text-gray-600 text-sm font-medium mb-1">Total Requests</p>
               <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-amber-600 hover:shadow-xl transition-shadow">
-              <p className="text-gray-600 text-sm font-semibold mb-1">Pending Review</p>
+            <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-4">
+                <FaClock className="text-3xl text-amber-600" />
+              </div>
+              <p className="text-gray-600 text-sm font-medium mb-1">Pending Review</p>
               <p className="text-3xl font-bold text-amber-600">{stats.pending}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-600 hover:shadow-xl transition-shadow">
-              <p className="text-gray-600 text-sm font-semibold mb-1">Approved</p>
+            <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-4">
+                <FaCheckCircle className="text-3xl text-green-600" />
+              </div>
+              <p className="text-gray-600 text-sm font-medium mb-1">Approved</p>
               <p className="text-3xl font-bold text-green-600">{stats.approved}</p>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-600 hover:shadow-xl transition-shadow">
-              <p className="text-gray-600 text-sm font-semibold mb-1">Rejected</p>
+            <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center justify-between mb-4">
+                <FaTimesCircle className="text-3xl text-red-600" />
+              </div>
+              <p className="text-gray-600 text-sm font-medium mb-1">Rejected</p>
               <p className="text-3xl font-bold text-red-600">{stats.rejected}</p>
             </div>
           </div>
 
           {/* Filters and Search */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
                 <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -722,14 +726,14 @@ function MembershipsPage() {
                 </select>
                 <button
                   onClick={() => setShowAddModal(true)}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all flex items-center gap-2 shadow-lg"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
                 >
                   <FaPlus />
                   Add Member
                 </button>
                 <button
                   onClick={exportToCSV}
-                  className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all flex items-center gap-2 shadow-lg"
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center gap-2"
                 >
                   <FaDownload />
                   Export CSV
@@ -739,76 +743,73 @@ function MembershipsPage() {
           </div>
 
           {/* Memberships Table */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gradient-to-r from-blue-900 to-blue-800 text-white">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-bold">Name</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold">Contact</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold">Date of Birth</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold">Submitted</th>
-                    <th className="px-6 py-4 text-left text-sm font-bold">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {filteredMemberships.length > 0 ? (
-                    filteredMemberships.map((membership) => (
-                      <tr 
-                        key={membership.id}
-                        className="hover:bg-blue-50 transition-colors"
-                      >
-                        <td className="px-6 py-4">
-                          <p className="font-semibold text-gray-900">{membership.firstName} {membership.lastName}</p>
-                          <p className="text-sm text-gray-500">
-                            {membership.address && `${membership.address}, `}
-                            {membership.city && `${membership.city}`}
-                          </p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-sm text-gray-900">{membership.email}</p>
-                          <p className="text-sm text-gray-500">{membership.phone}</p>
-                        </td>
-                        <td className="px-6 py-4 text-gray-900">
-                          {membership.dateOfBirth || 'N/A'}
-                        </td>
-                        <td className="px-6 py-4">
-                          {getStatusBadge(membership.status)}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {membership.createdAt?.toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4">
-                          <button
-                            onClick={() => {
-                              setSelectedMembership(membership);
-                              setShowModal(true);
-                            }}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium"
-                          >
-                            <FaEye />
-                            View Details
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="px-6 py-12 text-center">
-                        <div className="text-gray-400">
-                          <FaUsers className="text-6xl mx-auto mb-4 opacity-20" />
-                          <p className="text-lg font-semibold">No memberships found</p>
-                          <p className="text-sm">Try adjusting your search or filters</p>
-                        </div>
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Contact</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date of Birth</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Submitted</th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {filteredMemberships.length > 0 ? (
+                  filteredMemberships.map((membership) => (
+                    <tr 
+                      key={membership.id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <p className="font-medium text-gray-900">{membership.firstName} {membership.lastName}</p>
+                        <p className="text-sm text-gray-500">
+                          {membership.address && `${membership.address}, `}
+                          {membership.city && `${membership.city}`}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm text-gray-900">{membership.email}</p>
+                        <p className="text-sm text-gray-500">{membership.phone}</p>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900">
+                        {membership.dateOfBirth || 'N/A'}
+                      </td>
+                      <td className="px-6 py-4">
+                        {getStatusBadge(membership.status)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {membership.createdAt?.toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => {
+                            setSelectedMembership(membership);
+                            setShowModal(true);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                        >
+                          <FaEye />
+                          View
+                        </button>
                       </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-12 text-center">
+                      <div className="text-gray-400">
+                        <FaUsers className="text-6xl mx-auto mb-4 opacity-20" />
+                        <p className="text-lg font-semibold">No memberships found</p>
+                        <p className="text-sm">Try adjusting your search or filters</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-        </div>
 
         {/* Modals */}
         {showModal && (

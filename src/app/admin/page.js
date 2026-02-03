@@ -134,9 +134,7 @@ function AdminDashboard() {
       
       const unreadContacts = contacts.filter(c => !c.read).length;
 
-      // Fetch Sermons
-      const sermonsRef = collection(db, 'sermons');
-      const sermonsSnapshot = await getDocs(sermonsRef);
+      
 
       // Fetch Users (admin only)
       let totalUsers = 0;
@@ -160,7 +158,6 @@ function AdminDashboard() {
         pendingPrayers,
         contacts: contactsSnapshot.size,
         unreadContacts,
-        sermons: sermonsSnapshot.size,
         users: totalUsers,
         activeUsers
       });
@@ -324,13 +321,6 @@ function AdminDashboard() {
         icon: <FaUsers className="text-4xl" />,
         color: 'bg-indigo-500',
         change: `${stats.activeUsers} active`
-      },
-      {
-        title: 'Sermons',
-        value: stats.sermons.toString(),
-        icon: <FaBook className="text-4xl" />,
-        color: 'bg-rose-500',
-        change: 'Total uploaded'
       }
     );
   }
