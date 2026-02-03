@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import withAuth from '@/components/withAuth';
-import AdminLayout from '@/components/AdminLayout';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, query, where, orderBy, limit, Timestamp } from 'firebase/firestore';
 import { 
@@ -239,309 +238,304 @@ function AdminDashboard() {
 
   if (loading) {
     return (
-      <AdminLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600 text-lg">Loading dashboard...</p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-900 mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading dashboard...</p>
         </div>
-      </AdminLayout>
+      </div>
     );
   }
 
   return (
-    <AdminLayout>
-      {/* MATCHING MEMBERSHIP PAGE STRUCTURE */}
-      <div className="min-h-screen bg-gray-50">
-        {/* Header - Same as Other Pages */}
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome back, {user?.displayName || user?.email}!
-            </h1>
-            <p className="text-gray-600">
-              {user?.role === 'admin' ? 'Administrator Dashboard' : 'Staff Dashboard'} - Overview & Analytics
-            </p>
-          </div>
-        </div>
-
-        <div className="container mx-auto px-4 py-8">
-          {/* Primary Stats Cards - MATCHING MEMBERSHIP LAYOUT */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {/* Memberships */}
-            <Link href="/admin/memberships" className="block">
-              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <FaUsers className="text-2xl text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-gray-600 text-sm">Total Members</p>
-                    <p className="text-2xl font-bold">{stats.totalMembers}</p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-                  <div className="flex items-center gap-1 text-amber-600">
-                    <FaClock />
-                    <span>{stats.pendingMembers} pending</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-green-600">
-                    <FaCheckCircle />
-                    <span>{stats.approvedMembers} approved</span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Events */}
-            <Link href="/admin/events" className="block">
-              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-100 rounded-lg">
-                    <FaCalendar className="text-2xl text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-gray-600 text-sm">Total Events</p>
-                    <p className="text-2xl font-bold">{stats.upcomingEvents}</p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-                  <div className="flex items-center gap-1 text-blue-600">
-                    <FaCalendar />
-                    <span>{stats.thisWeekEvents} this week</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-green-600">
-                    <FaCheckCircle />
-                    <span>upcoming</span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Prayer Requests */}
-            <Link href="/admin/prayers" className="block">
-              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-100 rounded-lg">
-                    <FaPrayingHands className="text-2xl text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="text-gray-600 text-sm">Prayer Requests</p>
-                    <p className="text-2xl font-bold">{stats.prayerRequests}</p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-                  <div className="flex items-center gap-1 text-amber-600">
-                    <FaClock />
-                    <span>{stats.pendingPrayers} pending</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-green-600">
-                    <FaCheckCircle />
-                    <span>{stats.prayerRequests - stats.pendingPrayers} answered</span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Contacts */}
-            <Link href="/admin/contacts" className="block">
-              <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-amber-100 rounded-lg">
-                    <FaEnvelope className="text-2xl text-amber-600" />
-                  </div>
-                  <div>
-                    <p className="text-gray-600 text-sm">Contact Messages</p>
-                    <p className="text-2xl font-bold">{stats.contacts}</p>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-                  <div className="flex items-center gap-1 text-amber-600">
-                    <FaExclamationCircle />
-                    <span>{stats.newContacts} new</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-green-600">
-                    <FaCheckCircle />
-                    <span>{stats.contacts - stats.newContacts} replied</span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* Monthly Trends - MATCHING STYLE */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-600">Membership Growth</h3>
-                <span className={`flex items-center gap-1 text-sm font-semibold ${
-                  monthlyTrend.members >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {monthlyTrend.members >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                  {Math.abs(monthlyTrend.members)}%
-                </span>
-              </div>
-              <p className="text-2xl font-bold text-gray-900">This Month</p>
-              <p className="text-sm text-gray-500 mt-1">vs last month</p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-600">Events Trend</h3>
-                <span className={`flex items-center gap-1 text-sm font-semibold ${
-                  monthlyTrend.events >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {monthlyTrend.events >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                  {Math.abs(monthlyTrend.events)}%
-                </span>
-              </div>
-              <p className="text-2xl font-bold text-gray-900">Growth Rate</p>
-              <p className="text-sm text-gray-500 mt-1">monthly comparison</p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-600">Prayer Requests</h3>
-                <span className={`flex items-center gap-1 text-sm font-semibold ${
-                  monthlyTrend.prayers >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {monthlyTrend.prayers >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                  {Math.abs(monthlyTrend.prayers)}%
-                </span>
-              </div>
-              <p className="text-2xl font-bold text-gray-900">Activity</p>
-              <p className="text-sm text-gray-500 mt-1">monthly change</p>
-            </div>
-          </div>
-
-          {/* Recent Activity Table - MATCHING MEMBERSHIP TABLE STYLE */}
-          <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
-              <button 
-                onClick={fetchDashboardData}
-                className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-2"
-              >
-                <FaChartLine />
-                Refresh
-              </button>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Activity
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Time
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {recentActivities.length > 0 ? (
-                    recentActivities.map((activity, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                              activity.status === 'pending' || activity.status === 'new'
-                                ? 'bg-amber-100 text-amber-600' 
-                                : 'bg-green-100 text-green-600'
-                            }`}>
-                              {activity.status === 'pending' || activity.status === 'new' 
-                                ? <FaExclamationCircle /> 
-                                : <FaCheckCircle />
-                              }
-                            </div>
-                            <div className="text-sm text-gray-900">{activity.message}</div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {activity.time}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
-                            activity.status === 'pending' || activity.status === 'new'
-                              ? 'bg-amber-100 text-amber-800' 
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                            {activity.status === 'pending' || activity.status === 'new' 
-                              ? <FaClock /> 
-                              : <FaCheckCircle />
-                            }
-                            {activity.status.toUpperCase()}
-                          </span>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="3" className="px-6 py-12 text-center">
-                        <div className="text-gray-400">
-                          <FaChartLine className="text-6xl mx-auto mb-4 opacity-20" />
-                          <p className="text-lg font-semibold">No recent activity</p>
-                          <p className="text-sm">Activity will appear here as it happens</p>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Quick Actions - Admin Only */}
-          {user?.role === 'admin' && (
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Link href="/admin/users" className="p-4 border-2 border-blue-200 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-blue-100 rounded-lg">
-                      <FaUsers className="text-xl text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">Manage Users</p>
-                      <p className="text-sm text-gray-600">{stats.users} total users</p>
-                    </div>
-                  </div>
-                </Link>
-                
-                <Link href="/admin/memberships" className="p-4 border-2 border-green-200 rounded-lg hover:border-green-400 hover:bg-green-50 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-green-100 rounded-lg">
-                      <FaUserCheck className="text-xl text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">Review Members</p>
-                      <p className="text-sm text-gray-600">{stats.pendingMembers} pending</p>
-                    </div>
-                  </div>
-                </Link>
-
-                <Link href="/admin/prayers" className="p-4 border-2 border-purple-200 rounded-lg hover:border-purple-400 hover:bg-purple-50 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-purple-100 rounded-lg">
-                      <FaPrayingHands className="text-xl text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">Prayer Requests</p>
-                      <p className="text-sm text-gray-600">{stats.pendingPrayers} to review</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - Matching Other Pages */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-6">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome back, {user?.displayName || user?.email}!
+          </h1>
+          <p className="text-gray-600">
+            {user?.role === 'admin' ? 'Administrator Dashboard' : 'Staff Dashboard'} - Overview & Analytics
+          </p>
         </div>
       </div>
-    </AdminLayout>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Primary Stats Cards - MATCHING MEMBERSHIP LAYOUT */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Memberships */}
+          <Link href="/admin/memberships" className="block">
+            <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <FaUsers className="text-2xl text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-gray-600 text-sm">Total Members</p>
+                  <p className="text-2xl font-bold">{stats.totalMembers}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                <div className="flex items-center gap-1 text-amber-600">
+                  <FaClock />
+                  <span>{stats.pendingMembers} pending</span>
+                </div>
+                <div className="flex items-center gap-1 text-green-600">
+                  <FaCheckCircle />
+                  <span>{stats.approvedMembers} approved</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Events */}
+          <Link href="/admin/events" className="block">
+            <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <FaCalendar className="text-2xl text-green-600" />
+                </div>
+                <div>
+                  <p className="text-gray-600 text-sm">Total Events</p>
+                  <p className="text-2xl font-bold">{stats.upcomingEvents}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                <div className="flex items-center gap-1 text-blue-600">
+                  <FaCalendar />
+                  <span>{stats.thisWeekEvents} this week</span>
+                </div>
+                <div className="flex items-center gap-1 text-green-600">
+                  <FaCheckCircle />
+                  <span>upcoming</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Prayer Requests */}
+          <Link href="/admin/prayers" className="block">
+            <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-purple-100 rounded-lg">
+                  <FaPrayingHands className="text-2xl text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-gray-600 text-sm">Prayer Requests</p>
+                  <p className="text-2xl font-bold">{stats.prayerRequests}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                <div className="flex items-center gap-1 text-amber-600">
+                  <FaClock />
+                  <span>{stats.pendingPrayers} pending</span>
+                </div>
+                <div className="flex items-center gap-1 text-green-600">
+                  <FaCheckCircle />
+                  <span>{stats.prayerRequests - stats.pendingPrayers} answered</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Contacts */}
+          <Link href="/admin/contacts" className="block">
+            <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-amber-100 rounded-lg">
+                  <FaEnvelope className="text-2xl text-amber-600" />
+                </div>
+                <div>
+                  <p className="text-gray-600 text-sm">Contact Messages</p>
+                  <p className="text-2xl font-bold">{stats.contacts}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                <div className="flex items-center gap-1 text-amber-600">
+                  <FaExclamationCircle />
+                  <span>{stats.newContacts} new</span>
+                </div>
+                <div className="flex items-center gap-1 text-green-600">
+                  <FaCheckCircle />
+                  <span>{stats.contacts - stats.newContacts} replied</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* Monthly Trends - MATCHING STYLE */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-gray-600">Membership Growth</h3>
+              <span className={`flex items-center gap-1 text-sm font-semibold ${
+                monthlyTrend.members >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {monthlyTrend.members >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+                {Math.abs(monthlyTrend.members)}%
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">This Month</p>
+            <p className="text-sm text-gray-500 mt-1">vs last month</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-gray-600">Events Trend</h3>
+              <span className={`flex items-center gap-1 text-sm font-semibold ${
+                monthlyTrend.events >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {monthlyTrend.events >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+                {Math.abs(monthlyTrend.events)}%
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">Growth Rate</p>
+            <p className="text-sm text-gray-500 mt-1">monthly comparison</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-gray-600">Prayer Requests</h3>
+              <span className={`flex items-center gap-1 text-sm font-semibold ${
+                monthlyTrend.prayers >= 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {monthlyTrend.prayers >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+                {Math.abs(monthlyTrend.prayers)}%
+              </span>
+            </div>
+            <p className="text-2xl font-bold text-gray-900">Activity</p>
+            <p className="text-sm text-gray-500 mt-1">monthly change</p>
+          </div>
+        </div>
+
+        {/* Recent Activity Table - MATCHING MEMBERSHIP TABLE STYLE */}
+        <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
+          <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
+            <button 
+              onClick={fetchDashboardData}
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-2"
+            >
+              <FaChartLine />
+              Refresh
+            </button>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Activity
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Time
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {recentActivities.length > 0 ? (
+                  recentActivities.map((activity, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                            activity.status === 'pending' || activity.status === 'new'
+                              ? 'bg-amber-100 text-amber-600' 
+                              : 'bg-green-100 text-green-600'
+                          }`}>
+                            {activity.status === 'pending' || activity.status === 'new' 
+                              ? <FaExclamationCircle /> 
+                              : <FaCheckCircle />
+                            }
+                          </div>
+                          <div className="text-sm text-gray-900">{activity.message}</div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {activity.time}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
+                          activity.status === 'pending' || activity.status === 'new'
+                            ? 'bg-amber-100 text-amber-800' 
+                            : 'bg-green-100 text-green-800'
+                        }`}>
+                          {activity.status === 'pending' || activity.status === 'new' 
+                            ? <FaClock /> 
+                            : <FaCheckCircle />
+                          }
+                          {activity.status.toUpperCase()}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="px-6 py-12 text-center">
+                      <div className="text-gray-400">
+                        <FaChartLine className="text-6xl mx-auto mb-4 opacity-20" />
+                        <p className="text-lg font-semibold">No recent activity</p>
+                        <p className="text-sm">Activity will appear here as it happens</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Quick Actions - Admin Only */}
+        {user?.role === 'admin' && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Link href="/admin/users" className="p-4 border-2 border-blue-200 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-blue-100 rounded-lg">
+                    <FaUsers className="text-xl text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Manage Users</p>
+                    <p className="text-sm text-gray-600">{stats.users} total users</p>
+                  </div>
+                </div>
+              </Link>
+              
+              <Link href="/admin/memberships" className="p-4 border-2 border-green-200 rounded-lg hover:border-green-400 hover:bg-green-50 transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-green-100 rounded-lg">
+                    <FaUserCheck className="text-xl text-green-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Review Members</p>
+                    <p className="text-sm text-gray-600">{stats.pendingMembers} pending</p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link href="/admin/prayers" className="p-4 border-2 border-purple-200 rounded-lg hover:border-purple-400 hover:bg-purple-50 transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-purple-100 rounded-lg">
+                    <FaPrayingHands className="text-xl text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Prayer Requests</p>
+                    <p className="text-sm text-gray-600">{stats.pendingPrayers} to review</p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

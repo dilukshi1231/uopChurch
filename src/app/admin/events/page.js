@@ -1,7 +1,6 @@
 // src/app/admin/events/page.js
 'use client';
 import { useState, useEffect } from 'react';
-import AdminLayout from '@/components/AdminLayout';
 import { withAuth } from '@/middleware/withAuth';
 import { db } from '@/lib/firebase';
 import { 
@@ -351,14 +350,12 @@ function EventsPage() {
 
   if (loading) {
     return (
-      <AdminLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading events...</p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading events...</p>
         </div>
-      </AdminLayout>
+      </div>
     );
   }
 
@@ -366,185 +363,182 @@ function EventsPage() {
   const pastEvents = events.filter(e => !isUpcoming(e.date));
 
   return (
-    <AdminLayout>
-      {/* MATCHING MEMBERSHIP PAGE STRUCTURE */}
-      <div className="min-h-screen bg-gray-50">
-        {/* Header - Same as Membership Page */}
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Events Management</h1>
-                <p className="text-gray-600 mt-1">Create and manage church events and activities</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - Matching Membership Page */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Events Management</h1>
+              <p className="text-gray-600 mt-1">Create and manage church events and activities</p>
+            </div>
+            <button
+              onClick={() => setShowModal(true)}
+              className="px-6 py-3 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
+            >
+              <FaPlus />
+              Create Event
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Stats Cards - MATCHING MEMBERSHIP LAYOUT */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <FaCalendar className="text-2xl text-blue-600" />
               </div>
-              <button
-                onClick={() => setShowModal(true)}
-                className="px-6 py-3 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
-              >
-                <FaPlus />
-                Create Event
-              </button>
+              <div>
+                <p className="text-gray-600 text-sm">Total Events</p>
+                <p className="text-2xl font-bold">{events.length}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-green-100 rounded-lg">
+                <FaCheckCircle className="text-2xl text-green-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Upcoming Events</p>
+                <p className="text-2xl font-bold text-green-600">{upcomingEvents.length}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gray-100 rounded-lg">
+                <FaCalendarAlt className="text-2xl text-gray-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Past Events</p>
+                <p className="text-2xl font-bold text-gray-600">{pastEvents.length}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
-          {/* Stats Cards - MATCHING MEMBERSHIP LAYOUT */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <FaCalendar className="text-2xl text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Total Events</p>
-                  <p className="text-2xl font-bold">{events.length}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <FaCheckCircle className="text-2xl text-green-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Upcoming Events</p>
-                  <p className="text-2xl font-bold text-green-600">{upcomingEvents.length}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gray-100 rounded-lg">
-                  <FaCalendarAlt className="text-2xl text-gray-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Past Events</p>
-                  <p className="text-2xl font-bold text-gray-600">{pastEvents.length}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Events Table - MATCHING MEMBERSHIP TABLE STYLING */}
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Event
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date & Time
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Location
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Category
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {events.length > 0 ? (
-                    events.map((event) => (
-                      <tr 
-                        key={event.id}
-                        className="hover:bg-gray-50"
-                      >
-                        {/* Avatar Circle + Event Name - MATCHING MEMBERSHIP STYLE */}
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                              <span className="font-semibold text-blue-900">
-                                {event.title?.charAt(0)}
-                              </span>
-                            </div>
-                            <div>
-                              <div className="font-medium text-gray-900">{event.title}</div>
-                              {event.capacity && (
-                                <div className="text-sm text-gray-500">
-                                  <FaUsers className="inline mr-1" />
-                                  {event.capacity} max
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {new Date(event.date).toLocaleDateString()}
-                          </div>
-                          <div className="text-sm text-gray-500">{event.time}</div>
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          <div className="flex items-center gap-1">
-                            <FaMapMarkerAlt className="text-gray-400" />
-                            {event.location}
-                          </div>
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {getCategoryBadge(event.category)}
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {isUpcoming(event.date) ? (
-                            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                              <FaCheckCircle />
-                              Upcoming
+        {/* Events Table - MATCHING MEMBERSHIP TABLE STYLING */}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Event
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date & Time
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Location
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {events.length > 0 ? (
+                  events.map((event) => (
+                    <tr 
+                      key={event.id}
+                      className="hover:bg-gray-50"
+                    >
+                      {/* Avatar Circle + Event Name - MATCHING MEMBERSHIP STYLE */}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="font-semibold text-blue-900">
+                              {event.title?.charAt(0)}
                             </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
-                              <FaClock />
-                              Past
-                            </span>
-                          )}
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <div className="flex items-center gap-3">
-                            <button
-                              onClick={() => handleEdit(event)}
-                              className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
-                            >
-                              <FaEdit /> Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(event.id)}
-                              className="text-red-600 hover:text-red-800 font-medium flex items-center gap-1"
-                            >
-                              <FaTrash /> Delete
-                            </button>
                           </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="px-6 py-12 text-center">
-                        <div className="text-gray-400">
-                          <FaCalendar className="text-6xl mx-auto mb-4 opacity-20" />
-                          <p className="text-lg font-semibold">No events found</p>
-                          <p className="text-sm">Click "Create Event" to add your first event</p>
+                          <div>
+                            <div className="font-medium text-gray-900">{event.title}</div>
+                            {event.capacity && (
+                              <div className="text-sm text-gray-500">
+                                <FaUsers className="inline mr-1" />
+                                {event.capacity} max
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {new Date(event.date).toLocaleDateString()}
+                        </div>
+                        <div className="text-sm text-gray-500">{event.time}</div>
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        <div className="flex items-center gap-1">
+                          <FaMapMarkerAlt className="text-gray-400" />
+                          {event.location}
+                        </div>
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {getCategoryBadge(event.category)}
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {isUpcoming(event.date) ? (
+                          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+                            <FaCheckCircle />
+                            Upcoming
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">
+                            <FaClock />
+                            Past
+                          </span>
+                        )}
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleEdit(event)}
+                            className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                          >
+                            <FaEdit /> Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(event.id)}
+                            className="text-red-600 hover:text-red-800 font-medium flex items-center gap-1"
+                          >
+                            <FaTrash /> Delete
+                          </button>
                         </div>
                       </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-12 text-center">
+                      <div className="text-gray-400">
+                        <FaCalendar className="text-6xl mx-auto mb-4 opacity-20" />
+                        <p className="text-lg font-semibold">No events found</p>
+                        <p className="text-sm">Click "Create Event" to add your first event</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -558,7 +552,7 @@ function EventsPage() {
         resetForm={resetForm}
         setShowModal={setShowModal}
       />
-    </AdminLayout>
+    </div>
   );
 }
 

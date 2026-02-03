@@ -1,7 +1,6 @@
 // src/app/admin/prayers/page.js
 'use client';
 import { useState, useEffect } from 'react';
-import AdminLayout from '@/components/AdminLayout';
 import { withAuth } from '@/middleware/withAuth';
 import { db } from '@/lib/firebase';
 import { 
@@ -263,14 +262,12 @@ function PrayerRequestsPage() {
 
   if (loading) {
     return (
-      <AdminLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading prayer requests...</p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading prayer requests...</p>
         </div>
-      </AdminLayout>
+      </div>
     );
   }
 
@@ -281,156 +278,154 @@ function PrayerRequestsPage() {
   };
 
   return (
-    <AdminLayout>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-6">
-            <h1 className="text-3xl font-bold text-gray-900">Prayer Requests Management</h1>
-            <p className="text-gray-600 mt-1">Review and manage prayer requests from the community</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - Matching Membership Page */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-6">
+          <h1 className="text-3xl font-bold text-gray-900">Prayer Requests Management</h1>
+          <p className="text-gray-600 mt-1">Review and manage prayer requests from the community</p>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Stats Cards */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <FaPrayingHands className="text-2xl text-blue-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Total Requests</p>
+                <p className="text-2xl font-bold">{stats.total}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-amber-100 rounded-lg">
+                <FaClock className="text-2xl text-amber-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Pending</p>
+                <p className="text-2xl font-bold text-amber-600">{stats.pending}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-green-100 rounded-lg">
+                <FaCheckCircle className="text-2xl text-green-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Answered</p>
+                <p className="text-2xl font-bold text-green-600">{stats.answered}</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
-          {/* Stats Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <FaPrayingHands className="text-2xl text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Total Requests</p>
-                  <p className="text-2xl font-bold">{stats.total}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-amber-100 rounded-lg">
-                  <FaClock className="text-2xl text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Pending</p>
-                  <p className="text-2xl font-bold text-amber-600">{stats.pending}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <FaCheckCircle className="text-2xl text-green-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Answered</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.answered}</p>
-                </div>
-              </div>
-            </div>
+        {/* Filter */}
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="answered">Answered</option>
+            </select>
           </div>
+        </div>
 
-          {/* Filter */}
-          <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="answered">Answered</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Prayer Requests Table */}
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Request Preview
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Submitted
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredPrayers.length > 0 ? (
-                    filteredPrayers.map((prayer) => (
-                      <tr 
-                        key={prayer.id}
-                        className="hover:bg-gray-50"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                              <span className="font-semibold text-blue-900">
-                                {prayer.name?.charAt(0)}
-                              </span>
-                            </div>
-                            <div className="font-medium text-gray-900">{prayer.name}</div>
+        {/* Prayer Requests Table */}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Request Preview
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Submitted
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredPrayers.length > 0 ? (
+                  filteredPrayers.map((prayer) => (
+                    <tr 
+                      key={prayer.id}
+                      className="hover:bg-gray-50"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="font-semibold text-blue-900">
+                              {prayer.name?.charAt(0)}
+                            </span>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {prayer.email}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="text-sm text-gray-900 max-w-md truncate">
-                            {prayer.message}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {getStatusBadge(prayer.status)}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {prayer.createdAt?.toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <button
-                            onClick={() => {
-                              setSelectedPrayer(prayer);
-                              setShowModal(true);
-                            }}
-                            className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
-                          >
-                            <FaEye /> View
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="px-6 py-12 text-center">
-                        <div className="text-gray-400">
-                          <FaPrayingHands className="text-6xl mx-auto mb-4 opacity-20" />
-                          <p className="text-lg font-semibold">No prayer requests found</p>
-                          <p className="text-sm">Try adjusting your filter</p>
+                          <div className="font-medium text-gray-900">{prayer.name}</div>
                         </div>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {prayer.email}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-900 max-w-md truncate">
+                          {prayer.message}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {getStatusBadge(prayer.status)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {prayer.createdAt?.toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button
+                          onClick={() => {
+                            setSelectedPrayer(prayer);
+                            setShowModal(true);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                        >
+                          <FaEye /> View
+                        </button>
+                      </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="px-6 py-12 text-center">
+                      <div className="text-gray-400">
+                        <FaPrayingHands className="text-6xl mx-auto mb-4 opacity-20" />
+                        <p className="text-lg font-semibold">No prayer requests found</p>
+                        <p className="text-sm">Try adjusting your filter</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -449,7 +444,7 @@ function PrayerRequestsPage() {
           getStatusBadge={getStatusBadge}
         />
       )}
-    </AdminLayout>
+    </div>
   );
 }
 

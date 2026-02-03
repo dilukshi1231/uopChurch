@@ -1,7 +1,6 @@
 // src/app/admin/contacts/page.js
 'use client';
 import { useState, useEffect } from 'react';
-import AdminLayout from '@/components/AdminLayout';
 import { withAuth } from '@/middleware/withAuth';
 import { db } from '@/lib/firebase';
 import { 
@@ -298,14 +297,12 @@ function ContactsPage() {
 
   if (loading) {
     return (
-      <AdminLayout>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading contacts...</p>
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading contacts...</p>
         </div>
-      </AdminLayout>
+      </div>
     );
   }
 
@@ -316,177 +313,174 @@ function ContactsPage() {
   };
 
   return (
-    <AdminLayout>
-      {/* MATCHING MEMBERSHIP PAGE STRUCTURE */}
-      <div className="min-h-screen bg-gray-50">
-        {/* Header - Same as Membership Page */}
-        <div className="bg-white border-b">
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - Matching Other Pages */}
+      <div className="bg-white border-b">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Contact Messages</h1>
+              <p className="text-gray-600 mt-1">Manage and respond to contact form submissions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Stats Cards - MATCHING MEMBERSHIP LAYOUT */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-100 rounded-lg">
+                <FaEnvelope className="text-2xl text-blue-600" />
+              </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Contact Messages</h1>
-                <p className="text-gray-600 mt-1">Manage and respond to contact form submissions</p>
+                <p className="text-gray-600 text-sm">Total Messages</p>
+                <p className="text-2xl font-bold">{stats.total}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-amber-100 rounded-lg">
+                <FaExclamationCircle className="text-2xl text-amber-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">New Messages</p>
+                <p className="text-2xl font-bold text-amber-600">{stats.new}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-green-100 rounded-lg">
+                <FaCheckCircle className="text-2xl text-green-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Replied</p>
+                <p className="text-2xl font-bold text-green-600">{stats.replied}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
-          {/* Stats Cards - MATCHING MEMBERSHIP LAYOUT */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <FaEnvelope className="text-2xl text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Total Messages</p>
-                  <p className="text-2xl font-bold">{stats.total}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-amber-100 rounded-lg">
-                  <FaExclamationCircle className="text-2xl text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">New Messages</p>
-                  <p className="text-2xl font-bold text-amber-600">{stats.new}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <FaCheckCircle className="text-2xl text-green-600" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">Replied</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.replied}</p>
-                </div>
-              </div>
-            </div>
+        {/* Filter */}
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">All Status</option>
+              <option value="new">New</option>
+              <option value="replied">Replied</option>
+            </select>
           </div>
+        </div>
 
-          {/* Filter */}
-          <div className="bg-white rounded-lg shadow p-6 mb-8">
-            <div className="flex items-center gap-4">
-              <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="all">All Status</option>
-                <option value="new">New</option>
-                <option value="replied">Replied</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Contacts Table - MATCHING MEMBERSHIP TABLE STYLING */}
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Contact Info
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Subject
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Reason
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Submitted
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredContacts.length > 0 ? (
-                    filteredContacts.map((contact) => (
-                      <tr 
-                        key={contact.id}
-                        className="hover:bg-gray-50"
-                      >
-                        {/* Avatar Circle + Name - MATCHING MEMBERSHIP STYLE */}
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                              <span className="font-semibold text-blue-900">
-                                {contact.name?.charAt(0)}
-                              </span>
-                            </div>
-                            <div className="font-medium text-gray-900">{contact.name}</div>
+        {/* Contacts Table - MATCHING MEMBERSHIP TABLE STYLING */}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Contact Info
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Subject
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Reason
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Submitted
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {filteredContacts.length > 0 ? (
+                  filteredContacts.map((contact) => (
+                    <tr 
+                      key={contact.id}
+                      className="hover:bg-gray-50"
+                    >
+                      {/* Avatar Circle + Name - MATCHING MEMBERSHIP STYLE */}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span className="font-semibold text-blue-900">
+                              {contact.name?.charAt(0)}
+                            </span>
                           </div>
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{contact.email}</div>
-                          {contact.phone && (
-                            <div className="text-sm text-gray-500">{contact.phone}</div>
-                          )}
-                        </td>
-                        
-                        <td className="px-6 py-4">
-                          <div className="text-sm text-gray-900 max-w-md truncate">
-                            {contact.subject || 'No subject'}
-                          </div>
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {contactReasonLabels[contact.contactReason] || contact.contactReason}
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {getStatusBadge(contact.status)}
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                          {contact.timestamp?.toLocaleDateString()}
-                        </td>
-                        
-                        <td className="px-6 py-4 whitespace-nowrap text-sm">
-                          <button
-                            onClick={() => {
-                              setSelectedContact(contact);
-                              setShowModal(true);
-                            }}
-                            className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
-                          >
-                            <FaEye /> View
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="7" className="px-6 py-12 text-center">
-                        <div className="text-gray-400">
-                          <FaEnvelope className="text-6xl mx-auto mb-4 opacity-20" />
-                          <p className="text-lg font-semibold">No contact messages found</p>
-                          <p className="text-sm">Try adjusting your filter</p>
+                          <div className="font-medium text-gray-900">{contact.name}</div>
                         </div>
                       </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{contact.email}</div>
+                        {contact.phone && (
+                          <div className="text-sm text-gray-500">{contact.phone}</div>
+                        )}
+                      </td>
+                      
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-gray-900 max-w-md truncate">
+                          {contact.subject || 'No subject'}
+                        </div>
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {contactReasonLabels[contact.contactReason] || contact.contactReason}
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {getStatusBadge(contact.status)}
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {contact.timestamp?.toLocaleDateString()}
+                      </td>
+                      
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button
+                          onClick={() => {
+                            setSelectedContact(contact);
+                            setShowModal(true);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                        >
+                          <FaEye /> View
+                        </button>
+                      </td>
                     </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="px-6 py-12 text-center">
+                      <div className="text-gray-400">
+                        <FaEnvelope className="text-6xl mx-auto mb-4 opacity-20" />
+                        <p className="text-lg font-semibold">No contact messages found</p>
+                        <p className="text-sm">Try adjusting your filter</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -505,7 +499,7 @@ function ContactsPage() {
           getStatusBadge={getStatusBadge}
         />
       )}
-    </AdminLayout>
+    </div>
   );
 }
 
