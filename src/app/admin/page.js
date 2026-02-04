@@ -1,257 +1,51 @@
 // src/app/admin/page.js
 'use client';
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import withAuth from '@/components/withAuth';
+import { withAuth } from '@/middleware/withAuth';
 import { db } from '@/lib/firebase';
 import { 
   collection, 
   getDocs, 
   query, 
-  where, 
   orderBy, 
-  limit, 
-  onSnapshot 
+  limit,
+  where 
 } from 'firebase/firestore';
 import { 
   FaUsers, 
   FaCalendar, 
   FaPrayingHands, 
-  FaEnvelope, 
-  FaBook, 
-  FaChartLine, 
-  FaCheckCircle, 
+  FaEnvelope,
+  FaCheckCircle,
+  FaClock,
   FaExclamationCircle,
-  FaUserCheck, 
-  FaUserClock, 
-  FaArrowUp, 
-  FaArrowDown,
-  FaClock, 
-  FaEye
+  FaEye,
+  FaSync
 } from 'react-icons/fa';
 import Link from 'next/link';
 
 function AdminDashboard() {
-  const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
-    totalMembers: 0,
-    pendingMembers: 0,
-    approvedMembers: 0,
-    upcomingEvents: 0,
-    thisWeekEvents: 0,
-    prayerRequests: 0,
-    activePrayers: 0,
-    answeredPrayers: 0,
-    contacts: 0,
-    newContacts: 0,
-    sermons: 0,
-    users: 0,
-    activeUsers: 0
+    memberships: { total: 0, pending: 0, approved: 0, rejected: 0 },
+    events: { total: 0, upcoming: 0, past: 0 },
+    prayers: { total: 0, active: 0, answered: 0 },
+    contacts: { total: 0, new: 0, replied: 0 }
   });
-  const [recentActivities, setRecentActivities] = useState([]);
-  const [monthlyTrend, setMonthlyTrend] = useState({
-    members: 0,
-    events: 0,
-    prayers: 0
-  });
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const unsubscribers = setupRealtimeListeners();
     fetchDashboardData();
-
-    return () => {
-      unsubscribers.forEach(unsub => unsub());
-    };
   }, []);
-
-  const setupRealtimeListeners = () => {
-    const unsubscribers = [];
-
-    const membershipsUnsub = onSnapshot(collection(db, 'memberships'), () => {
-      fetchDashboardData();
-    });
-    unsubscribers.push(membershipsUnsub);
-
-    const eventsUnsub = onSnapshot(collection(db, 'events'), () => {
-      fetchDashboardData();
-    });
-    unsubscribers.push(eventsUnsub);
-
-    const prayersUnsub = onSnapshot(collection(db, 'prayers'), () => {
-      fetchDashboardData();
-    });
-    unsubscribers.push(prayersUnsub);
-
-    const contactsUnsub = onSnapshot(collection(db, 'contacts'), () => {
-      fetchDashboardData();
-    });
-    unsubscribers.push(contactsUnsub);
-
-    return unsubscribers;
-  };
 
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-
-      const now = new Date();
-      const startOfWeek = new Date(now);
-      startOfWeek.setDate(now.getDate() - now.getDay());
-      startOfWeek.setHours(0, 0, 0, 0);
-
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-      // Fetch Memberships
-      const membershipsRef = collection(db, 'memberships');
-      const membershipsSnapshot = await getDocs(membershipsRef);
-      const memberships = membershipsSnapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt || Date.now())
-      }));
-      
-      const pendingMembers = memberships.filter(m => m.status === 'pending').length;
-      const approvedMembers = memberships.filter(m => m.status === 'approved').length;
-      
-      const thisMonthMembers = memberships.filter(m => {
-        const createdAt = m.createdAt;
-        return createdAt >= startOfMonth;
-      }).length;
-
-      const lastMonthMembers = memberships.filter(m => {
-        const createdAt = m.createdAt;
-        return createdAt >= lastMonth && createdAt < startOfMonth;
-      }).length;
-
-      const memberTrend = lastMonthMembers > 0 
-        ? ((thisMonthMembers - lastMonthMembers) / lastMonthMembers * 100).toFixed(1)
-        : thisMonthMembers > 0 ? 100 : 0;
-
-      // Fetch Events
-      const eventsRef = collection(db, 'events');
-      const eventsSnapshot = await getDocs(eventsRef);
-      const events = eventsSnapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data() 
-      }));
-      
-      const upcomingEvents = events.filter(e => {
-        const eventDate = new Date(e.date);
-        return eventDate >= now;
-      }).length;
-
-      const thisWeekEvents = events.filter(e => {
-        const eventDate = new Date(e.date);
-        return eventDate >= startOfWeek && eventDate < new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000);
-      }).length;
-
-      const thisMonthEvents = events.filter(e => {
-        const eventDate = new Date(e.date);
-        return eventDate >= startOfMonth;
-      }).length;
-
-      const lastMonthEvents = events.filter(e => {
-        const eventDate = new Date(e.date);
-        return eventDate >= lastMonth && eventDate < startOfMonth;
-      }).length;
-
-      const eventTrend = lastMonthEvents > 0 
-        ? ((thisMonthEvents - lastMonthEvents) / lastMonthEvents * 100).toFixed(1)
-        : thisMonthEvents > 0 ? 100 : 0;
-
-      // Fetch Prayer Requests
-      const prayersRef = collection(db, 'prayers');
-      const prayersSnapshot = await getDocs(prayersRef);
-      const prayersData = prayersSnapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt || Date.now())
-      }));
-      
-      const activePrayers = prayersData.filter(p => p.status === 'active' || !p.status).length;
-      const answeredPrayers = prayersData.filter(p => p.status === 'answered').length;
-
-      const thisMonthPrayers = prayersData.filter(p => {
-        const createdAt = p.createdAt;
-        return createdAt >= startOfMonth;
-      }).length;
-
-      const lastMonthPrayers = prayersData.filter(p => {
-        const createdAt = p.createdAt;
-        return createdAt >= lastMonth && createdAt < startOfMonth;
-      }).length;
-
-      const prayerTrend = lastMonthPrayers > 0 
-        ? ((thisMonthPrayers - lastMonthPrayers) / lastMonthPrayers * 100).toFixed(1)
-        : thisMonthPrayers > 0 ? 100 : 0;
-
-      // Fetch Contacts
-      const contactsRef = collection(db, 'contacts');
-      const contactsSnapshot = await getDocs(contactsRef);
-      const contacts = contactsSnapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data(),
-        timestamp: doc.data().timestamp?.toDate?.() || new Date(doc.data().timestamp || Date.now())
-      }));
-      
-      const newContacts = contacts.filter(c => c.status === 'new' || !c.status).length;
-
-      // Update stats
-      setStats({
-        totalMembers: memberships.length,
-        pendingMembers,
-        approvedMembers,
-        upcomingEvents,
-        thisWeekEvents,
-        prayerRequests: prayersData.length,
-        activePrayers,
-        answeredPrayers,
-        contacts: contacts.length,
-        newContacts,
-        sermons: 0,
-        users: 0,
-        activeUsers: 0
-      });
-
-      setMonthlyTrend({
-        members: memberTrend,
-        events: eventTrend,
-        prayers: prayerTrend
-      });
-
-      // Build recent activities
-      const activities = [];
-      
-      memberships.slice(0, 3).forEach(m => {
-        activities.push({
-          message: `New membership application from ${m.name}`,
-          time: m.createdAt.toLocaleString(),
-          status: m.status,
-          link: '/admin/memberships'
-        });
-      });
-
-      prayersData.slice(0, 3).forEach(p => {
-        activities.push({
-          message: `New prayer request: ${p.title}`,
-          time: p.createdAt.toLocaleString(),
-          status: p.status || 'active',
-          link: '/admin/prayers'
-        });
-      });
-
-      contacts.slice(0, 3).forEach(c => {
-        activities.push({
-          message: `New contact from ${c.name}`,
-          time: c.timestamp.toLocaleString(),
-          status: c.status || 'new',
-          link: '/admin/contacts'
-        });
-      });
-
-      setRecentActivities(activities.slice(0, 10));
+      await Promise.all([
+        fetchStats(),
+        fetchRecentActivity()
+      ]);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -259,259 +53,354 @@ function AdminDashboard() {
     }
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchDashboardData();
+    setRefreshing(false);
+  };
+
+  const fetchStats = async () => {
+    try {
+      // Fetch memberships
+      const membershipsSnap = await getDocs(collection(db, 'memberships'));
+      const memberships = membershipsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Fetch events
+      const eventsSnap = await getDocs(collection(db, 'events'));
+      const events = eventsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const now = new Date();
+      
+      // Fetch contacts
+      const contactsSnap = await getDocs(collection(db, 'contacts'));
+      const contacts = contactsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Filter prayer requests
+      const prayers = contacts.filter(c => c.contactReason === 'prayer' || c.contactReason === 'Prayer');
+
+      setStats({
+        memberships: {
+          total: memberships.length,
+          pending: memberships.filter(m => m.status === 'pending').length,
+          approved: memberships.filter(m => m.status === 'approved').length,
+          rejected: memberships.filter(m => m.status === 'rejected').length
+        },
+        events: {
+          total: events.length,
+          upcoming: events.filter(e => e.date?.toDate?.() > now || new Date(e.date) > now).length,
+          past: events.filter(e => e.date?.toDate?.() <= now || new Date(e.date) <= now).length
+        },
+        prayers: {
+          total: prayers.length,
+          active: prayers.filter(p => (p.prayerStatus || 'active') === 'active').length,
+          answered: prayers.filter(p => (p.prayerStatus || 'active') === 'answered').length
+        },
+        contacts: {
+          total: contacts.length,
+          new: contacts.filter(c => c.status === 'new').length,
+          replied: contacts.filter(c => c.status === 'replied').length
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  const fetchRecentActivity = async () => {
+    try {
+      const activities = [];
+
+      // Fetch recent memberships
+      const membershipsSnap = await getDocs(
+        query(collection(db, 'memberships'), orderBy('submittedAt', 'desc'), limit(5))
+      );
+      membershipsSnap.forEach(doc => {
+        const data = doc.data();
+        activities.push({
+          id: `membership-${doc.id}`,
+          type: 'membership',
+          icon: <FaUsers />,
+          iconBg: 'bg-green-100',
+          iconColor: 'text-green-600',
+          message: `New membership application from ${formatName(data.firstName, data.lastName, data.email)}`,
+          time: data.submittedAt?.toDate?.() || new Date(data.submittedAt),
+          status: data.status || 'pending',
+          link: '/admin/memberships'
+        });
+      });
+
+      // Fetch recent contacts
+      const contactsSnap = await getDocs(
+        query(collection(db, 'contacts'), orderBy('timestamp', 'desc'), limit(5))
+      );
+      contactsSnap.forEach(doc => {
+        const data = doc.data();
+        const isPrayer = data.contactReason === 'prayer' || data.contactReason === 'Prayer';
+        
+        activities.push({
+          id: `contact-${doc.id}`,
+          type: isPrayer ? 'prayer' : 'contact',
+          icon: isPrayer ? <FaPrayingHands /> : <FaEnvelope />,
+          iconBg: isPrayer ? 'bg-purple-100' : 'bg-blue-100',
+          iconColor: isPrayer ? 'text-purple-600' : 'text-blue-600',
+          message: isPrayer 
+            ? `New prayer request: ${formatName(data.name, null, data.email)}${data.subject ? ` - ${data.subject}` : ''}`
+            : `New contact from ${formatName(data.name, null, data.email)}`,
+          time: data.timestamp?.toDate?.() || new Date(data.timestamp),
+          status: isPrayer ? (data.prayerStatus || 'active') : (data.status || 'new'),
+          link: isPrayer ? '/admin/prayers' : '/admin/contacts'
+        });
+      });
+
+      // Sort by time
+      activities.sort((a, b) => b.time - a.time);
+
+      setRecentActivity(activities.slice(0, 10));
+    } catch (error) {
+      console.error('Error fetching recent activity:', error);
+    }
+  };
+
+  // Helper function to format names properly
+  const formatName = (firstName, lastName = null, email = null) => {
+    // If we have both first and last name
+    if (firstName && lastName) {
+      return `${firstName} ${lastName}`;
+    }
+    
+    // If we only have first name
+    if (firstName && firstName !== 'undefined' && firstName.trim() !== '') {
+      return firstName;
+    }
+    
+    // If we have email, extract name from it
+    if (email && email !== 'undefined') {
+      const emailName = email.split('@')[0];
+      // Convert email username to readable format (e.g., john.doe -> John Doe)
+      return emailName
+        .split(/[._-]/)
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(' ');
+    }
+    
+    // Fallback
+    return 'Unknown User';
+  };
+
+  const getStatusConfig = (type, status) => {
+    const configs = {
+      membership: {
+        pending: { label: 'Pending', bg: 'bg-yellow-100', text: 'text-yellow-800', icon: <FaClock /> },
+        approved: { label: 'Approved', bg: 'bg-green-100', text: 'text-green-800', icon: <FaCheckCircle /> },
+        rejected: { label: 'Rejected', bg: 'bg-red-100', text: 'text-red-800', icon: <FaExclamationCircle /> },
+        Unknown: { label: 'Unknown', bg: 'bg-gray-100', text: 'text-gray-800', icon: <FaClock /> }
+      },
+      contact: {
+        new: { label: 'New', bg: 'bg-orange-100', text: 'text-orange-800', icon: <FaExclamationCircle /> },
+        replied: { label: 'Replied', bg: 'bg-green-100', text: 'text-green-800', icon: <FaCheckCircle /> }
+      },
+      prayer: {
+        active: { label: 'Active', bg: 'bg-green-100', text: 'text-green-800', icon: <FaCheckCircle /> },
+        answered: { label: 'Answered', bg: 'bg-blue-100', text: 'text-blue-800', icon: <FaCheckCircle /> },
+        archived: { label: 'Archived', bg: 'bg-gray-100', text: 'text-gray-800', icon: <FaClock /> }
+      }
+    };
+
+    return configs[type]?.[status] || configs[type]?.['Unknown'] || { 
+      label: status, 
+      bg: 'bg-gray-100', 
+      text: 'text-gray-800',
+      icon: <FaClock />
+    };
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard...</p>
+      <div className="p-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading dashboard...</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome back, {user?.email}</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+        <p className="text-gray-600">Welcome to your church management dashboard</p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Memberships */}
-        <Link href="/admin/memberships" className="block">
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
+        <Link href="/admin/memberships">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-blue-500">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-blue-100 p-3 rounded-full">
                 <FaUsers className="text-2xl text-blue-600" />
               </div>
-              <div>
-                <p className="text-gray-600 text-sm">Total Members</p>
-                <p className="text-2xl font-bold">{stats.totalMembers}</p>
+              <div className="text-right">
+                <p className="text-3xl font-bold text-gray-900">{stats.memberships.total}</p>
+                <p className="text-sm text-gray-600">Total</p>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-              <div className="flex items-center gap-1 text-amber-600">
-                <FaClock />
-                <span>{stats.pendingMembers} pending</span>
-              </div>
-              <div className="flex items-center gap-1 text-green-600">
-                <FaCheckCircle />
-                <span>{stats.approvedMembers} approved</span>
-              </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Memberships</h3>
+            <div className="flex justify-between text-sm">
+              <span className="text-yellow-600">Pending: {stats.memberships.pending}</span>
+              <span className="text-green-600">Approved: {stats.memberships.approved}</span>
             </div>
           </div>
         </Link>
 
         {/* Events */}
-        <Link href="/admin/events" className="block">
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-lg">
+        <Link href="/admin/events">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-green-500">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-green-100 p-3 rounded-full">
                 <FaCalendar className="text-2xl text-green-600" />
               </div>
-              <div>
-                <p className="text-gray-600 text-sm">Upcoming Events</p>
-                <p className="text-2xl font-bold">{stats.upcomingEvents}</p>
+              <div className="text-right">
+                <p className="text-3xl font-bold text-gray-900">{stats.events.total}</p>
+                <p className="text-sm text-gray-600">Total</p>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-              <div className="flex items-center gap-1 text-blue-600">
-                <FaCalendar />
-                <span>{stats.thisWeekEvents} this week</span>
-              </div>
-              <div className="flex items-center gap-1 text-green-600">
-                <FaCheckCircle />
-                <span>upcoming</span>
-              </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Events</h3>
+            <div className="flex justify-between text-sm">
+              <span className="text-blue-600">Upcoming: {stats.events.upcoming}</span>
+              <span className="text-gray-600">Past: {stats.events.past}</span>
             </div>
           </div>
         </Link>
 
-        {/* Prayer Requests - NOW CLICKABLE */}
-        <Link href="/admin/prayers" className="block">
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-purple-100 rounded-lg">
+        {/* Prayer Requests */}
+        <Link href="/admin/prayers">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-purple-500">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-purple-100 p-3 rounded-full">
                 <FaPrayingHands className="text-2xl text-purple-600" />
               </div>
-              <div>
-                <p className="text-gray-600 text-sm">Prayer Requests</p>
-                <p className="text-2xl font-bold">{stats.prayerRequests}</p>
+              <div className="text-right">
+                <p className="text-3xl font-bold text-gray-900">{stats.prayers.total}</p>
+                <p className="text-sm text-gray-600">Total</p>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-              <div className="flex items-center gap-1 text-green-600">
-                <FaPrayingHands />
-                <span>{stats.activePrayers} active</span>
-              </div>
-              <div className="flex items-center gap-1 text-blue-600">
-                <FaCheckCircle />
-                <span>{stats.answeredPrayers} answered</span>
-              </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Prayer Requests</h3>
+            <div className="flex justify-between text-sm">
+              <span className="text-green-600">Active: {stats.prayers.active}</span>
+              <span className="text-blue-600">Answered: {stats.prayers.answered}</span>
             </div>
           </div>
         </Link>
 
         {/* Contacts */}
-        <Link href="/admin/contacts" className="block">
-          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-amber-100 rounded-lg">
-                <FaEnvelope className="text-2xl text-amber-600" />
+        <Link href="/admin/contacts">
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-orange-500">
+            <div className="flex items-center justify-between mb-4">
+              <div className="bg-orange-100 p-3 rounded-full">
+                <FaEnvelope className="text-2xl text-orange-600" />
               </div>
-              <div>
-                <p className="text-gray-600 text-sm">Contact Messages</p>
-                <p className="text-2xl font-bold">{stats.contacts}</p>
+              <div className="text-right">
+                <p className="text-3xl font-bold text-gray-900">{stats.contacts.total}</p>
+                <p className="text-sm text-gray-600">Total</p>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-              <div className="flex items-center gap-1 text-amber-600">
-                <FaExclamationCircle />
-                <span>{stats.newContacts} new</span>
-              </div>
-              <div className="flex items-center gap-1 text-green-600">
-                <FaCheckCircle />
-                <span>{stats.contacts - stats.newContacts} replied</span>
-              </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Contacts</h3>
+            <div className="flex justify-between text-sm">
+              <span className="text-orange-600">New: {stats.contacts.new}</span>
+              <span className="text-green-600">Replied: {stats.contacts.replied}</span>
             </div>
           </div>
         </Link>
       </div>
 
-      {/* Monthly Trends */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Membership Growth</h3>
-            <span className={`flex items-center gap-1 text-sm font-semibold ${
-              monthlyTrend.members >= 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              {monthlyTrend.members >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-              {Math.abs(monthlyTrend.members)}%
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-gray-900">This Month</p>
-          <p className="text-sm text-gray-500 mt-1">vs last month</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Events Trend</h3>
-            <span className={`flex items-center gap-1 text-sm font-semibold ${
-              monthlyTrend.events >= 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              {monthlyTrend.events >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-              {Math.abs(monthlyTrend.events)}%
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-gray-900">Growth Rate</p>
-          <p className="text-sm text-gray-500 mt-1">monthly comparison</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-gray-600">Prayer Requests</h3>
-            <span className={`flex items-center gap-1 text-sm font-semibold ${
-              monthlyTrend.prayers >= 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              {monthlyTrend.prayers >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-              {Math.abs(monthlyTrend.prayers)}%
-            </span>
-          </div>
-          <p className="text-2xl font-bold text-gray-900">Activity</p>
-          <p className="text-sm text-gray-500 mt-1">monthly change</p>
-        </div>
-      </div>
-
-      {/* Recent Activity Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+      {/* Recent Activity */}
+      <div className="bg-white rounded-lg shadow-md">
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
-          <button 
-            onClick={fetchDashboardData}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-2"
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
           >
-            <FaChartLine />
+            <FaSync className={refreshing ? 'animate-spin' : ''} />
             Refresh
           </button>
         </div>
-        
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Activity
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Time
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {recentActivities.length > 0 ? (
-                recentActivities.map((activity, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
-                            ? 'bg-amber-100 text-amber-600' 
-                            : 'bg-green-100 text-green-600'
-                        }`}>
-                          {activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
-                            ? <FaExclamationCircle /> 
-                            : <FaCheckCircle />
-                          }
-                        </div>
-                        <div className="text-sm text-gray-900">{activity.message}</div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {activity.time}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
-                        activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
-                          ? <FaClock /> 
-                          : <FaCheckCircle />
-                        }
-                        {activity.status || 'Unknown'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                      <Link 
-                        href={activity.link}
-                        className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-end gap-2"
-                      >
-                        <FaEye />
-                        View
-                      </Link>
-                    </td>
-                  </tr>
-                ))
-              ) : (
+
+        {recentActivity.length === 0 ? (
+          <div className="p-12 text-center">
+            <FaClock className="text-6xl text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">No recent activity</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
-                    No recent activity to display
-                  </td>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Activity
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Time
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Action
+                  </th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {recentActivity.map((activity) => {
+                  const statusConfig = getStatusConfig(activity.type, activity.status);
+                  return (
+                    <tr key={activity.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`p-2 rounded-full ${activity.iconBg}`}>
+                            <span className={activity.iconColor}>{activity.icon}</span>
+                          </div>
+                          <span className="text-sm text-gray-900">{activity.message}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-gray-600">
+                          {activity.time.toLocaleString('en-US', {
+                            month: 'numeric',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                          })}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${statusConfig.bg} ${statusConfig.text}`}>
+                          {statusConfig.icon}
+                          {statusConfig.label}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Link href={activity.link}>
+                          <button className="text-blue-600 hover:text-blue-900 font-medium text-sm flex items-center gap-1">
+                            <FaEye />
+                            View
+                          </button>
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
