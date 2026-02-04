@@ -61,35 +61,6 @@ export default function Hero() {
             </p>
           </div>
 
-          {/* CTA Buttons - Enhanced with Glassmorphism */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center fade-in mb-16">
-            <Link href="/plan-visit" className="group w-full sm:w-auto">
-              <button className="relative overflow-hidden bg-gradient-to-r from-white to-gray-100 text-blue-900 px-12 py-6 rounded-2xl font-bold text-lg 
-                               shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105
-                               transition-all duration-300 flex items-center gap-4 w-full justify-center
-                               border-2 border-white/50">
-                {/* Button Shine Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                
-                <FaCalendarAlt className="text-2xl group-hover:scale-125 group-hover:rotate-12 transition-transform relative z-10" />
-                <span className="relative z-10">Plan Your Visit</span>
-              </button>
-            </Link>
-            
-            <Link href="/watch-live" className="group w-full sm:w-auto">
-              <button className="relative overflow-hidden bg-white/10 backdrop-blur-lg text-white px-12 py-6 rounded-2xl font-bold text-lg 
-                               border-2 border-white/40 shadow-2xl hover:shadow-3xl hover:bg-white/20
-                               transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 
-                               flex items-center gap-4 w-full justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                
-                <div className="relative z-10 w-10 h-10 bg-red-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                  <FaPlay className="text-white text-sm ml-1" />
-                </div>
-                <span className="relative z-10">Watch Live</span>
-              </button>
-            </Link>
-          </div>
 
           {/* Service Times Info - Enhanced Card */}
           <div className="inline-flex flex-col sm:flex-row items-center gap-8 bg-white/15 backdrop-blur-xl px-10 py-6 rounded-3xl border-2 border-white/30 shadow-2xl hover:shadow-3xl hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
@@ -111,17 +82,19 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-sm text-blue-200 font-semibold mb-1 tracking-wide uppercase">Location</p>
-                <p className="text-xl md:text-2xl font-bold drop-shadow-lg">Main Sanctuary</p>
+                <p className="text-xl md:text-2xl font-bold drop-shadow-lg">Gal Palliya</p>
               </div>
             </div>
           </div>
 
+          {/* Additional Info Tags */}
+          
         </div>
       </div>
       
-      {/* ENHANCED WAVE WITH INCREASED CURVATURE */}
-      <div className="absolute bottom-0 w-full z-20">
-        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto drop-shadow-2xl">
+      {/* Enhanced Decorative Wave - Reduced left curvature */}
+      <div className="absolute bottom-[-2px] w-full z-20">
+        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto" preserveAspectRatio="none">
           <defs>
             <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" style={{stopColor: '#ffffff', stopOpacity: 1}} />
@@ -129,9 +102,10 @@ export default function Hero() {
               <stop offset="100%" style={{stopColor: '#ffffff', stopOpacity: 1}} />
             </linearGradient>
           </defs>
-          {/* Increased curvature - deeper waves with more pronounced curves */}
-          <path d="M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 140C1248 130 1344 120 1392 115L1440 110V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z" 
-                fill="url(#waveGradient)"/>
+          {/* Reduced left side curvature - starts higher (Y=80 instead of Y=60) */}
+          <path d="M0,200 L0,80 Q360,30 720,55 T1440,70 L1440,200 Z" 
+                fill="url(#waveGradient)"
+                stroke="none"/>
         </svg>
       </div>
 
