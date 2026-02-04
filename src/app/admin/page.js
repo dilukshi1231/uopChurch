@@ -1,15 +1,33 @@
-// src/app/admin/page.js - FIXED VERSION
+// src/app/admin/page.js
 'use client';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import withAuth from '@/components/withAuth';
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { 
-  FaUsers, FaCalendar, FaPrayingHands, FaEnvelope, 
-  FaBook, FaChartLine, FaCheckCircle, FaExclamationCircle,
-  FaUserCheck, FaUserClock, FaArrowUp, FaArrowDown,
-  FaClock, FaEye
+  collection, 
+  getDocs, 
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  onSnapshot 
+} from 'firebase/firestore';
+import { 
+  FaUsers, 
+  FaCalendar, 
+  FaPrayingHands, 
+  FaEnvelope, 
+  FaBook, 
+  FaChartLine, 
+  FaCheckCircle, 
+  FaExclamationCircle,
+  FaUserCheck, 
+  FaUserClock, 
+  FaArrowUp, 
+  FaArrowDown,
+  FaClock, 
+  FaEye
 } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -23,7 +41,8 @@ function AdminDashboard() {
     upcomingEvents: 0,
     thisWeekEvents: 0,
     prayerRequests: 0,
-    pendingPrayers: 0,
+    activePrayers: 0,
+    answeredPrayers: 0,
     contacts: 0,
     newContacts: 0,
     sermons: 0,
@@ -38,13 +57,9 @@ function AdminDashboard() {
   });
 
   useEffect(() => {
-    // Set up real-time listeners
     const unsubscribers = setupRealtimeListeners();
-    
-    // Initial data fetch
     fetchDashboardData();
 
-    // Cleanup listeners on unmount
     return () => {
       unsubscribers.forEach(unsub => unsub());
     };
@@ -53,25 +68,21 @@ function AdminDashboard() {
   const setupRealtimeListeners = () => {
     const unsubscribers = [];
 
-    // Listen to memberships changes
     const membershipsUnsub = onSnapshot(collection(db, 'memberships'), () => {
       fetchDashboardData();
     });
     unsubscribers.push(membershipsUnsub);
 
-    // Listen to events changes
     const eventsUnsub = onSnapshot(collection(db, 'events'), () => {
       fetchDashboardData();
     });
     unsubscribers.push(eventsUnsub);
 
-    // Listen to prayer requests changes
-    const prayersUnsub = onSnapshot(collection(db, 'prayerRequests'), () => {
+    const prayersUnsub = onSnapshot(collection(db, 'prayers'), () => {
       fetchDashboardData();
     });
     unsubscribers.push(prayersUnsub);
 
-    // Listen to contacts changes
     const contactsUnsub = onSnapshot(collection(db, 'contacts'), () => {
       fetchDashboardData();
     });
@@ -84,7 +95,6 @@ function AdminDashboard() {
     try {
       setLoading(true);
 
-      // Get current date and date ranges
       const now = new Date();
       const startOfWeek = new Date(now);
       startOfWeek.setDate(now.getDate() - now.getDay());
@@ -105,7 +115,6 @@ function AdminDashboard() {
       const pendingMembers = memberships.filter(m => m.status === 'pending').length;
       const approvedMembers = memberships.filter(m => m.status === 'approved').length;
       
-      // Calculate monthly trend for members
       const thisMonthMembers = memberships.filter(m => {
         const createdAt = m.createdAt;
         return createdAt >= startOfMonth;
@@ -138,7 +147,6 @@ function AdminDashboard() {
         return eventDate >= startOfWeek && eventDate < new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000);
       }).length;
 
-      // Calculate monthly trend for events
       const thisMonthEvents = events.filter(e => {
         const eventDate = new Date(e.date);
         return eventDate >= startOfMonth;
@@ -154,23 +162,23 @@ function AdminDashboard() {
         : thisMonthEvents > 0 ? 100 : 0;
 
       // Fetch Prayer Requests
-      const prayersRef = collection(db, 'prayerRequests');
+      const prayersRef = collection(db, 'prayers');
       const prayersSnapshot = await getDocs(prayersRef);
-      const prayers = prayersSnapshot.docs.map(doc => ({ 
+      const prayersData = prayersSnapshot.docs.map(doc => ({ 
         id: doc.id, 
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt || Date.now())
       }));
       
-      const pendingPrayers = prayers.filter(p => p.status === 'pending' || !p.status).length;
+      const activePrayers = prayersData.filter(p => p.status === 'active' || !p.status).length;
+      const answeredPrayers = prayersData.filter(p => p.status === 'answered').length;
 
-      // Calculate monthly trend for prayers
-      const thisMonthPrayers = prayers.filter(p => {
+      const thisMonthPrayers = prayersData.filter(p => {
         const createdAt = p.createdAt;
         return createdAt >= startOfMonth;
       }).length;
 
-      const lastMonthPrayers = prayers.filter(p => {
+      const lastMonthPrayers = prayersData.filter(p => {
         const createdAt = p.createdAt;
         return createdAt >= lastMonth && createdAt < startOfMonth;
       }).length;
@@ -190,97 +198,57 @@ function AdminDashboard() {
       
       const newContacts = contacts.filter(c => c.status === 'new' || !c.status).length;
 
-      // Fetch Users (admin only)
-      let totalUsers = 0;
-      let activeUsers = 0;
-      if (user?.role === 'admin') {
-        const usersRef = collection(db, 'users');
-        const usersSnapshot = await getDocs(usersRef);
-        const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        totalUsers = users.length;
-        activeUsers = users.filter(u => u.isActive !== false).length;
-      }
-
-      // Set stats
+      // Update stats
       setStats({
-        totalMembers: membershipsSnapshot.size,
+        totalMembers: memberships.length,
         pendingMembers,
         approvedMembers,
         upcomingEvents,
         thisWeekEvents,
-        prayerRequests: prayersSnapshot.size,
-        pendingPrayers,
-        contacts: contactsSnapshot.size,
+        prayerRequests: prayersData.length,
+        activePrayers,
+        answeredPrayers,
+        contacts: contacts.length,
         newContacts,
-        users: totalUsers,
-        activeUsers
+        sermons: 0,
+        users: 0,
+        activeUsers: 0
       });
 
       setMonthlyTrend({
-        members: parseFloat(memberTrend),
-        events: parseFloat(eventTrend),
-        prayers: parseFloat(prayerTrend)
+        members: memberTrend,
+        events: eventTrend,
+        prayers: prayerTrend
       });
 
-      // Fetch Recent Activities
+      // Build recent activities
       const activities = [];
-
-      // Recent memberships (last 3)
-      const recentMemberships = memberships
-        .sort((a, b) => b.createdAt - a.createdAt)
-        .slice(0, 3);
-
-      recentMemberships.forEach(m => {
+      
+      memberships.slice(0, 3).forEach(m => {
         activities.push({
-          type: 'membership',
-          message: `New membership request from ${m.firstName} ${m.lastName}`,
-          time: formatTimeAgo(m.createdAt),
+          message: `New membership application from ${m.name}`,
+          time: m.createdAt.toLocaleString(),
           status: m.status,
           link: '/admin/memberships'
         });
       });
 
-      // Recent prayer requests (last 3)
-      const recentPrayers = prayers
-        .sort((a, b) => b.createdAt - a.createdAt)
-        .slice(0, 3);
-
-      recentPrayers.forEach(p => {
+      prayersData.slice(0, 3).forEach(p => {
         activities.push({
-          type: 'prayer',
-          message: `Prayer request from ${p.name || 'Anonymous'}`,
-          time: formatTimeAgo(p.createdAt),
-          status: p.status || 'pending',
+          message: `New prayer request: ${p.title}`,
+          time: p.createdAt.toLocaleString(),
+          status: p.status || 'active',
           link: '/admin/prayers'
         });
       });
 
-      // Recent contacts (last 3)
-      const recentContacts = contacts
-        .sort((a, b) => b.timestamp - a.timestamp)
-        .slice(0, 3);
-
-      recentContacts.forEach(c => {
+      contacts.slice(0, 3).forEach(c => {
         activities.push({
-          type: 'contact',
-          message: `Contact message from ${c.name}`,
-          time: formatTimeAgo(c.timestamp),
+          message: `New contact from ${c.name}`,
+          time: c.timestamp.toLocaleString(),
           status: c.status || 'new',
           link: '/admin/contacts'
         });
-      });
-
-      // Sort all activities by most recent and take top 10
-      activities.sort((a, b) => {
-        // Parse the time strings to compare
-        const getMinutes = (timeStr) => {
-          if (timeStr.includes('just now')) return 0;
-          if (timeStr.includes('minute')) return parseInt(timeStr);
-          if (timeStr.includes('hour')) return parseInt(timeStr) * 60;
-          if (timeStr.includes('day')) return parseInt(timeStr) * 1440;
-          return 999999;
-        };
-        return getMinutes(a.time) - getMinutes(b.time);
       });
 
       setRecentActivities(activities.slice(0, 10));
@@ -289,21 +257,6 @@ function AdminDashboard() {
       console.error('Error fetching dashboard data:', error);
       setLoading(false);
     }
-  };
-
-  const formatTimeAgo = (date) => {
-    if (!date) return 'Unknown';
-    
-    const now = new Date();
-    const diff = now - date;
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-
-    if (minutes < 1) return 'just now';
-    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-    return `${days} day${days > 1 ? 's' : ''} ago`;
   };
 
   if (loading) {
@@ -318,16 +271,13 @@ function AdminDashboard() {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Header */}
+    <div className="p-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, {user?.displayName || 'Admin'}!
-        </h1>
-        <p className="text-gray-600">Here's what's happening with your church today.</p>
+        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+        <p className="text-gray-600 mt-2">Welcome back, {user?.email}</p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Memberships */}
         <Link href="/admin/memberships" className="block">
@@ -337,7 +287,7 @@ function AdminDashboard() {
                 <FaUsers className="text-2xl text-blue-600" />
               </div>
               <div>
-                <p className="text-gray-600 text-sm">Memberships</p>
+                <p className="text-gray-600 text-sm">Total Members</p>
                 <p className="text-2xl font-bold">{stats.totalMembers}</p>
               </div>
             </div>
@@ -379,7 +329,7 @@ function AdminDashboard() {
           </div>
         </Link>
 
-        {/* Prayer Requests */}
+        {/* Prayer Requests - NOW CLICKABLE */}
         <Link href="/admin/prayers" className="block">
           <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="flex items-center gap-4">
@@ -392,13 +342,13 @@ function AdminDashboard() {
               </div>
             </div>
             <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
-              <div className="flex items-center gap-1 text-amber-600">
-                <FaClock />
-                <span>{stats.pendingPrayers} pending</span>
-              </div>
               <div className="flex items-center gap-1 text-green-600">
+                <FaPrayingHands />
+                <span>{stats.activePrayers} active</span>
+              </div>
+              <div className="flex items-center gap-1 text-blue-600">
                 <FaCheckCircle />
-                <span>{stats.prayerRequests - stats.pendingPrayers} answered</span>
+                <span>{stats.answeredPrayers} answered</span>
               </div>
             </div>
           </div>
@@ -513,11 +463,11 @@ function AdminDashboard() {
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          activity.status === 'pending' || activity.status === 'new'
+                          activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
                             ? 'bg-amber-100 text-amber-600' 
                             : 'bg-green-100 text-green-600'
                         }`}>
-                          {activity.status === 'pending' || activity.status === 'new' 
+                          {activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
                             ? <FaExclamationCircle /> 
                             : <FaCheckCircle />
                           }
@@ -530,11 +480,11 @@ function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
-                        activity.status === 'pending' || activity.status === 'new'
+                        activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
                           ? 'bg-amber-100 text-amber-800'
                           : 'bg-green-100 text-green-800'
                       }`}>
-                        {activity.status === 'pending' || activity.status === 'new' 
+                        {activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
                           ? <FaClock /> 
                           : <FaCheckCircle />
                         }
@@ -563,33 +513,6 @@ function AdminDashboard() {
           </table>
         </div>
       </div>
-
-      {/* Admin-only section */}
-      {user?.role === 'admin' && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">System Overview</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <FaUserCheck className="text-2xl text-green-600" />
-                <div>
-                  <p className="text-sm text-gray-600">Total Users</p>
-                  <p className="text-xl font-bold">{stats.users}</p>
-                </div>
-              </div>
-            </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-3">
-                <FaUserClock className="text-2xl text-blue-600" />
-                <div>
-                  <p className="text-sm text-gray-600">Active Users</p>
-                  <p className="text-xl font-bold">{stats.activeUsers}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
