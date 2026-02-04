@@ -1,263 +1,366 @@
-// src/app/admin/prayers/page.js
+// src/app/admin/page.js - FIXED FOR PRAYERS COLLECTION
 'use client';
 import { useState, useEffect } from 'react';
-import { withAuth } from '@/middleware/withAuth';
+import { useAuth } from '@/contexts/AuthContext';
+import withAuth from '@/components/withAuth';
 import { db } from '@/lib/firebase';
+import { collection, getDocs, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { 
-  collection, 
-  getDocs, 
-  doc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  orderBy 
-} from 'firebase/firestore';
-import { 
-  FaPrayingHands, 
-  FaTrash, 
-  FaEye,
-  FaCheckCircle,
-  FaClock,
-  FaTimes,
-  FaHeart,
-  FaUser,
-  FaEnvelope,
-  FaCalendarAlt
+  FaUsers, FaCalendar, FaPrayingHands, FaEnvelope, 
+  FaBook, FaChartLine, FaCheckCircle, FaExclamationCircle,
+  FaUserCheck, FaUserClock, FaArrowUp, FaArrowDown,
+  FaClock, FaEye
 } from 'react-icons/fa';
+import Link from 'next/link';
 
-const PrayerDetailModal = ({ prayer, onClose, updatePrayerStatus, deletePrayer, actionLoading, getStatusBadge }) => {
-  if (!prayer) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="bg-blue-600 text-white p-6 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold">Prayer Request Details</h2>
-            <p className="text-blue-100 text-sm mt-1">From {prayer.name}</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-blue-700 rounded transition-colors"
-          >
-            <FaTimes className="text-xl" />
-          </button>
-        </div>
-
-        <div className="p-6 space-y-6">
-          {/* Status */}
-          <div className="flex items-center justify-between bg-gray-50 p-4 rounded border border-gray-200">
-            <span className="text-gray-700 font-medium">Status:</span>
-            {getStatusBadge(prayer.status)}
-          </div>
-
-          {/* Requester Info */}
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaUser className="text-blue-600" />
-              Requester Information
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Name</p>
-                <p className="text-gray-900 font-medium">{prayer.name}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Email</p>
-                <p className="text-gray-900 font-medium">{prayer.email}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Prayer Request */}
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Prayer Request</h3>
-            <p className="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded border border-gray-200">
-              {prayer.message}
-            </p>
-          </div>
-
-          {/* Privacy Setting */}
-          {prayer.isPublic !== undefined && (
-            <div className="bg-gray-50 p-4 rounded border border-gray-200">
-              <div className="flex items-center gap-2">
-                <FaHeart className="text-blue-600" />
-                <span className="text-sm text-gray-700">
-                  <strong>Privacy:</strong> This request is {prayer.isPublic ? 'public' : 'private'}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Submission Date */}
-          <div className="bg-gray-50 p-4 rounded border border-gray-200">
-            <div className="flex items-center gap-2 text-gray-600 text-sm">
-              <FaCalendarAlt />
-              <span>
-                Submitted on: <span className="font-semibold text-gray-900">{prayer.createdAt?.toLocaleString()}</span>
-              </span>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t">
-            {prayer.status === 'pending' && (
-              <button
-                onClick={() => updatePrayerStatus(prayer.id, 'answered')}
-                disabled={actionLoading}
-                className="flex-1 bg-green-600 text-white px-6 py-3 rounded font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {actionLoading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <>
-                    <FaCheckCircle />
-                    Mark as Answered
-                  </>
-                )}
-              </button>
-            )}
-            {prayer.status === 'answered' && (
-              <button
-                onClick={() => updatePrayerStatus(prayer.id, 'pending')}
-                disabled={actionLoading}
-                className="flex-1 bg-amber-600 text-white px-6 py-3 rounded font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {actionLoading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  <>
-                    <FaClock />
-                    Mark as Pending
-                  </>
-                )}
-              </button>
-            )}
-            <button
-              onClick={() => deletePrayer(prayer.id)}
-              disabled={actionLoading}
-              className="px-6 py-3 bg-gray-600 text-white rounded font-semibold hover:bg-gray-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <FaTrash />
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-function PrayerRequestsPage() {
-  const [prayers, setPrayers] = useState([]);
-  const [filteredPrayers, setFilteredPrayers] = useState([]);
+function AdminDashboard() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [selectedPrayer, setSelectedPrayer] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [actionLoading, setActionLoading] = useState(false);
+  const [stats, setStats] = useState({
+    totalMembers: 0,
+    pendingMembers: 0,
+    approvedMembers: 0,
+    upcomingEvents: 0,
+    thisWeekEvents: 0,
+    prayerRequests: 0,
+    pendingPrayers: 0,
+    contacts: 0,
+    newContacts: 0,
+    sermons: 0,
+    users: 0,
+    activeUsers: 0
+  });
+  const [recentActivities, setRecentActivities] = useState([]);
+  const [monthlyTrend, setMonthlyTrend] = useState({
+    members: 0,
+    events: 0,
+    prayers: 0
+  });
 
   useEffect(() => {
-    fetchPrayers();
+    // Set up real-time listeners
+    const unsubscribers = setupRealtimeListeners();
+    
+    // Initial data fetch
+    fetchDashboardData();
+
+    // Cleanup listeners on unmount
+    return () => {
+      unsubscribers.forEach(unsub => unsub());
+    };
   }, []);
 
-  useEffect(() => {
-    filterPrayers();
-  }, [statusFilter, prayers]);
+  const setupRealtimeListeners = () => {
+    const unsubscribers = [];
 
-  const fetchPrayers = async () => {
+    try {
+      // Listen to memberships changes
+      const membershipsUnsub = onSnapshot(
+        collection(db, 'memberships'), 
+        () => {
+          console.log('✅ Memberships collection changed - refreshing data');
+          fetchDashboardData();
+        },
+        (error) => console.error('❌ Error listening to memberships:', error)
+      );
+      unsubscribers.push(membershipsUnsub);
+
+      // Listen to events changes
+      const eventsUnsub = onSnapshot(
+        collection(db, 'events'), 
+        () => {
+          console.log('✅ Events collection changed - refreshing data');
+          fetchDashboardData();
+        },
+        (error) => console.error('❌ Error listening to events:', error)
+      );
+      unsubscribers.push(eventsUnsub);
+
+      // Listen to prayer requests changes - FIXED: Using 'prayers' collection
+      const prayersUnsub = onSnapshot(
+        collection(db, 'prayers'), 
+        () => {
+          console.log('✅ Prayers collection changed - refreshing data');
+          fetchDashboardData();
+        },
+        (error) => console.error('❌ Error listening to prayers:', error)
+      );
+      unsubscribers.push(prayersUnsub);
+
+      // Listen to contacts changes
+      const contactsUnsub = onSnapshot(
+        collection(db, 'contacts'), 
+        () => {
+          console.log('✅ Contacts collection changed - refreshing data');
+          fetchDashboardData();
+        },
+        (error) => console.error('❌ Error listening to contacts:', error)
+      );
+      unsubscribers.push(contactsUnsub);
+
+      console.log('✅ All real-time listeners set up successfully');
+    } catch (error) {
+      console.error('❌ Error setting up listeners:', error);
+    }
+
+    return unsubscribers;
+  };
+
+  const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const prayersRef = collection(db, 'prayerRequests');
-      const q = query(prayersRef, orderBy('createdAt', 'desc'));
-      const snapshot = await getDocs(q);
+      console.log('🔍 Starting dashboard data fetch...');
+
+      // Get current date and date ranges
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - now.getDay());
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+      // Fetch Memberships
+      console.log('📊 Fetching memberships...');
+      const membershipsRef = collection(db, 'memberships');
+      const membershipsSnapshot = await getDocs(membershipsRef);
+      console.log(`Found ${membershipsSnapshot.size} memberships`);
       
-      const prayersData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate?.() || new Date(doc.data().createdAt)
-      }));
-
-      setPrayers(prayersData);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching prayer requests:', error);
-      setLoading(false);
-    }
-  };
-
-  const filterPrayers = () => {
-    let filtered = [...prayers];
-
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(p => p.status === statusFilter);
-    }
-
-    setFilteredPrayers(filtered);
-  };
-
-  const updatePrayerStatus = async (prayerId, newStatus) => {
-    try {
-      setActionLoading(true);
-      const prayerRef = doc(db, 'prayerRequests', prayerId);
-      await updateDoc(prayerRef, {
-        status: newStatus,
-        updatedAt: new Date()
+      const memberships = membershipsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id, 
+          ...data,
+          createdAt: data.createdAt?.toDate?.() || new Date(data.createdAt || Date.now())
+        };
       });
       
-      await fetchPrayers();
+      const pendingMembers = memberships.filter(m => m.status === 'pending').length;
+      const approvedMembers = memberships.filter(m => m.status === 'approved').length;
       
-      const statusMessages = {
-        answered: 'Prayer request marked as answered!',
-        pending: 'Status changed to pending.'
+      // Calculate monthly trend for members
+      const thisMonthMembers = memberships.filter(m => {
+        const createdAt = m.createdAt;
+        return createdAt >= startOfMonth;
+      }).length;
+
+      const lastMonthMembers = memberships.filter(m => {
+        const createdAt = m.createdAt;
+        return createdAt >= lastMonth && createdAt < startOfMonth;
+      }).length;
+
+      const memberTrend = lastMonthMembers > 0 
+        ? ((thisMonthMembers - lastMonthMembers) / lastMonthMembers * 100).toFixed(1)
+        : thisMonthMembers > 0 ? 100 : 0;
+
+      // Fetch Events
+      console.log('📅 Fetching events...');
+      const eventsRef = collection(db, 'events');
+      const eventsSnapshot = await getDocs(eventsRef);
+      console.log(`Found ${eventsSnapshot.size} events`);
+      
+      const events = eventsSnapshot.docs.map(doc => ({ 
+        id: doc.id, 
+        ...doc.data() 
+      }));
+      
+      const upcomingEvents = events.filter(e => {
+        const eventDate = new Date(e.date);
+        return eventDate >= now;
+      }).length;
+
+      const thisWeekEvents = events.filter(e => {
+        const eventDate = new Date(e.date);
+        return eventDate >= startOfWeek && eventDate < new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000);
+      }).length;
+
+      // Calculate monthly trend for events
+      const thisMonthEvents = events.filter(e => {
+        const eventDate = new Date(e.date);
+        return eventDate >= startOfMonth;
+      }).length;
+
+      const lastMonthEvents = events.filter(e => {
+        const eventDate = new Date(e.date);
+        return eventDate >= lastMonth && eventDate < startOfMonth;
+      }).length;
+
+      const eventTrend = lastMonthEvents > 0 
+        ? ((thisMonthEvents - lastMonthEvents) / lastMonthEvents * 100).toFixed(1)
+        : thisMonthEvents > 0 ? 100 : 0;
+
+      // FIXED: Fetch Prayer Requests from 'prayers' collection
+      console.log('🙏 Fetching prayer requests from "prayers" collection...');
+      const prayersRef = collection(db, 'prayers');
+      const prayersSnapshot = await getDocs(prayersRef);
+      console.log(`Found ${prayersSnapshot.size} prayer requests`);
+      
+      const prayers = prayersSnapshot.docs.map(doc => {
+        const data = doc.data();
+        console.log('Prayer data:', data);
+        return {
+          id: doc.id, 
+          ...data,
+          createdAt: data.createdAt?.toDate?.() || new Date(data.createdAt || Date.now())
+        };
+      });
+      
+      // Count prayers by status - prayers use 'status: active' or 'status: answered'
+      const activePrayers = prayers.filter(p => p.status === 'active' || !p.status).length;
+      const answeredPrayers = prayers.filter(p => p.status === 'answered').length;
+      console.log(`Active prayers: ${activePrayers}, Answered: ${answeredPrayers}`);
+
+      // Calculate monthly trend for prayers
+      const thisMonthPrayers = prayers.filter(p => {
+        const createdAt = p.createdAt;
+        return createdAt >= startOfMonth;
+      }).length;
+
+      const lastMonthPrayers = prayers.filter(p => {
+        const createdAt = p.createdAt;
+        return createdAt >= lastMonth && createdAt < startOfMonth;
+      }).length;
+
+      const prayerTrend = lastMonthPrayers > 0 
+        ? ((thisMonthPrayers - lastMonthPrayers) / lastMonthPrayers * 100).toFixed(1)
+        : thisMonthPrayers > 0 ? 100 : 0;
+
+      // Fetch Contacts
+      console.log('✉️ Fetching contacts...');
+      const contactsRef = collection(db, 'contacts');
+      const contactsSnapshot = await getDocs(contactsRef);
+      console.log(`Found ${contactsSnapshot.size} contacts`);
+      
+      const contacts = contactsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id, 
+          ...data,
+          timestamp: data.timestamp?.toDate?.() || new Date(data.timestamp || Date.now())
+        };
+      });
+      
+      const newContacts = contacts.filter(c => c.status === 'new' || !c.status).length;
+
+      // Fetch Users (admin only)
+      let totalUsers = 0;
+      let activeUsers = 0;
+      if (user?.role === 'admin') {
+        console.log('👥 Fetching users (admin only)...');
+        const usersRef = collection(db, 'users');
+        const usersSnapshot = await getDocs(usersRef);
+        const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        totalUsers = users.length;
+        activeUsers = users.filter(u => u.isActive !== false).length;
+      }
+
+      // Set stats
+      const newStats = {
+        totalMembers: membershipsSnapshot.size,
+        pendingMembers,
+        approvedMembers,
+        upcomingEvents,
+        thisWeekEvents,
+        prayerRequests: prayersSnapshot.size,
+        pendingPrayers: activePrayers, // Changed from pendingPrayers to activePrayers
+        contacts: contactsSnapshot.size,
+        newContacts,
+        users: totalUsers,
+        activeUsers
       };
-      
-      alert(statusMessages[newStatus] || 'Status updated successfully!');
-      setShowModal(false);
+
+      console.log('📊 Final stats:', newStats);
+      setStats(newStats);
+
+      setMonthlyTrend({
+        members: parseFloat(memberTrend),
+        events: parseFloat(eventTrend),
+        prayers: parseFloat(prayerTrend)
+      });
+
+      // Fetch Recent Activities
+      const activities = [];
+
+      // Recent memberships (last 3)
+      const recentMemberships = memberships
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, 3);
+
+      recentMemberships.forEach(m => {
+        activities.push({
+          type: 'membership',
+          message: `New membership request from ${m.firstName} ${m.lastName}`,
+          time: formatTimeAgo(m.createdAt),
+          status: m.status,
+          link: '/admin/memberships'
+        });
+      });
+
+      // Recent prayer requests (last 3)
+      const recentPrayers = prayers
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, 3);
+
+      recentPrayers.forEach(p => {
+        activities.push({
+          type: 'prayer',
+          message: `Prayer request: ${p.title || 'Untitled'}`,
+          time: formatTimeAgo(p.createdAt),
+          status: p.status === 'answered' ? 'answered' : 'active',
+          link: '/admin/prayers'
+        });
+      });
+
+      // Recent contacts (last 3)
+      const recentContacts = contacts
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 3);
+
+      recentContacts.forEach(c => {
+        activities.push({
+          type: 'contact',
+          message: `Contact message from ${c.name}`,
+          time: formatTimeAgo(c.timestamp),
+          status: c.status || 'new',
+          link: '/admin/contacts'
+        });
+      });
+
+      // Sort all activities by most recent and take top 10
+      activities.sort((a, b) => {
+        const getMinutes = (timeStr) => {
+          if (timeStr.includes('just now')) return 0;
+          if (timeStr.includes('minute')) return parseInt(timeStr);
+          if (timeStr.includes('hour')) return parseInt(timeStr) * 60;
+          if (timeStr.includes('day')) return parseInt(timeStr) * 1440;
+          return 999999;
+        };
+        return getMinutes(a.time) - getMinutes(b.time);
+      });
+
+      console.log('🔔 Recent activities:', activities.slice(0, 10));
+      setRecentActivities(activities.slice(0, 10));
+      setLoading(false);
+      console.log('✅ Dashboard data fetch completed');
     } catch (error) {
-      console.error('Error updating prayer status:', error);
-      alert('Failed to update prayer status. Please try again.');
-    } finally {
-      setActionLoading(false);
+      console.error('❌ Error fetching dashboard data:', error);
+      setLoading(false);
     }
   };
 
-  const deletePrayer = async (prayerId) => {
-    if (!confirm('Are you sure you want to delete this prayer request? This action cannot be undone.')) {
-      return;
-    }
+  const formatTimeAgo = (date) => {
+    if (!date) return 'Unknown';
+    
+    const now = new Date();
+    const diff = now - date;
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
 
-    try {
-      setActionLoading(true);
-      await deleteDoc(doc(db, 'prayerRequests', prayerId));
-      await fetchPrayers();
-      alert('Prayer request deleted successfully!');
-      setShowModal(false);
-    } catch (error) {
-      console.error('Error deleting prayer request:', error);
-      alert('Failed to delete prayer request. Please try again.');
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const getStatusBadge = (status) => {
-    const badges = {
-      pending: 'bg-amber-100 text-amber-800',
-      answered: 'bg-green-100 text-green-800'
-    };
-
-    const icons = {
-      pending: <FaClock />,
-      answered: <FaCheckCircle />
-    };
-
-    return (
-      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${badges[status] || 'bg-gray-100 text-gray-800'}`}>
-        {icons[status]}
-        {status?.charAt(0).toUpperCase() + status?.slice(1) || 'Unknown'}
-      </span>
-    );
+    if (minutes < 1) return 'just now';
+    if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    return `${days} day${days > 1 ? 's' : ''} ago`;
   };
 
   if (loading) {
@@ -265,187 +368,287 @@ function PrayerRequestsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading prayer requests...</p>
+          <p className="text-gray-600">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
-  const stats = {
-    total: prayers.length,
-    pending: prayers.filter(p => p.status === 'pending').length,
-    answered: prayers.filter(p => p.status === 'answered').length
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header - Matching Membership Page */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Prayer Requests Management</h1>
-          <p className="text-gray-600 mt-1">Review and manage prayer requests from the community</p>
-        </div>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Welcome back, {user?.displayName || 'Admin'}!
+        </h1>
+        <p className="text-gray-600">Here's what's happening with your church today.</p>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Stats Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
+      {/* Stats Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Memberships */}
+        <Link href="/admin/memberships" className="block">
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-blue-100 rounded-lg">
-                <FaPrayingHands className="text-2xl text-blue-600" />
+                <FaUsers className="text-2xl text-blue-600" />
               </div>
               <div>
-                <p className="text-gray-600 text-sm">Total Requests</p>
-                <p className="text-2xl font-bold">{stats.total}</p>
+                <p className="text-gray-600 text-sm">Memberships</p>
+                <p className="text-2xl font-bold">{stats.totalMembers}</p>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+              <div className="flex items-center gap-1 text-amber-600">
+                <FaClock />
+                <span>{stats.pendingMembers} pending</span>
+              </div>
+              <div className="flex items-center gap-1 text-green-600">
+                <FaCheckCircle />
+                <span>{stats.approvedMembers} approved</span>
               </div>
             </div>
           </div>
+        </Link>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-amber-100 rounded-lg">
-                <FaClock className="text-2xl text-amber-600" />
-              </div>
-              <div>
-                <p className="text-gray-600 text-sm">Pending</p>
-                <p className="text-2xl font-bold text-amber-600">{stats.pending}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
+        {/* Events */}
+        <Link href="/admin/events" className="block">
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-green-100 rounded-lg">
-                <FaCheckCircle className="text-2xl text-green-600" />
+                <FaCalendar className="text-2xl text-green-600" />
               </div>
               <div>
-                <p className="text-gray-600 text-sm">Answered</p>
-                <p className="text-2xl font-bold text-green-600">{stats.answered}</p>
+                <p className="text-gray-600 text-sm">Upcoming Events</p>
+                <p className="text-2xl font-bold">{stats.upcomingEvents}</p>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+              <div className="flex items-center gap-1 text-blue-600">
+                <FaCalendar />
+                <span>{stats.thisWeekEvents} this week</span>
+              </div>
+              <div className="flex items-center gap-1 text-green-600">
+                <FaCheckCircle />
+                <span>upcoming</span>
               </div>
             </div>
           </div>
+        </Link>
+
+        {/* Prayer Requests - FIXED LABELS */}
+        <Link href="/admin/prayers" className="block">
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-purple-100 rounded-lg">
+                <FaPrayingHands className="text-2xl text-purple-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Prayer Requests</p>
+                <p className="text-2xl font-bold">{stats.prayerRequests}</p>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+              <div className="flex items-center gap-1 text-amber-600">
+                <FaClock />
+                <span>{stats.pendingPrayers} active</span>
+              </div>
+              <div className="flex items-center gap-1 text-green-600">
+                <FaCheckCircle />
+                <span>{stats.prayerRequests - stats.pendingPrayers} answered</span>
+              </div>
+            </div>
+          </div>
+        </Link>
+
+        {/* Contacts */}
+        <Link href="/admin/contacts" className="block">
+          <div className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-amber-100 rounded-lg">
+                <FaEnvelope className="text-2xl text-amber-600" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-sm">Contact Messages</p>
+                <p className="text-2xl font-bold">{stats.contacts}</p>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+              <div className="flex items-center gap-1 text-amber-600">
+                <FaExclamationCircle />
+                <span>{stats.newContacts} new</span>
+              </div>
+              <div className="flex items-center gap-1 text-green-600">
+                <FaCheckCircle />
+                <span>{stats.contacts - stats.newContacts} replied</span>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+
+      {/* Monthly Trends */}
+      <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-medium text-gray-600">Membership Growth</h3>
+            <span className={`flex items-center gap-1 text-sm font-semibold ${
+              monthlyTrend.members >= 0 ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {monthlyTrend.members >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+              {Math.abs(monthlyTrend.members)}%
+            </span>
+          </div>
+          <p className="text-2xl font-bold text-gray-900">This Month</p>
+          <p className="text-sm text-gray-500 mt-1">vs last month</p>
         </div>
 
-        {/* Filter */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700">Filter by Status:</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="answered">Answered</option>
-            </select>
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-medium text-gray-600">Events Trend</h3>
+            <span className={`flex items-center gap-1 text-sm font-semibold ${
+              monthlyTrend.events >= 0 ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {monthlyTrend.events >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+              {Math.abs(monthlyTrend.events)}%
+            </span>
           </div>
+          <p className="text-2xl font-bold text-gray-900">Growth Rate</p>
+          <p className="text-sm text-gray-500 mt-1">monthly comparison</p>
         </div>
 
-        {/* Prayer Requests Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Request Preview
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Submitted
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredPrayers.length > 0 ? (
-                  filteredPrayers.map((prayer) => (
-                    <tr 
-                      key={prayer.id}
-                      className="hover:bg-gray-50"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="font-semibold text-blue-900">
-                              {prayer.name?.charAt(0)}
-                            </span>
-                          </div>
-                          <div className="font-medium text-gray-900">{prayer.name}</div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {prayer.email}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900 max-w-md truncate">
-                          {prayer.message}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {getStatusBadge(prayer.status)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {prayer.createdAt?.toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <button
-                          onClick={() => {
-                            setSelectedPrayer(prayer);
-                            setShowModal(true);
-                          }}
-                          className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
-                        >
-                          <FaEye /> View
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="px-6 py-12 text-center">
-                      <div className="text-gray-400">
-                        <FaPrayingHands className="text-6xl mx-auto mb-4 opacity-20" />
-                        <p className="text-lg font-semibold">No prayer requests found</p>
-                        <p className="text-sm">Try adjusting your filter</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-medium text-gray-600">Prayer Requests</h3>
+            <span className={`flex items-center gap-1 text-sm font-semibold ${
+              monthlyTrend.prayers >= 0 ? 'text-green-600' : 'text-red-600'
+            }`}>
+              {monthlyTrend.prayers >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+              {Math.abs(monthlyTrend.prayers)}%
+            </span>
           </div>
+          <p className="text-2xl font-bold text-gray-900">Activity</p>
+          <p className="text-sm text-gray-500 mt-1">monthly change</p>
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <PrayerDetailModal
-          prayer={selectedPrayer}
-          onClose={() => {
-            setShowModal(false);
-            setSelectedPrayer(null);
-          }}
-          updatePrayerStatus={updatePrayerStatus}
-          deletePrayer={deletePrayer}
-          actionLoading={actionLoading}
-          getStatusBadge={getStatusBadge}
-        />
+      {/* Recent Activity Table */}
+      <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
+          <button 
+            onClick={fetchDashboardData}
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-2"
+          >
+            <FaChartLine />
+            Refresh
+          </button>
+        </div>
+        
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Activity
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Time
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {recentActivities.length > 0 ? (
+                recentActivities.map((activity, index) => (
+                  <tr key={index} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
+                            ? 'bg-amber-100 text-amber-600' 
+                            : 'bg-green-100 text-green-600'
+                        }`}>
+                          {activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
+                            ? <FaExclamationCircle /> 
+                            : <FaCheckCircle />
+                          }
+                        </div>
+                        <div className="text-sm text-gray-900">{activity.message}</div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {activity.time}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
+                        activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
+                          ? 'bg-amber-100 text-amber-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {activity.status === 'pending' || activity.status === 'new' || activity.status === 'active'
+                          ? <FaClock /> 
+                          : <FaCheckCircle />
+                        }
+                        {activity.status || 'Unknown'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                      <Link 
+                        href={activity.link}
+                        className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-end gap-2"
+                      >
+                        <FaEye />
+                        View
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
+                    No recent activity to display
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Admin-only section */}
+      {user?.role === 'admin' && (
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">System Overview</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <FaUserCheck className="text-2xl text-green-600" />
+                <div>
+                  <p className="text-sm text-gray-600">Total Users</p>
+                  <p className="text-xl font-bold">{stats.users}</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <FaUserClock className="text-2xl text-blue-600" />
+                <div>
+                  <p className="text-sm text-gray-600">Active Users</p>
+                  <p className="text-xl font-bold">{stats.activeUsers}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
 }
 
-export default withAuth(PrayerRequestsPage, ['admin', 'staff']);
+export default withAuth(AdminDashboard, ['admin', 'staff']);
