@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /auth
+
+Sitemap: https://churchproject-h9525fsph-dilukshis-projects-7d344bc8.vercel.app/sitemap.xml
