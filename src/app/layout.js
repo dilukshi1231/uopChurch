@@ -9,10 +9,23 @@ import ConditionalLayout from '@/components/ConditionalLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Grace Church - Growing in Faith Together',
-  description: 'Welcome to Grace Church. Join us for worship, community, and spiritual growth.',
+  title: {
+    default: 'The Church of Christ The Risen Lord - Welcome Home',
+    template: '%s | The Church of Christ The Risen Lord',
+  },
+  description: 'Join us at Gall Palliya. Sunday worship services, community events, prayer groups, and ministries for all ages. Everyone is welcome!',
+  keywords: ['church', 'Gal Palliya','UOP Chapel','Christian church', 'Sunday service', 'worship', 'prayer', 'community', 'faith'],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'The Church of Christ the Risen Lord',
+    title: 'The Church of Christ the Risen Lord - Welcome Home',
+    description: 'Join us for Sunday worship services, community events, and ministries for all ages.',
+  },
 };
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
