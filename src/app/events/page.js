@@ -25,12 +25,12 @@ export default function EventsPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent"></div>
           
           {/* Decorative Floating Elements */}
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-orange-400/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
           
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-block mb-6 p-4 bg-blue-600/90 backdrop-blur-md rounded-full shadow-2xl">
+              <div className="inline-block mb-6 p-4 bg-orange-600/90 backdrop-blur-md rounded-full shadow-2xl">
                 <FaCalendarAlt className="text-5xl text-white" />
               </div>
               <h1 className="text-6xl md:text-7xl font-extrabold mb-6 text-white drop-shadow-2xl">
@@ -40,8 +40,8 @@ export default function EventsPage() {
                 Connect, grow, and serve through our community events and activities
               </p>
               <div className="mt-10 inline-flex items-center gap-3 bg-white/95 backdrop-blur-sm px-8 py-4 rounded-full shadow-2xl">
-                <FaUsers className="text-3xl text-blue-900" />
-                <span className="text-xl font-bold text-blue-900">Join Our Vibrant Community</span>
+                <FaUsers className="text-3xl text-red-900" />
+                <span className="text-xl font-bold text-red-900">Join Our Vibrant Community</span>
               </div>
             </div>
           </div>
@@ -77,18 +77,18 @@ export default function EventsPage() {
                     <input
                       type="email"
                       placeholder="Your email address"
-                      className="w-full pl-14 pr-5 py-5 rounded-2xl border-3 border-gray-300 focus:outline-none focus:border-blue-900 focus:ring-4 focus:ring-blue-200 transition-all bg-white text-lg font-medium"
+                      className="w-full pl-14 pr-5 py-5 rounded-2xl border-3 border-gray-300 focus:outline-none focus:border-red-900 focus:ring-4 focus:ring-orange-200 transition-all bg-white text-lg font-medium"
                     />
                   </div>
-                  <button className="bg-gradient-to-r from-blue-900 to-blue-700 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:from-blue-800 hover:to-blue-600 transition-all duration-300 shadow-xl hover:shadow-2xl whitespace-nowrap transform hover:scale-105">
+                  <button className="bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:from-red-700 hover:to-orange-600 transition-all duration-300 shadow-xl hover:shadow-2xl whitespace-nowrap transform hover:scale-105">
                     Subscribe Now
                   </button>
                 </div>
 
                 {/* Additional Benefits */}
                 <div className="grid md:grid-cols-3 gap-6">
-                  <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                    <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-amber-100 rounded-2xl border-2 border-orange-200 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    <div className="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                       <FaCalendarAlt className="text-white text-2xl" />
                     </div>
                     <h3 className="font-bold text-xl text-gray-900 mb-2">Event Reminders</h3>
@@ -101,8 +101,8 @@ export default function EventsPage() {
                     <h3 className="font-bold text-xl text-gray-900 mb-2">Weekly Updates</h3>
                     <p className="text-base text-gray-700 font-medium">Stay informed about upcoming activities</p>
                   </div>
-                  <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border-2 border-blue-200 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                    <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-amber-100 rounded-2xl border-2 border-orange-200 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    <div className="w-16 h-16 bg-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                       <FaUsers className="text-white text-2xl" />
                     </div>
                     <h3 className="font-bold text-xl text-gray-900 mb-2">Exclusive Access</h3>
@@ -116,7 +116,7 @@ export default function EventsPage() {
 
         {/* Enhanced Call to Action */}
         <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-amber-700"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-900 via-red-700 to-amber-600"></div>
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070')] bg-cover bg-center opacity-15"></div>
           
           {/* Decorative Elements */}
@@ -134,7 +134,7 @@ export default function EventsPage() {
               </p>
               <a 
                 href="/contact" 
-                className="inline-block bg-white text-blue-900 px-12 py-5 rounded-full font-bold text-xl hover:bg-blue-50 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-110"
+                className="inline-block bg-white text-red-900 px-12 py-5 rounded-full font-bold text-xl hover:bg-orange-50 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-110"
               >
                 Contact Us Today
               </a>

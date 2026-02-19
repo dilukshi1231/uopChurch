@@ -31,11 +31,11 @@ export default function NewsletterSignup() {
   };
 
   return (
-    <section className="py-16 bg-blue-900 text-white">
+    <section className="py-16 bg-red-900 text-white">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Stay Connected</h2>
-          <p className="text-blue-100 mb-8">
+          <p className="text-amber-100 mb-8">
             Subscribe to our newsletter for weekly updates, event announcements, and inspirational content.
           </p>
           
@@ -51,7 +51,7 @@ export default function NewsletterSignup() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-white text-blue-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:bg-gray-300"
+              className="bg-white text-red-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:bg-gray-300"
             >
               {loading ? 'Subscribing...' : 'Subscribe'}
             </button>
@@ -63,7 +63,7 @@ export default function NewsletterSignup() {
             </p>
           )}
 
-          <p className="text-sm text-blue-200 mt-4">
+          <p className="text-sm text-amber-200 mt-4">
             We respect your privacy. Unsubscribe anytime.
           </p>
         </div>

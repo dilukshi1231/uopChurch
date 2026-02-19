@@ -98,7 +98,7 @@ export default function UpcomingEvents({ showViewAllButton = true, limitEvents =
             onClick={() => setFilter('upcoming')}
             className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
               filter === 'upcoming'
-                ? 'bg-blue-900 text-white'
+                ? 'bg-red-900 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -108,7 +108,7 @@ export default function UpcomingEvents({ showViewAllButton = true, limitEvents =
             onClick={() => setFilter('past')}
             className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
               filter === 'past'
-                ? 'bg-blue-900 text-white'
+                ? 'bg-red-900 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -129,7 +129,7 @@ export default function UpcomingEvents({ showViewAllButton = true, limitEvents =
         ) : (
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {events.map((event) => (
-              <div key={event.id} className="card border-l-4 border-blue-900 overflow-hidden p-0">
+              <div key={event.id} className="card border-l-4 border-red-900 overflow-hidden p-0">
                 {/* Event Image */}
                 {event.image && (
                   <div className="w-full h-48 overflow-hidden">
@@ -143,7 +143,7 @@ export default function UpcomingEvents({ showViewAllButton = true, limitEvents =
                 
                 {/* Event Content */}
                 <div className="p-6">
-                  <div className="flex items-center gap-2 text-blue-900 mb-3">
+                  <div className="flex items-center gap-2 text-red-900 mb-3">
                     <FaCalendar />
                     <span className="font-semibold">
                       {format(event.date, 'MMM dd, yyyy')}
@@ -154,11 +154,11 @@ export default function UpcomingEvents({ showViewAllButton = true, limitEvents =
                   
                   <div className="space-y-2 text-sm text-gray-600 mb-4">
                     <div className="flex items-center gap-2">
-                      <FaClock className="text-blue-900" />
+                      <FaClock className="text-red-900" />
                       <span>{format(event.date, 'h:mm a')}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <FaMapMarkerAlt className="text-blue-900" />
+                      <FaMapMarkerAlt className="text-red-900" />
                       <span>{event.location}</span>
                     </div>
                   </div>

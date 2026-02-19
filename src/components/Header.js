@@ -36,9 +36,12 @@ export default function Header() {
     <header className="bg-white shadow-md sticky top-0 z-50">
       {/* Bible Verse Banner */}
       <BibleVerseBanner />
-      
-      {/* Top Bar */}
-      <div className="bg-primary text-white py-2">
+
+      {/* Top Bar — Red → Orange → Gold gradient */}
+      <div
+        className="text-white py-2"
+        style={{ background: 'linear-gradient(to right, #7f1d1d, #c2410c, #d97706)' }}
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-between items-center text-xs md:text-sm gap-2">
             <div className="flex items-center gap-3 md:gap-6">
@@ -51,8 +54,8 @@ export default function Header() {
                 <span className="whitespace-nowrap">123 Faith Street, Your City, ST 12345</span>
               </div>
             </div>
-            <div className="text-xs md:text-sm whitespace-nowrap">
-              Service Times: Sun 9AM & 11AM
+            <div className="text-xs md:text-sm whitespace-nowrap font-medium">
+              Service Times: Sun 9AM &amp; 11AM
             </div>
           </div>
         </div>
@@ -64,17 +67,22 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 flex-shrink-0">
             <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg overflow-hidden bg-white">
-              <Image 
-                src="/images/logo.png" 
-                alt="Grace Church Logo" 
-                width={48} 
+              <Image
+                src="/images/logo.png"
+                alt="Grace Church Logo"
+                width={48}
                 height={48}
                 className="object-contain"
                 priority
               />
             </div>
             <div>
-              <h1 className="text-lg md:text-xl font-bold text-primary leading-tight">The Church of Christ the Risen Lord</h1>
+              <h1
+                className="text-lg md:text-xl font-bold leading-tight"
+                style={{ background: 'linear-gradient(to right, #7f1d1d, #ea580c, #d97706)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+              >
+                The Church of Christ the Risen Lord
+              </h1>
               <p className="text-xs text-gray-600 hidden sm:block">Growing in Faith Together</p>
             </div>
           </Link>
@@ -85,12 +93,12 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-secondary font-medium transition-colors text-sm xl:text-base"
+                className="text-gray-700 hover:text-orange-700 font-medium transition-colors text-sm xl:text-base"
               >
                 {item.name}
               </Link>
             ))}
-            
+
             {/* User Menu */}
             {user ? (
               <div className="relative">
@@ -98,7 +106,10 @@ export default function Header() {
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                  <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                  <div
+                    className="w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{ background: 'linear-gradient(to right, #c2410c, #d97706)' }}
+                  >
                     <FaUser className="text-white text-sm" />
                   </div>
                   <span className="text-sm font-medium text-gray-700">{user.displayName}</span>
@@ -125,7 +136,10 @@ export default function Header() {
               </div>
             ) : (
               <Link href="/auth">
-                <button className="bg-secondary text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-secondary-700 transition-colors text-sm xl:text-base whitespace-nowrap">
+                <button
+                  className="text-white px-6 py-2.5 rounded-lg font-semibold transition-all text-sm xl:text-base whitespace-nowrap shadow-md hover:shadow-lg hover:scale-105"
+                  style={{ background: 'linear-gradient(to right, #7f1d1d, #c2410c, #d97706)' }}
+                >
                   Login / Register
                 </button>
               </Link>
@@ -150,18 +164,21 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 hover:text-secondary font-medium py-2 px-3 rounded-lg hover:bg-gray-50 transition-all"
+                  className="text-gray-700 hover:text-orange-700 font-medium py-2 px-3 rounded-lg hover:bg-orange-50 transition-all"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              
+
               {user ? (
                 <>
                   <div className="border-t pt-3">
                     <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg mb-2">
-                      <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center"
+                        style={{ background: 'linear-gradient(to right, #c2410c, #d97706)' }}
+                      >
                         <FaUser className="text-white text-sm" />
                       </div>
                       <span className="text-sm font-medium text-gray-700">{user.displayName}</span>
@@ -187,7 +204,10 @@ export default function Header() {
                 </>
               ) : (
                 <Link href="/auth" onClick={() => setIsMenuOpen(false)}>
-                  <button className="w-full bg-secondary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary-700 transition-colors">
+                  <button
+                    className="w-full text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md"
+                    style={{ background: 'linear-gradient(to right, #7f1d1d, #c2410c, #d97706)' }}
+                  >
                     Login / Register
                   </button>
                 </Link>

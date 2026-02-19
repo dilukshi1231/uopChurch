@@ -300,8 +300,8 @@ function PrayerRequestsPage() {
         label: 'Active'
       },
       answered: {
-        bg: 'bg-blue-100',
-        text: 'text-blue-800',
+        bg: 'bg-orange-100',
+        text: 'text-red-800',
         icon: <FaHeart />,
         label: 'Answered'
       },
@@ -380,14 +380,14 @@ function PrayerRequestsPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Answered</p>
               <p className="text-3xl font-bold text-gray-900">{stats.answered}</p>
             </div>
-            <div className="bg-blue-100 p-4 rounded-full">
-              <FaHeart className="text-2xl text-blue-600" />
+            <div className="bg-orange-100 p-4 rounded-full">
+              <FaHeart className="text-2xl text-orange-600" />
             </div>
           </div>
         </div>
@@ -435,7 +435,7 @@ function PrayerRequestsPage() {
               onClick={() => setStatusFilter('answered')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                 statusFilter === 'answered'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-orange-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >

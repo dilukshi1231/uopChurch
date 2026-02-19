@@ -77,7 +77,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-800 to-orange-900 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full">
         {/* Logo/Header */}
         <div className="text-center mb-8">
@@ -85,7 +85,7 @@ export default function AuthPage() {
             <span className="text-white font-bold text-3xl">GC</span>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Grace Church</h1>
-          <p className="text-blue-200">Welcome back to our community</p>
+          <p className="text-amber-200">Welcome back to our community</p>
         </div>
 
         {/* Auth Card */}
@@ -98,8 +98,8 @@ export default function AuthPage() {
                   onClick={() => setIsLogin(true)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
                     isLogin
-                      ? 'bg-blue-900 text-white shadow-md'
-                      : 'text-gray-600 hover:text-blue-900'
+                      ? 'bg-red-900 text-white shadow-md'
+                      : 'text-gray-600 hover:text-red-900'
                   }`}
                 >
                   <FaSignInAlt className="inline mr-2" />
@@ -109,8 +109,8 @@ export default function AuthPage() {
                   onClick={() => setIsLogin(false)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition-all ${
                     !isLogin
-                      ? 'bg-blue-900 text-white shadow-md'
-                      : 'text-gray-600 hover:text-blue-900'
+                      ? 'bg-red-900 text-white shadow-md'
+                      : 'text-gray-600 hover:text-red-900'
                   }`}
                 >
                   <FaUserPlus className="inline mr-2" />
@@ -293,7 +293,7 @@ export default function AuthPage() {
         </div>
 
         {/* Help Text */}
-        <p className="text-center text-blue-200 text-sm mt-6">
+        <p className="text-center text-amber-200 text-sm mt-6">
           Need help? Contact us at{' '}
           <a href="mailto:info@gracechurch.org" className="text-amber-400 hover:underline font-semibold">
             info@gracechurch.org

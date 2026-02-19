@@ -1,3 +1,4 @@
+// src/app/admin/users/page.js
 'use client';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -62,7 +63,7 @@ export default function AdminUsersPage() {
       case 'admin':
         return <FaUserShield className="text-red-600" />;
       case 'staff':
-        return <FaUserTie className="text-blue-600" />;
+        return <FaUserTie className="text-orange-600" />;
       default:
         return <FaUser className="text-gray-600" />;
     }
@@ -71,7 +72,7 @@ export default function AdminUsersPage() {
   const getRoleBadge = (role) => {
     const styles = {
       admin: 'bg-red-100 text-red-800',
-      staff: 'bg-blue-100 text-blue-800',
+      staff: 'bg-orange-100 text-red-800',
       member: 'bg-gray-100 text-gray-800'
     };
     return styles[role] || styles.member;
@@ -81,7 +82,7 @@ export default function AdminUsersPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading users...</p>
         </div>
       </div>
@@ -114,8 +115,8 @@ export default function AdminUsersPage() {
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <FaUserTie className="text-2xl text-blue-600" />
+              <div className="p-3 bg-orange-100 rounded-lg">
+                <FaUserTie className="text-2xl text-orange-600" />
               </div>
               <div>
                 <p className="text-gray-600 text-sm">Staff Members</p>
@@ -165,8 +166,8 @@ export default function AdminUsersPage() {
                   <tr key={u.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <span className="font-semibold text-blue-900">
+                        <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                          <span className="font-semibold text-red-900">
                             {u.displayName?.charAt(0) || u.email?.charAt(0)}
                           </span>
                         </div>
@@ -222,7 +223,7 @@ export default function AdminUsersPage() {
                             setEditingUser(u.id);
                             setSelectedRole(u.role);
                           }}
-                          className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                          className="text-orange-600 hover:text-red-800 font-medium flex items-center gap-1"
                         >
                           <FaEdit /> Edit Role
                         </button>
@@ -239,7 +240,7 @@ export default function AdminUsersPage() {
         </div>
 
         {/* Info Box */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <div className="mt-8 bg-orange-50 border border-orange-200 rounded-lg p-6">
           <h3 className="font-bold text-lg mb-3">Role Permissions</h3>
           <div className="space-y-2 text-sm">
             <div className="flex items-start gap-2">
@@ -249,7 +250,7 @@ export default function AdminUsersPage() {
               </div>
             </div>
             <div className="flex items-start gap-2">
-              <FaUserTie className="text-blue-600 mt-1 flex-shrink-0" />
+              <FaUserTie className="text-orange-600 mt-1 flex-shrink-0" />
               <div>
                 <strong>Staff:</strong> Can manage events, memberships, prayers, and contacts. Cannot manage users or view reports.
               </div>

@@ -124,7 +124,7 @@ export default function MembershipPage() {
   if (submitted) {
     return (
       <div>
-        <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
+        <section className="bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 text-white py-20">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6">Membership Application</h1>
@@ -146,23 +146,23 @@ export default function MembershipPage() {
                 Your application has been received and is under review.
               </p>
 
-              <div className="bg-blue-50 border-l-4 border-blue-900 p-6 text-left mb-8">
+              <div className="bg-orange-50 border-l-4 border-red-900 p-6 text-left mb-8">
                 <h3 className="font-bold text-lg mb-3">What Happens Next?</h3>
                 <ul className="space-y-2 text-gray-700">
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-900 font-bold">1.</span>
+                    <span className="text-red-900 font-bold">1.</span>
                     <span>Our pastoral team will review your application within 3-5 business days.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-900 font-bold">2.</span>
+                    <span className="text-red-900 font-bold">2.</span>
                     <span>You'll be contacted to schedule a meeting with one of our pastors.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-900 font-bold">3.</span>
+                    <span className="text-red-900 font-bold">3.</span>
                     <span>We'll invite you to attend our next membership class (typically held monthly).</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-blue-900 font-bold">4.</span>
+                    <span className="text-red-900 font-bold">4.</span>
                     <span>After completing the class, you'll be welcomed as an official member!</span>
                   </li>
                 </ul>
@@ -186,11 +186,11 @@ export default function MembershipPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
+      <section className="bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Become a Member</h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-amber-100">
               Join our church family and be part of something greater
             </p>
           </div>
@@ -205,23 +205,23 @@ export default function MembershipPage() {
               {[1, 2, 3, 4].map((num) => (
                 <div key={num} className="flex items-center flex-1">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                    step >= num ? 'bg-blue-900 text-white' : 'bg-gray-200 text-gray-500'
+                    step >= num ? 'bg-red-900 text-white' : 'bg-gray-200 text-gray-500'
                   }`}>
                     {num}
                   </div>
                   {num < 4 && (
                     <div className={`flex-1 h-1 mx-2 ${
-                      step > num ? 'bg-blue-900' : 'bg-gray-200'
+                      step > num ? 'bg-red-900' : 'bg-gray-200'
                     }`}></div>
                   )}
                 </div>
               ))}
             </div>
             <div className="flex justify-between mt-2 text-sm">
-              <span className={step >= 1 ? 'text-blue-900 font-semibold' : 'text-gray-500'}>Personal</span>
-              <span className={step >= 2 ? 'text-blue-900 font-semibold' : 'text-gray-500'}>Spiritual</span>
-              <span className={step >= 3 ? 'text-blue-900 font-semibold' : 'text-gray-500'}>Ministry</span>
-              <span className={step >= 4 ? 'text-blue-900 font-semibold' : 'text-gray-500'}>Review</span>
+              <span className={step >= 1 ? 'text-red-900 font-semibold' : 'text-gray-500'}>Personal</span>
+              <span className={step >= 2 ? 'text-red-900 font-semibold' : 'text-gray-500'}>Spiritual</span>
+              <span className={step >= 3 ? 'text-red-900 font-semibold' : 'text-gray-500'}>Ministry</span>
+              <span className={step >= 4 ? 'text-red-900 font-semibold' : 'text-gray-500'}>Review</span>
             </div>
           </div>
         </div>
@@ -237,7 +237,7 @@ export default function MembershipPage() {
               {step === 1 && (
                 <div>
                   <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                    <FaUser className="text-blue-900" />
+                    <FaUser className="text-red-900" />
                     Personal Information
                   </h2>
 
@@ -250,7 +250,7 @@ export default function MembershipPage() {
                         value={formData.firstName}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                     <div>
@@ -261,7 +261,7 @@ export default function MembershipPage() {
                         value={formData.lastName}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                   </div>
@@ -275,7 +275,7 @@ export default function MembershipPage() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                     <div>
@@ -286,7 +286,7 @@ export default function MembershipPage() {
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                   </div>
@@ -300,7 +300,7 @@ export default function MembershipPage() {
                         value={formData.dateOfBirth}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                     <div>
@@ -310,7 +310,7 @@ export default function MembershipPage() {
                         value={formData.gender}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       >
                         <option value="">Select...</option>
                         <option value="male">Male</option>
@@ -324,7 +324,7 @@ export default function MembershipPage() {
                         value={formData.maritalStatus}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       >
                         <option value="">Select...</option>
                         <option value="single">Single</option>
@@ -336,7 +336,7 @@ export default function MembershipPage() {
                   </div>
 
                   <h3 className="text-xl font-bold mb-4 mt-8 flex items-center gap-3">
-                    <FaMapMarkerAlt className="text-blue-900" />
+                    <FaMapMarkerAlt className="text-red-900" />
                     Address
                   </h3>
 
@@ -348,7 +348,7 @@ export default function MembershipPage() {
                       value={formData.address}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                     />
                   </div>
 
@@ -361,7 +361,7 @@ export default function MembershipPage() {
                         value={formData.city}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                     <div>
@@ -372,7 +372,7 @@ export default function MembershipPage() {
                         value={formData.state}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                     <div>
@@ -383,13 +383,13 @@ export default function MembershipPage() {
                         value={formData.zipCode}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                   </div>
 
                   <h3 className="text-xl font-bold mb-4 mt-8 flex items-center gap-3">
-                    <FaPhone className="text-blue-900" />
+                    <FaPhone className="text-red-900" />
                     Emergency Contact
                   </h3>
 
@@ -402,7 +402,7 @@ export default function MembershipPage() {
                         value={formData.emergencyName}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                     <div>
@@ -414,7 +414,7 @@ export default function MembershipPage() {
                         onChange={handleChange}
                         required
                         placeholder="Spouse, Parent, etc."
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                     <div>
@@ -425,7 +425,7 @@ export default function MembershipPage() {
                         value={formData.emergencyPhone}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                   </div>
@@ -436,7 +436,7 @@ export default function MembershipPage() {
               {step === 2 && (
                 <div>
                   <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                    <FaHeart className="text-blue-900" />
+                    <FaHeart className="text-red-900" />
                     Spiritual Journey
                   </h2>
 
@@ -449,7 +449,7 @@ export default function MembershipPage() {
                       name="salvationDate"
                       value={formData.salvationDate}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                     />
                     <p className="text-sm text-gray-600 mt-1">If you don't remember the exact date, an approximate year is fine</p>
                   </div>
@@ -508,7 +508,7 @@ export default function MembershipPage() {
                         name="baptismDate"
                         value={formData.baptismDate}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       />
                     </div>
                   )}
@@ -523,7 +523,7 @@ export default function MembershipPage() {
                       value={formData.previousChurch}
                       onChange={handleChange}
                       placeholder="Church name and location"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                     />
                   </div>
 
@@ -537,7 +537,7 @@ export default function MembershipPage() {
                       onChange={handleChange}
                       required
                       rows="5"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       placeholder="Share your heart with us..."
                     ></textarea>
                   </div>
@@ -600,7 +600,7 @@ export default function MembershipPage() {
                       value={formData.servingExperience}
                       onChange={handleChange}
                       rows="4"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       placeholder="Tell us about your experience serving in ministry..."
                     ></textarea>
                   </div>
@@ -658,13 +658,13 @@ export default function MembershipPage() {
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="mt-4 text-blue-900 font-semibold hover:underline"
+                      className="mt-4 text-red-900 font-semibold hover:underline"
                     >
                       Edit Information
                     </button>
                   </div>
 
-                  <div className="bg-blue-50 border-l-4 border-blue-900 p-6 mb-6">
+                  <div className="bg-orange-50 border-l-4 border-red-900 p-6 mb-6">
                     <h3 className="font-bold text-lg mb-3">Membership Covenant</h3>
                     <div className="text-sm text-gray-700 space-y-2 mb-4">
                       <p>As a member of Grace Church, I covenant to:</p>
@@ -733,7 +733,7 @@ export default function MembershipPage() {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="ml-auto bg-blue-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors"
+                    className="ml-auto bg-red-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-800 transition-colors"
                   >
                     Next Step
                   </button>
@@ -741,7 +741,7 @@ export default function MembershipPage() {
                   <button
                     type="submit"
                     disabled={loading || !formData.agreeStatement || !formData.agreeCommitment}
-                    className="ml-auto bg-blue-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="ml-auto bg-red-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                   >
                     {loading ? 'Submitting...' : 'Submit Application'}
                   </button>
@@ -760,7 +760,7 @@ export default function MembershipPage() {
             
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <div className="w-16 h-16 bg-orange-100 text-red-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                   <FaHeart />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Deeper Connection</h3>
@@ -770,7 +770,7 @@ export default function MembershipPage() {
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <div className="w-16 h-16 bg-orange-100 text-red-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                   <FaUser />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Spiritual Growth</h3>
@@ -780,7 +780,7 @@ export default function MembershipPage() {
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <div className="w-16 h-16 bg-orange-100 text-red-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                   <FaCheck />
                 </div>
                 <h3 className="text-xl font-semibold mb-3">Greater Impact</h3>

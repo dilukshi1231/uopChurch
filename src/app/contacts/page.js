@@ -124,11 +124,11 @@ export default function ContactPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
+      <section className="bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-amber-100">
               We'd love to hear from you! Reach out with questions, prayer requests, or just to say hello.
             </p>
           </div>
@@ -147,7 +147,7 @@ export default function ContactPage() {
                 rel="noopener noreferrer"
                 className="card text-center hover:shadow-xl transition-all duration-300"
               >
-                <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <div className="w-16 h-16 bg-orange-100 text-red-900 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
                   {info.icon}
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{info.title}</h3>
@@ -185,7 +185,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       placeholder="John Doe"
                     />
                   </div>
@@ -200,7 +200,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -216,7 +216,7 @@ export default function ContactPage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                       placeholder="(555) 123-4567"
                     />
                   </div>
@@ -230,7 +230,7 @@ export default function ContactPage() {
                       value={formData.contactReason}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                     >
                       {contactReasons.map(reason => (
                         <option key={reason.value} value={reason.value}>
@@ -251,7 +251,7 @@ export default function ContactPage() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                     placeholder="How can we help you?"
                   />
                 </div>
@@ -266,7 +266,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     rows="6"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                     placeholder="Tell us more about your inquiry..."
                   ></textarea>
                 </div>
@@ -274,7 +274,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-blue-900 text-white py-4 px-6 rounded-lg font-bold text-lg hover:bg-blue-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="w-full bg-red-900 text-white py-4 px-6 rounded-lg font-bold text-lg hover:bg-red-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Sending...' : 'Send Message'}
                 </button>
@@ -290,7 +290,7 @@ export default function ContactPage() {
               {/* Office Hours */}
               <div className="card">
                 <div className="flex items-center gap-3 mb-4">
-                  <FaClock className="text-3xl text-blue-900" />
+                  <FaClock className="text-3xl text-red-900" />
                   <h3 className="text-2xl font-bold">Office Hours</h3>
                 </div>
                 <div className="space-y-3">
@@ -342,10 +342,10 @@ export default function ContactPage() {
                   Follow us on social media for updates, encouragement, and community.
                 </p>
                 <div className="flex gap-4">
-                  <a href="#" className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                  <a href="#" className="w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center hover:bg-orange-700 transition-colors">
                     <FaFacebook className="text-xl" />
                   </a>
-                  <a href="#" className="w-12 h-12 bg-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                  <a href="#" className="w-12 h-12 bg-orange-400 text-white rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors">
                     <FaTwitter className="text-xl" />
                   </a>
                   <a href="#" className="w-12 h-12 bg-pink-600 text-white rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
@@ -370,17 +370,17 @@ export default function ContactPage() {
               {staff.map((member, idx) => (
                 <div key={idx} className="card">
                   <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                  <p className="text-blue-900 font-medium mb-4">{member.role}</p>
+                  <p className="text-red-900 font-medium mb-4">{member.role}</p>
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <FaEnvelope className="text-blue-900" />
-                      <a href={`mailto:${member.email}`} className="hover:text-blue-900">
+                      <FaEnvelope className="text-red-900" />
+                      <a href={`mailto:${member.email}`} className="hover:text-red-900">
                         {member.email}
                       </a>
                     </div>
                     <div className="flex items-center gap-2 text-gray-600">
-                      <FaPhone className="text-blue-900" />
-                      <a href={`tel:${member.phone.replace(/\D/g, '')}`} className="hover:text-blue-900">
+                      <FaPhone className="text-red-900" />
+                      <a href={`tel:${member.phone.replace(/\D/g, '')}`} className="hover:text-red-900">
                         {member.phone}
                       </a>
                     </div>

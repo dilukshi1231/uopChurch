@@ -1,3 +1,4 @@
+// src/components/BibleVerse.js
 'use client';
 import { useState, useEffect } from 'react';
 import { FaBible, FaSync } from 'react-icons/fa';
@@ -161,19 +162,22 @@ export default function BibleVerse() {
   if (!verse) return null;
 
   return (
-    <div className="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-12">
+    <div
+      className="text-white py-12"
+      style={{ background: 'linear-gradient(to right, #450a0a, #7f1d1d, #c2410c, #d97706)' }}
+    >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <FaBible className="text-3xl text-blue-300" />
-            <h3 className="text-xl font-semibold text-blue-200">Verse of the Moment</h3>
+            <FaBible className="text-3xl text-amber-300" />
+            <h3 className="text-xl font-semibold text-amber-200">Verse of the Moment</h3>
           </div>
 
           <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
             <blockquote className="text-2xl md:text-3xl font-serif italic mb-4 leading-relaxed">
-              "{verse.text}"
+              &ldquo;{verse.text}&rdquo;
             </blockquote>
-            <p className="text-lg text-blue-200 font-semibold mb-6">
+            <p className="text-lg text-amber-200 font-semibold mb-6">
               - {verse.reference}
             </p>
           </div>
@@ -181,7 +185,7 @@ export default function BibleVerse() {
           <button
             onClick={refreshVerse}
             disabled={loading}
-            className="inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-2 rounded-full font-medium hover:bg-blue-50 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 bg-white text-red-900 px-6 py-2 rounded-full font-medium hover:bg-amber-50 transition-colors disabled:opacity-50 shadow-lg"
           >
             <FaSync className={loading ? 'animate-spin' : ''} />
             New Verse

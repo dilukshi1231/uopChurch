@@ -42,14 +42,14 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="bg-blue-600 text-white p-6 flex items-center justify-between">
+        <div className="bg-orange-600 text-white p-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Add New Member</h2>
-            <p className="text-blue-100 text-sm mt-1">Manually add a member to the church</p>
+            <p className="text-amber-100 text-sm mt-1">Manually add a member to the church</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-blue-700 rounded transition-colors"
+            className="p-2 hover:bg-orange-700 rounded transition-colors"
           >
             <FaTimes className="text-xl" />
           </button>
@@ -59,7 +59,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
           {/* Personal Information */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaIdCard className="text-blue-600" />
+              <FaIdCard className="text-orange-600" />
               Personal Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -72,7 +72,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                   required
                   value={newMemberData.firstName}
                   onChange={(e) => setNewMemberData(prev => ({...prev, firstName: e.target.value}))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="John"
                 />
               </div>
@@ -85,7 +85,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                   required
                   value={newMemberData.lastName}
                   onChange={(e) => setNewMemberData(prev => ({...prev, lastName: e.target.value}))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="Doe"
                 />
               </div>
@@ -97,7 +97,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                   type="date"
                   value={newMemberData.dateOfBirth}
                   onChange={(e) => setNewMemberData(prev => ({...prev, dateOfBirth: e.target.value}))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -106,7 +106,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
           {/* Contact Information */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaEnvelope className="text-blue-600" />
+              <FaEnvelope className="text-orange-600" />
               Contact Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -119,7 +119,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                   required
                   value={newMemberData.email}
                   onChange={(e) => setNewMemberData(prev => ({...prev, email: e.target.value}))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="john@example.com"
                 />
               </div>
@@ -132,7 +132,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                   required
                   value={newMemberData.phone}
                   onChange={(e) => setNewMemberData(prev => ({...prev, phone: e.target.value}))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -142,7 +142,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
           {/* Address */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaMapMarkerAlt className="text-blue-600" />
+              <FaMapMarkerAlt className="text-orange-600" />
               Address
             </h3>
             <div className="space-y-4">
@@ -152,7 +152,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                   type="text"
                   value={newMemberData.address}
                   onChange={(e) => setNewMemberData(prev => ({...prev, address: e.target.value}))}
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   placeholder="123 Main St"
                 />
               </div>
@@ -163,7 +163,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                     type="text"
                     value={newMemberData.city}
                     onChange={(e) => setNewMemberData(prev => ({...prev, city: e.target.value}))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="City"
                   />
                 </div>
@@ -173,7 +173,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                     type="text"
                     value={newMemberData.state}
                     onChange={(e) => setNewMemberData(prev => ({...prev, state: e.target.value}))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="ST"
                   />
                 </div>
@@ -183,7 +183,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
                     type="text"
                     value={newMemberData.zipCode}
                     onChange={(e) => setNewMemberData(prev => ({...prev, zipCode: e.target.value}))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     placeholder="12345"
                   />
                 </div>
@@ -198,7 +198,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
               value={newMemberData.message}
               onChange={(e) => setNewMemberData(prev => ({...prev, message: e.target.value}))}
               rows="3"
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="Any additional information..."
             />
           </div>
@@ -208,7 +208,7 @@ const AddMemberModal = ({ onClose, newMemberData, setNewMemberData, handleAddMem
             <button
               type="submit"
               disabled={actionLoading}
-              className="flex-1 bg-blue-600 text-white px-6 py-3 rounded font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-orange-600 text-white px-6 py-3 rounded font-semibold hover:bg-orange-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {actionLoading ? (
                 <>
@@ -243,14 +243,14 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="bg-blue-600 text-white p-6 flex items-center justify-between">
+        <div className="bg-orange-600 text-white p-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">{membership.firstName} {membership.lastName}</h2>
-            <p className="text-blue-100 text-sm mt-1">Membership Request Details</p>
+            <p className="text-amber-100 text-sm mt-1">Membership Request Details</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-blue-700 rounded transition-colors"
+            className="p-2 hover:bg-orange-700 rounded transition-colors"
           >
             <FaTimes className="text-xl" />
           </button>
@@ -266,7 +266,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
           {/* Personal Information */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaIdCard className="text-blue-600" />
+              <FaIdCard className="text-orange-600" />
               Personal Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -280,7 +280,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1 flex items-center gap-2">
-                  <FaBirthdayCake className="text-blue-600" />
+                  <FaBirthdayCake className="text-orange-600" />
                   Date of Birth
                 </p>
                 <p className="text-gray-900 font-medium">{membership.dateOfBirth || 'Not provided'}</p>
@@ -291,7 +291,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
           {/* Contact Information */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <FaEnvelope className="text-blue-600" />
+              <FaEnvelope className="text-orange-600" />
               Contact Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -310,7 +310,7 @@ const MembershipDetailModal = ({ membership, onClose, updateMembershipStatus, de
           {(membership.address || membership.city || membership.state) && (
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <FaMapMarkerAlt className="text-blue-600" />
+                <FaMapMarkerAlt className="text-orange-600" />
                 Address
               </h3>
               <div className="space-y-2">
@@ -638,7 +638,7 @@ function MembershipsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading memberships...</p>
         </div>
       </div>
@@ -667,8 +667,8 @@ function MembershipsPage() {
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <FaUsers className="text-2xl text-blue-600" />
+              <div className="p-3 bg-orange-100 rounded-lg">
+                <FaUsers className="text-2xl text-orange-600" />
               </div>
               <div>
                 <p className="text-gray-600 text-sm">Total Requests</p>
@@ -724,14 +724,14 @@ function MembershipsPage() {
                 placeholder="Search by name, email, or phone..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div className="flex gap-3">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -740,7 +740,7 @@ function MembershipsPage() {
               </select>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="px-6 py-3 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-orange-600 text-white rounded font-semibold hover:bg-orange-700 transition-colors flex items-center gap-2"
               >
                 <FaPlus />
                 Add Member
@@ -791,8 +791,8 @@ function MembershipsPage() {
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="font-semibold text-blue-900">
+                          <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                            <span className="font-semibold text-red-900">
                               {membership.firstName?.charAt(0)}{membership.lastName?.charAt(0)}
                             </span>
                           </div>
@@ -823,7 +823,7 @@ function MembershipsPage() {
                             setSelectedMembership(membership);
                             setShowModal(true);
                           }}
-                          className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                          className="text-orange-600 hover:text-red-800 font-medium flex items-center gap-1"
                         >
                           <FaEye /> View
                         </button>

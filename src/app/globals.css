@@ -7,12 +7,42 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
+/* =========================================
+   HEAVENLY GRADIENT THEME — Red • Orange • Gold
+   ========================================= */
+
 .btn-primary {
-  @apply bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-800 transition-all duration-300 shadow-lg hover:shadow-xl;
+  background: linear-gradient(to right, #7f1d1d, #c2410c, #d97706);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(to right, #991b1b, #9a3412, #b45309);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
-  @apply bg-secondary text-white px-8 py-3 rounded-lg font-semibold hover:bg-secondary-700 transition-all duration-300 shadow-lg hover:shadow-xl;
+  background: linear-gradient(to right, #d97706, #f59e0b);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(to right, #b45309, #d97706);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
 }
 
 .card {
@@ -20,11 +50,28 @@ body {
 }
 
 .section-title {
-  @apply text-3xl md:text-4xl font-bold text-primary mb-6;
+  @apply text-3xl md:text-4xl font-bold mb-6;
+  background: linear-gradient(to right, #7f1d1d, #c2410c, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .container {
   @apply max-w-7xl mx-auto px-4;
+}
+
+/* Heavenly gradient utility */
+.heavenly-gradient {
+  background: linear-gradient(to right, #7f1d1d, #c2410c, #d97706);
+}
+
+.heavenly-gradient-dark {
+  background: linear-gradient(to right, #450a0a, #7f1d1d, #c2410c, #d97706);
+}
+
+.heavenly-gradient-br {
+  background: linear-gradient(to bottom right, #7f1d1d, #c2410c, #d97706);
 }
 
 .hero-gradient {
@@ -32,7 +79,7 @@ body {
 }
 
 .verse-gradient {
-  background: linear-gradient(135deg, #556B2F 0%, #68783D 50%, #556B2F 100%);
+  background: linear-gradient(135deg, #7f1d1d 0%, #c2410c 50%, #d97706 100%);
 }
 
 @keyframes fadeIn {
@@ -85,6 +132,6 @@ html {
 }
 
 ::selection {
-  background-color: #556B2F;
+  background-color: #c2410c;
   color: white;
 }

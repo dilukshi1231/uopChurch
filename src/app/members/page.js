@@ -175,7 +175,7 @@ export default function MemberDirectoryPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading member directory...</p>
         </div>
       </div>
@@ -185,12 +185,12 @@ export default function MemberDirectoryPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
+      <section className="bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <FaUsers className="text-5xl mx-auto mb-4" />
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Member Directory</h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-amber-100">
               Connect with fellow members of our church family
             </p>
           </div>
@@ -210,7 +210,7 @@ export default function MemberDirectoryPage() {
                   placeholder="Search by name, email, or location..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900 text-lg"
+                  className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900 text-lg"
                 />
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function MemberDirectoryPage() {
                 <select
                   value={filterMinistry}
                   onChange={(e) => setFilterMinistry(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                 >
                   {ministries.map(ministry => (
                     <option key={ministry} value={ministry}>
@@ -243,7 +243,7 @@ export default function MemberDirectoryPage() {
                 <select
                   value={filterGroup}
                   onChange={(e) => setFilterGroup(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-900"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-900"
                 >
                   {smallGroups.map(group => (
                     <option key={group} value={group}>
@@ -275,7 +275,7 @@ export default function MemberDirectoryPage() {
                     setFilterMinistry('all');
                     setFilterGroup('all');
                   }}
-                  className="mt-4 text-blue-900 font-semibold hover:underline"
+                  className="mt-4 text-red-900 font-semibold hover:underline"
                 >
                   Clear all filters
                 </button>
@@ -287,7 +287,7 @@ export default function MemberDirectoryPage() {
                        onClick={() => setSelectedMember(member)}>
                     {/* Avatar */}
                     <div className="flex items-start gap-4 mb-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-900 to-blue-700 rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                      <div className="w-16 h-16 bg-gradient-to-br from-red-800 via-orange-600 to-amber-500 rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
                         {member.firstName[0]}{member.lastName[0]}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -302,7 +302,7 @@ export default function MemberDirectoryPage() {
 
                     {/* Location */}
                     <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-                      <FaMapMarkerAlt className="text-blue-900 flex-shrink-0" />
+                      <FaMapMarkerAlt className="text-red-900 flex-shrink-0" />
                       <span className="truncate">{member.city}, {member.state}</span>
                     </div>
 
@@ -321,7 +321,7 @@ export default function MemberDirectoryPage() {
                         <p className="text-xs font-semibold text-gray-700 mb-1">Ministry Interests:</p>
                         <div className="flex flex-wrap gap-1">
                           {member.ministryInterests.slice(0, 2).map((ministry, idx) => (
-                            <span key={idx} className="bg-blue-100 text-blue-900 text-xs px-2 py-1 rounded">
+                            <span key={idx} className="bg-orange-100 text-red-900 text-xs px-2 py-1 rounded">
                               {ministry}
                             </span>
                           ))}
@@ -346,7 +346,7 @@ export default function MemberDirectoryPage() {
                       <a
                         href={`mailto:${member.email}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex-1 bg-blue-900 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-800 transition-colors text-center"
+                        className="flex-1 bg-red-900 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-red-800 transition-colors text-center"
                       >
                         <FaEnvelope className="inline mr-1" /> Email
                       </a>
@@ -375,16 +375,16 @@ export default function MemberDirectoryPage() {
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                onClick={(e) => e.stopPropagation()}>
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-lg">
+            <div className="bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 text-white p-6 rounded-t-lg">
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 bg-white text-blue-900 rounded-full flex items-center justify-center text-3xl font-bold">
+                <div className="w-20 h-20 bg-white text-red-900 rounded-full flex items-center justify-center text-3xl font-bold">
                   {selectedMember.firstName[0]}{selectedMember.lastName[0]}
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold">
                     {selectedMember.firstName} {selectedMember.lastName}
                   </h2>
-                  <p className="text-blue-100">
+                  <p className="text-amber-100">
                     Member since {new Date(selectedMember.memberSince).toLocaleDateString('en-US', 
                       { month: 'long', year: 'numeric' })}
                   </p>
@@ -399,19 +399,19 @@ export default function MemberDirectoryPage() {
                 <h3 className="text-lg font-bold mb-3">Contact Information</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-3">
-                    <FaEnvelope className="text-blue-900 w-5" />
-                    <a href={`mailto:${selectedMember.email}`} className="text-blue-900 hover:underline">
+                    <FaEnvelope className="text-red-900 w-5" />
+                    <a href={`mailto:${selectedMember.email}`} className="text-red-900 hover:underline">
                       {selectedMember.email}
                     </a>
                   </div>
                   <div className="flex items-center gap-3">
-                    <FaPhone className="text-blue-900 w-5" />
-                    <a href={`tel:${selectedMember.phone}`} className="text-blue-900 hover:underline">
+                    <FaPhone className="text-red-900 w-5" />
+                    <a href={`tel:${selectedMember.phone}`} className="text-red-900 hover:underline">
                       {selectedMember.phone}
                     </a>
                   </div>
                   <div className="flex items-center gap-3">
-                    <FaMapMarkerAlt className="text-blue-900 w-5" />
+                    <FaMapMarkerAlt className="text-red-900 w-5" />
                     <span>{selectedMember.city}, {selectedMember.state}</span>
                   </div>
                 </div>
@@ -441,7 +441,7 @@ export default function MemberDirectoryPage() {
                   <h3 className="text-lg font-bold mb-3">Ministry Interests</h3>
                   <div className="flex flex-wrap gap-2">
                     {selectedMember.ministryInterests.map((ministry, idx) => (
-                      <span key={idx} className="bg-blue-100 text-blue-900 px-3 py-2 rounded-lg text-sm font-medium">
+                      <span key={idx} className="bg-orange-100 text-red-900 px-3 py-2 rounded-lg text-sm font-medium">
                         {ministry}
                       </span>
                     ))}
@@ -454,7 +454,7 @@ export default function MemberDirectoryPage() {
             <div className="p-6 border-t flex gap-3">
               <a
                 href={`mailto:${selectedMember.email}`}
-                className="flex-1 bg-blue-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-800 transition-colors text-center"
+                className="flex-1 bg-red-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-800 transition-colors text-center"
               >
                 <FaEnvelope className="inline mr-2" />
                 Send Email

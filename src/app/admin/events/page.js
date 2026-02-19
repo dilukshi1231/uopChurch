@@ -35,12 +35,12 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="bg-blue-600 text-white p-6 flex items-center justify-between">
+        <div className="bg-orange-600 text-white p-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">
               {editingEvent ? 'Edit Event' : 'Create New Event'}
             </h2>
-            <p className="text-blue-100 text-sm mt-1">
+            <p className="text-amber-100 text-sm mt-1">
               {editingEvent ? 'Update event details' : 'Add a new event to the calendar'}
             </p>
           </div>
@@ -49,7 +49,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
               setShowModal(false);
               resetForm();
             }}
-            className="p-2 hover:bg-blue-700 rounded transition-colors"
+            className="p-2 hover:bg-orange-700 rounded transition-colors"
           >
             <FaTimes className="text-xl" />
           </button>
@@ -66,7 +66,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
               value={formData.title}
               onChange={handleInputChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="Enter event title"
             />
           </div>
@@ -81,7 +81,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
               onChange={handleInputChange}
               required
               rows={4}
-              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="Enter event description"
             />
           </div>
@@ -97,7 +97,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
                 value={formData.date}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
@@ -111,7 +111,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
                 value={formData.time}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -126,7 +126,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
               value={formData.location}
               onChange={handleInputChange}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="Enter event location"
             />
           </div>
@@ -141,7 +141,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
                 value={formData.category}
                 onChange={handleInputChange}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 <option value="service">Service</option>
                 <option value="bible_study">Bible Study</option>
@@ -161,7 +161,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
                 name="capacity"
                 value={formData.capacity}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 placeholder="Max attendees (optional)"
               />
             </div>
@@ -176,7 +176,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
               name="image"
               value={formData.image}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="https://example.com/image.jpg"
             />
           </div>
@@ -184,7 +184,7 @@ const EventModal = ({ showModal, editingEvent, formData, handleInputChange, hand
           <div className="flex gap-3 pt-4 border-t">
             <button
               type="submit"
-              className="flex-1 bg-blue-600 text-white px-6 py-3 rounded font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+              className="flex-1 bg-orange-600 text-white px-6 py-3 rounded font-semibold hover:bg-orange-700 transition-colors flex items-center justify-center gap-2"
             >
               <FaSave />
               {editingEvent ? 'Update Event' : 'Create Event'}
@@ -329,7 +329,7 @@ function EventsPage() {
 
   const getCategoryBadge = (category) => {
     const badges = {
-      service: 'bg-blue-100 text-blue-800',
+      service: 'bg-orange-100 text-red-800',
       bible_study: 'bg-purple-100 text-purple-800',
       youth: 'bg-green-100 text-green-800',
       prayer: 'bg-pink-100 text-pink-800',
@@ -352,7 +352,7 @@ function EventsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading events...</p>
         </div>
       </div>
@@ -374,7 +374,7 @@ function EventsPage() {
             </div>
             <button
               onClick={() => setShowModal(true)}
-              className="px-6 py-3 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2"
+              className="px-6 py-3 bg-orange-600 text-white rounded font-semibold hover:bg-orange-700 transition-colors flex items-center gap-2"
             >
               <FaPlus />
               Create Event
@@ -388,8 +388,8 @@ function EventsPage() {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <FaCalendar className="text-2xl text-blue-600" />
+              <div className="p-3 bg-orange-100 rounded-lg">
+                <FaCalendar className="text-2xl text-orange-600" />
               </div>
               <div>
                 <p className="text-gray-600 text-sm">Total Events</p>
@@ -459,8 +459,8 @@ function EventsPage() {
                       {/* Avatar Circle + Event Name - MATCHING MEMBERSHIP STYLE */}
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="font-semibold text-blue-900">
+                          <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                            <span className="font-semibold text-red-900">
                               {event.title?.charAt(0)}
                             </span>
                           </div>
@@ -512,7 +512,7 @@ function EventsPage() {
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => handleEdit(event)}
-                            className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                            className="text-orange-600 hover:text-red-800 font-medium flex items-center gap-1"
                           >
                             <FaEdit /> Edit
                           </button>

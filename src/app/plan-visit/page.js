@@ -128,7 +128,7 @@ export default function PlanYourVisit() {
       title: 'Book a Space',
       icon: <FaUsers />,
       description: 'Reserve rooms for study groups, meetings, or events',
-      color: 'from-blue-500 to-blue-600'
+      color: 'from-orange-500 to-amber-600'
     },
     {
       id: 'counseling',
@@ -266,7 +266,7 @@ export default function PlanYourVisit() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 text-white py-20 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-red-900 via-red-800 to-orange-900 text-white py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
             backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
@@ -283,10 +283,10 @@ export default function PlanYourVisit() {
             
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Hey Student! 👋
-              <span className="block mt-2 text-blue-200">Let's Connect</span>
+              <span className="block mt-2 text-amber-200">Let's Connect</span>
             </h1>
             
-            <p className="text-xl text-blue-100 mb-8">
+            <p className="text-xl text-amber-100 mb-8">
               A community of university students growing in faith, building real friendships, 
               and figuring out life together. Come check us out!
             </p>
@@ -294,7 +294,7 @@ export default function PlanYourVisit() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => openBookingModal('visit')}
-                className="bg-white text-blue-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl"
+                className="bg-white text-red-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-xl"
               >
                 I'm Visiting This Week
               </button>
@@ -307,7 +307,7 @@ export default function PlanYourVisit() {
       </section>
 
       {/* Booking Options Section */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-orange-50">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-4">Get Connected</h2>
@@ -350,23 +350,23 @@ export default function PlanYourVisit() {
                   onClick={() => setSelectedService(service.id)}
                   className={`cursor-pointer rounded-xl p-6 transition-all transform hover:scale-105 ${
                     selectedService === service.id
-                      ? 'bg-gradient-to-br from-blue-900 to-blue-700 text-white shadow-2xl'
+                      ? 'bg-gradient-to-br from-red-800 via-orange-600 to-amber-500 text-white shadow-2xl'
                       : 'bg-gray-50 hover:bg-gray-100'
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-3">
-                    <FaClock className={selectedService === service.id ? 'text-blue-200' : 'text-blue-900'} />
+                    <FaClock className={selectedService === service.id ? 'text-amber-200' : 'text-red-900'} />
                     <span className="font-bold text-lg">{service.time}</span>
                   </div>
                   
                   <h3 className="text-xl font-bold mb-2">{service.name}</h3>
-                  <p className={`text-sm mb-4 ${selectedService === service.id ? 'text-blue-100' : 'text-gray-600'}`}>
+                  <p className={`text-sm mb-4 ${selectedService === service.id ? 'text-amber-100' : 'text-gray-600'}`}>
                     {service.duration} • {service.style}
                   </p>
 
                   {selectedService === service.id && (
                     <div className="mt-4 pt-4 border-t border-white/20">
-                      <p className="text-blue-100 mb-3">{service.description}</p>
+                      <p className="text-amber-100 mb-3">{service.description}</p>
                       <ul className="space-y-2">
                         {service.whatToExpect.map((item, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-sm">
@@ -388,13 +388,13 @@ export default function PlanYourVisit() {
       {showBookingModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-2xl w-full my-8">
-            <div className="sticky top-0 bg-gradient-to-r from-blue-900 to-purple-900 text-white p-6 rounded-t-2xl z-10">
+            <div className="sticky top-0 bg-gradient-to-r from-red-900 to-orange-800 text-white p-6 rounded-t-2xl z-10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold mb-1">
                     {bookingOptions.find(opt => opt.id === bookingType)?.title}
                   </h2>
-                  <p className="text-blue-100 text-sm">
+                  <p className="text-amber-100 text-sm">
                     {bookingOptions.find(opt => opt.id === bookingType)?.description}
                   </p>
                 </div>
@@ -413,7 +413,7 @@ export default function PlanYourVisit() {
               {/* Basic Info */}
               <div>
                 <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <FaUser className="text-blue-900" />
+                  <FaUser className="text-red-900" />
                   Your Information
                 </h3>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -424,7 +424,7 @@ export default function PlanYourVisit() {
                       value={bookingForm.name}
                       onChange={(e) => setBookingForm({...bookingForm, name: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       placeholder="John Doe"
                     />
                   </div>
@@ -435,7 +435,7 @@ export default function PlanYourVisit() {
                       value={bookingForm.email}
                       onChange={(e) => setBookingForm({...bookingForm, email: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       placeholder="john@university.edu"
                     />
                   </div>
@@ -446,7 +446,7 @@ export default function PlanYourVisit() {
                       value={bookingForm.phone}
                       onChange={(e) => setBookingForm({...bookingForm, phone: e.target.value})}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       placeholder="(555) 123-4567"
                     />
                   </div>
@@ -456,7 +456,7 @@ export default function PlanYourVisit() {
                       type="text"
                       value={bookingForm.studentId}
                       onChange={(e) => setBookingForm({...bookingForm, studentId: e.target.value})}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       placeholder="Optional"
                     />
                   </div>
@@ -467,7 +467,7 @@ export default function PlanYourVisit() {
                     value={bookingForm.university}
                     onChange={(e) => setBookingForm({...bookingForm, university: e.target.value})}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                   >
                     <option value="">Select your university...</option>
                     <option value="state-university">State University</option>
@@ -482,7 +482,7 @@ export default function PlanYourVisit() {
               {bookingType === 'space' && (
                 <div>
                   <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    <FaMapMarkerAlt className="text-blue-900" />
+                    <FaMapMarkerAlt className="text-red-900" />
                     Event Details
                   </h3>
                   <div className="space-y-4">
@@ -492,7 +492,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.eventType}
                         onChange={(e) => setBookingForm({...bookingForm, eventType: e.target.value})}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="">Select event type...</option>
                         <option value="study-group">Study Group</option>
@@ -509,7 +509,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.spaceNeeded}
                         onChange={(e) => setBookingForm({...bookingForm, spaceNeeded: e.target.value})}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="">Select space...</option>
                         {availableSpaces.map(space => (
@@ -526,7 +526,7 @@ export default function PlanYourVisit() {
                           onChange={(e) => setBookingForm({...bookingForm, date: e.target.value})}
                           required
                           min={new Date().toISOString().split('T')[0]}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                       </div>
                       <div>
@@ -536,7 +536,7 @@ export default function PlanYourVisit() {
                           value={bookingForm.startTime}
                           onChange={(e) => setBookingForm({...bookingForm, startTime: e.target.value})}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                       </div>
                       <div>
@@ -546,7 +546,7 @@ export default function PlanYourVisit() {
                           value={bookingForm.endTime}
                           onChange={(e) => setBookingForm({...bookingForm, endTime: e.target.value})}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
                       </div>
                     </div>
@@ -558,7 +558,7 @@ export default function PlanYourVisit() {
                         onChange={(e) => setBookingForm({...bookingForm, attendees: e.target.value})}
                         required
                         min="1"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
                     <div>
@@ -576,7 +576,7 @@ export default function PlanYourVisit() {
                                   : bookingForm.equipment.filter(i => i !== eq);
                                 setBookingForm({...bookingForm, equipment: newEq});
                               }}
-                              className="w-4 h-4 text-blue-900"
+                              className="w-4 h-4 text-red-900"
                             />
                             <span className="text-sm">{eq}</span>
                           </label>
@@ -590,7 +590,7 @@ export default function PlanYourVisit() {
                         onChange={(e) => setBookingForm({...bookingForm, purpose: e.target.value})}
                         required
                         rows="4"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="Tell us about your event..."
                       />
                     </div>
@@ -611,7 +611,7 @@ export default function PlanYourVisit() {
                         onChange={(e) => setBookingForm({...bookingForm, date: e.target.value})}
                         required
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
                     <div>
@@ -620,7 +620,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.startTime}
                         onChange={(e) => setBookingForm({...bookingForm, startTime: e.target.value})}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="">Select...</option>
                         <option value="morning">Morning (9 AM - 12 PM)</option>
@@ -634,7 +634,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.eventType}
                         onChange={(e) => setBookingForm({...bookingForm, eventType: e.target.value})}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="">Select...</option>
                         <option value="spiritual-guidance">Spiritual Guidance</option>
@@ -652,7 +652,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.additionalNotes}
                         onChange={(e) => setBookingForm({...bookingForm, additionalNotes: e.target.value})}
                         rows="4"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="Optional: Share anything that would help us prepare..."
                       />
                     </div>
@@ -678,7 +678,7 @@ export default function PlanYourVisit() {
                         onChange={(e) => setBookingForm({...bookingForm, date: e.target.value})}
                         required
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
                     <div>
@@ -687,7 +687,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.eventType}
                         onChange={(e) => setBookingForm({...bookingForm, eventType: e.target.value})}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="">Select...</option>
                         <option value="sunday-11am">Sunday 11:00 AM</option>
@@ -703,7 +703,7 @@ export default function PlanYourVisit() {
                         onChange={(e) => setBookingForm({...bookingForm, attendees: e.target.value})}
                         required
                         min="1"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="How many people will be with you?"
                       />
                     </div>
@@ -713,7 +713,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.additionalNotes}
                         onChange={(e) => setBookingForm({...bookingForm, additionalNotes: e.target.value})}
                         rows="4"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="Any questions or special requests? (optional)"
                       />
                     </div>
@@ -739,7 +739,7 @@ export default function PlanYourVisit() {
                         onChange={(e) => setBookingForm({...bookingForm, date: e.target.value})}
                         required
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
                     <div>
@@ -748,7 +748,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.startTime}
                         onChange={(e) => setBookingForm({...bookingForm, startTime: e.target.value})}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                       >
                         <option value="">Select...</option>
                         <option value="10:00">10:00 AM</option>
@@ -767,7 +767,7 @@ export default function PlanYourVisit() {
                         required
                         min="1"
                         max="20"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="Maximum 20 people per tour"
                       />
                     </div>
@@ -786,7 +786,7 @@ export default function PlanYourVisit() {
                                   : bookingForm.equipment.filter(i => i !== area);
                                 setBookingForm({...bookingForm, equipment: newAreas});
                               }}
-                              className="w-4 h-4 text-blue-900"
+                              className="w-4 h-4 text-red-900"
                             />
                             <span className="text-sm">{area}</span>
                           </label>
@@ -799,7 +799,7 @@ export default function PlanYourVisit() {
                         value={bookingForm.additionalNotes}
                         onChange={(e) => setBookingForm({...bookingForm, additionalNotes: e.target.value})}
                         rows="3"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                         placeholder="Any specific questions about the church?"
                       />
                     </div>
@@ -812,7 +812,7 @@ export default function PlanYourVisit() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-blue-900 text-white px-6 py-4 rounded-lg font-bold text-lg hover:bg-blue-800 transition-colors disabled:bg-gray-400"
+                  className="flex-1 bg-red-900 text-white px-6 py-4 rounded-lg font-bold text-lg hover:bg-red-800 transition-colors disabled:bg-gray-400"
                 >
                   {loading ? 'Submitting...' : 'Submit Request'}
                 </button>
@@ -840,11 +840,11 @@ export default function PlanYourVisit() {
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {studentResources.map((resource, index) => (
-                <div key={index} className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                  <div className="text-4xl text-blue-900 mb-4">{resource.icon}</div>
+                <div key={index} className="bg-gradient-to-br from-gray-50 to-orange-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                  <div className="text-4xl text-red-900 mb-4">{resource.icon}</div>
                   <h3 className="font-bold text-lg mb-2">{resource.title}</h3>
                   <p className="text-gray-700 text-sm mb-2">{resource.description}</p>
-                  <p className="text-blue-900 text-xs font-semibold">{resource.details}</p>
+                  <p className="text-red-900 text-xs font-semibold">{resource.details}</p>
                 </div>
               ))}
             </div>
@@ -853,7 +853,7 @@ export default function PlanYourVisit() {
       </section>
 
       {/* First Time Info */}
-      <section className="py-16 bg-gradient-to-br from-purple-50 to-blue-50">
+      <section className="py-16 bg-gradient-to-br from-amber-50 to-orange-50">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-4">First Time Here?</h2>
@@ -871,7 +871,7 @@ export default function PlanYourVisit() {
               <h3 className="text-2xl font-bold mb-4 text-center">What to Expect</h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-semibold text-blue-900 mb-2">When You Arrive:</h4>
+                  <h4 className="font-semibold text-red-900 mb-2">When You Arrive:</h4>
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start gap-2">
                       <span className="text-green-600 font-bold">✓</span>
@@ -892,7 +892,7 @@ export default function PlanYourVisit() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-blue-900 mb-2">After Service:</h4>
+                  <h4 className="font-semibold text-red-900 mb-2">After Service:</h4>
                   <ul className="space-y-2 text-sm text-gray-700">
                     <li className="flex items-start gap-2">
                       <span className="text-green-600 font-bold">✓</span>
@@ -928,8 +928,8 @@ export default function PlanYourVisit() {
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               {upcomingEvents.map((event, index) => (
-                <div key={index} className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                  <div className="flex items-center gap-2 text-blue-900 font-bold mb-3">
+                <div key={index} className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex items-center gap-2 text-red-900 font-bold mb-3">
                     <FaCalendar />
                     <span>{event.date}</span>
                   </div>
@@ -947,7 +947,7 @@ export default function PlanYourVisit() {
       </section>
 
       {/* FAQs */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-orange-50">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-4">Got Questions?</h2>
@@ -962,7 +962,7 @@ export default function PlanYourVisit() {
                     className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex items-start gap-3">
-                      <FaQuestionCircle className="text-blue-900 mt-1 flex-shrink-0" />
+                      <FaQuestionCircle className="text-red-900 mt-1 flex-shrink-0" />
                       <span className="font-semibold text-gray-900">{faq.question}</span>
                     </div>
                     <svg
@@ -989,19 +989,19 @@ export default function PlanYourVisit() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-gradient-to-br from-blue-900 via-purple-900 to-blue-900 text-white">
+      <section className="py-20 bg-gradient-to-br from-red-900 via-orange-800 to-red-900 text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Still Have Questions?
             </h2>
-            <p className="text-xl text-blue-100 mb-8">
+            <p className="text-xl text-amber-100 mb-8">
               Seriously, ask us anything. We're real people and we'd love to chat.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
                 onClick={() => openBookingModal('visit')}
-                className="bg-white text-blue-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all"
+                className="bg-white text-red-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all"
               >
                 Plan Your Visit
               </button>
@@ -1012,7 +1012,7 @@ export default function PlanYourVisit() {
                 Email Us
               </a>
             </div>
-            <p className="mt-8 text-blue-200 text-sm">
+            <p className="mt-8 text-amber-200 text-sm">
               Or text "STUDENT" to (555) 123-4567 to join our GroupMe
             </p>
           </div>

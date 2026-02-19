@@ -183,7 +183,7 @@ export default function SmallGroupsPage() {
 
   const getCategoryColor = (category) => {
     const colors = {
-      'bible-study': 'bg-blue-100 text-blue-900',
+      'bible-study': 'bg-orange-100 text-red-900',
       'fellowship': 'bg-green-100 text-green-900',
       'prayer': 'bg-purple-100 text-purple-900',
       'family': 'bg-pink-100 text-pink-900',
@@ -202,7 +202,7 @@ export default function SmallGroupsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading small groups...</p>
         </div>
       </div>

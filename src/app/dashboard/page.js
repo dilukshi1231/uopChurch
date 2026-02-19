@@ -25,7 +25,7 @@ function UserDashboard() {
       title: 'Upcoming Events',
       description: 'See events you\'re registered for',
       icon: <FaCalendar className="text-4xl" />,
-      color: 'from-blue-500 to-blue-600',
+      color: 'from-orange-500 to-amber-600',
       href: '/events'
     },
     {
@@ -47,12 +47,12 @@ function UserDashboard() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-amber-50">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-amber-50">
         <div className="container mx-auto px-4 py-12">
           {/* Welcome Section */}
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-600 to-red-800 rounded-full flex items-center justify-center text-white text-2xl font-bold">
                 {user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </div>
               <div>
@@ -92,11 +92,11 @@ function UserDashboard() {
                       {link.icon}
                     </div>
                     <div className="p-6">
-                      <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
                         {link.title}
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">{link.description}</p>
-                      <div className="flex items-center text-blue-600 font-medium text-sm group-hover:gap-2 transition-all">
+                      <div className="flex items-center text-orange-600 font-medium text-sm group-hover:gap-2 transition-all">
                         <span>View More</span>
                         <FaArrowRight className="ml-1 group-hover:ml-2 transition-all" />
                       </div>
@@ -111,7 +111,7 @@ function UserDashboard() {
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Announcements</h2>
             <div className="space-y-4">
-              <div className="border-l-4 border-blue-600 pl-4 py-2">
+              <div className="border-l-4 border-orange-600 pl-4 py-2">
                 <h3 className="font-semibold text-gray-900 mb-1">Welcome to Grace Church!</h3>
                 <p className="text-gray-600 text-sm mb-2">
                   We're glad you're here. Join us for our Sunday services and connect with our community.
@@ -136,21 +136,21 @@ function UserDashboard() {
           </div>
 
           {/* Call to Action */}
-          <div className="bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl shadow-lg p-8 text-white text-center">
+          <div className="bg-gradient-to-br from-red-800 via-orange-600 to-amber-500 rounded-2xl shadow-lg p-8 text-white text-center">
             <FaHeart className="text-5xl mx-auto mb-4 animate-pulse" />
             <h2 className="text-3xl font-bold mb-4">Get Involved</h2>
-            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+            <p className="text-amber-100 mb-6 max-w-2xl mx-auto">
               There are many ways to serve and grow in your faith. Join a ministry, volunteer, 
               or connect with a small group today!
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/ministries">
-                <button className="bg-white text-blue-900 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
+                <button className="bg-white text-red-900 px-6 py-3 rounded-lg font-semibold hover:bg-orange-50 transition-colors">
                   Explore Ministries
                 </button>
               </Link>
               <Link href="/small-groups">
-                <button className="bg-blue-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <button className="bg-red-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-700 transition-colors">
                   Join a Small Group
                 </button>
               </Link>

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #2C5F8D;
+  --primary-color: #b91c1c;
   --secondary-color: #8B4513;
   --accent-color: #D4AF37;
 }
@@ -13,7 +13,11 @@ body {
 }
 
 .btn-primary {
-  @apply bg-blue-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition-colors duration-300;
+  background: linear-gradient(to right, #7f1d1d, #ea580c, #d97706);
+  @apply text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+}
+.btn-primary:hover {
+  background: linear-gradient(to right, #991b1b, #c2410c, #b45309);
 }
 
 .btn-secondary {

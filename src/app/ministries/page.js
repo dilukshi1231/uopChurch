@@ -152,11 +152,11 @@ export default function MinistriesPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
+      <section className="bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 text-white py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Ministries</h1>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-amber-100">
               Find your place to connect, grow, and serve in community
             </p>
           </div>
@@ -188,7 +188,7 @@ export default function MinistriesPage() {
                 onClick={() => setActiveCategory(category.id)}
                 className={`flex items-center gap-2 px-5 py-3 rounded-lg font-medium transition-all ${
                   activeCategory === category.id
-                    ? 'bg-blue-900 text-white shadow-lg'
+                    ? 'bg-red-900 text-white shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -209,10 +209,10 @@ export default function MinistriesPage() {
                 <div key={ministry.id} className="card hover:shadow-xl transition-all duration-300 flex flex-col">
                   {/* Icon Header */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-16 h-16 bg-blue-900 text-white rounded-lg flex items-center justify-center text-3xl">
+                    <div className="w-16 h-16 bg-red-900 text-white rounded-lg flex items-center justify-center text-3xl">
                       {ministry.icon}
                     </div>
-                    <span className="bg-blue-100 text-blue-900 text-xs font-semibold px-3 py-1 rounded-full">
+                    <span className="bg-orange-100 text-red-900 text-xs font-semibold px-3 py-1 rounded-full">
                       {ministry.ageGroup}
                     </span>
                   </div>
@@ -240,7 +240,7 @@ export default function MinistriesPage() {
                     <ul className="space-y-1">
                       {ministry.features.map((feature, idx) => (
                         <li key={idx} className="text-sm text-gray-600 flex items-start">
-                          <span className="text-blue-900 mr-2">•</span>
+                          <span className="text-red-900 mr-2">•</span>
                           {feature}
                         </li>
                       ))}
@@ -249,7 +249,7 @@ export default function MinistriesPage() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3 mt-auto">
-                    <button className="flex-1 bg-blue-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-800 transition-colors">
+                    <button className="flex-1 bg-red-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-800 transition-colors">
                       Learn More
                     </button>
                     <a 
@@ -302,7 +302,7 @@ export default function MinistriesPage() {
                   description: 'Help with food distribution, community events, and service projects'
                 }
               ].map((opp, idx) => (
-                <div key={idx} className="card border-l-4 border-blue-900">
+                <div key={idx} className="card border-l-4 border-red-900">
                   <div className="flex justify-between items-start mb-3">
                     <h3 className="text-xl font-bold">{opp.role}</h3>
                     <span className="bg-amber-100 text-amber-900 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
@@ -370,18 +370,18 @@ export default function MinistriesPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-blue-900 text-white">
+      <section className="py-16 bg-red-900 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Find Your Place to Serve</h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
             God has given each of us unique gifts and passions. Let's help you discover 
             where you can make the biggest impact.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <button className="bg-white text-red-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Take Spiritual Gifts Assessment
             </button>
-            <a href="/contact" className="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors inline-block">
+            <a href="/contact" className="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-red-900 transition-colors inline-block">
               Talk to Someone
             </a>
           </div>

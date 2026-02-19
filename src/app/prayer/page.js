@@ -163,7 +163,7 @@ export default function PrayerRequestsPage() {
 
   const getCategoryColor = (category) => {
     const colors = {
-      personal: 'bg-blue-100 text-blue-900',
+      personal: 'bg-orange-100 text-red-900',
       health: 'bg-green-100 text-green-900',
       family: 'bg-purple-100 text-purple-900',
       missions: 'bg-amber-100 text-amber-900',
@@ -176,7 +176,7 @@ export default function PrayerRequestsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading prayer requests...</p>
         </div>
       </div>
