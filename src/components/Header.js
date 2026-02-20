@@ -37,29 +37,7 @@ export default function Header() {
       {/* Bible Verse Banner */}
       <BibleVerseBanner />
 
-      {/* Top Bar — Red → Orange → Gold gradient */}
-      <div
-        className="text-white py-2"
-        style={{ background: 'linear-gradient(to right, #7f1d1d, #c2410c, #d97706)' }}
-      >
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-between items-center text-xs md:text-sm gap-2">
-            <div className="flex items-center gap-3 md:gap-6">
-              <div className="flex items-center gap-2">
-                <FaPhone className="text-xs flex-shrink-0" />
-                <span className="whitespace-nowrap">(555) 123-4567</span>
-              </div>
-              <div className="hidden sm:flex items-center gap-2">
-                <FaMapMarkerAlt className="text-xs flex-shrink-0" />
-                <span className="whitespace-nowrap">123 Faith Street, Your City, ST 12345</span>
-              </div>
-            </div>
-            <div className="text-xs md:text-sm whitespace-nowrap font-medium">
-              Service Times: Sun 9AM &amp; 11AM
-            </div>
-          </div>
-        </div>
-      </div>
+      
 
       {/* Main Navigation */}
       <nav className="container mx-auto px-4 py-4">

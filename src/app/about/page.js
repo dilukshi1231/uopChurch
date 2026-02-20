@@ -1,241 +1,200 @@
-import Image from 'next/image';
-import { FaHeart, FaBook, FaGlobe, FaPray, FaUsers, FaCross } from 'react-icons/fa';
+// src/app/about/page.js
+import { FaCross, FaUsers, FaHeart, FaBookOpen, FaHandsHelping, FaMapMarkerAlt, FaPhone, FaEnvelope, FaChurch } from 'react-icons/fa';
+import Link from 'next/link';
+
+export const metadata = {
+  title: 'About Us - The Church of Christ the Risen Lord',
+  description: 'Learn about our history, mission, beliefs, and community at The Church of Christ the Risen Lord.',
+};
 
 export default function AboutPage() {
-  const leadership = [
+  const coreValues = [
     {
-      name: 'Pastor John Smith',
-      role: 'Senior Pastor',
-      bio: 'Pastor John has been leading Grace Church for over 15 years. He is passionate about biblical teaching and community outreach.',
-      image: '/images/placeholder.jpg'
-    },
-    {
-      name: 'Sarah Johnson',
-      role: 'Worship Director',
-      bio: 'Sarah leads our worship team with a heart for creating authentic worship experiences that draw people closer to God.',
-      image: '/images/placeholder.jpg'
-    },
-    {
-      name: 'Michael Davis',
-      role: 'Youth Pastor',
-      bio: 'Michael is dedicated to helping young people discover their purpose and grow in their faith journey.',
-      image: '/images/placeholder.jpg'
-    },
-    {
-      name: 'Emily Wilson',
-      role: 'Children\'s Director',
-      bio: 'Emily creates engaging programs that help children learn about Jesus in fun and meaningful ways.',
-      image: '/images/placeholder.jpg'
-    }
-  ];
-
-  const values = [
-    {
-      icon: <FaBook />,
-      title: 'Biblical Foundation',
-      description: 'We believe the Bible is God\'s Word and the foundation for all faith and practice.'
-    },
-    {
-      icon: <FaPray />,
-      title: 'Prayer & Worship',
-      description: 'We prioritize authentic worship and powerful prayer as essential to our relationship with God.'
+      icon: <FaBookOpen />,
+      title: 'Scripture-Centered',
+      description: 'We believe the Bible is the inspired, authoritative Word of God and the foundation for all we do.',
+      color: 'from-red-800 to-orange-700',
+      bg: 'from-red-50 to-orange-50',
+      border: 'border-red-200',
     },
     {
       icon: <FaHeart />,
-      title: 'Love & Compassion',
-      description: 'We strive to love God and love others, showing compassion to all people.'
+      title: 'Christ-Exalting',
+      description: 'Jesus Christ is Lord. Everything we do is to glorify Him and make His name known in our community.',
+      color: 'from-orange-600 to-amber-600',
+      bg: 'from-orange-50 to-amber-50',
+      border: 'border-orange-200',
     },
     {
-      icon: <FaGlobe />,
-      title: 'Community Impact',
-      description: 'We are committed to making a positive impact in our community and around the world.'
-    }
+      icon: <FaUsers />,
+      title: 'Community-Driven',
+      description: 'We are a family. We do life together through worship, prayer, fellowship, and serving one another.',
+      color: 'from-amber-600 to-amber-700',
+      bg: 'from-amber-50 to-yellow-50',
+      border: 'border-amber-200',
+    },
+    {
+      icon: <FaHandsHelping />,
+      title: 'Mission-Focused',
+      description: 'We are called to serve our city and the world — sharing the love of Christ through word and deed.',
+      color: 'from-red-700 to-red-900',
+      bg: 'from-red-50 to-orange-50',
+      border: 'border-red-200',
+    },
+  ];
+
+  const beliefs = [
+    { title: 'The Trinity', description: 'We believe in one God eternally existing in three persons: Father, Son, and Holy Spirit.' },
+    { title: 'Scripture', description: 'The Bible is God\'s inspired, inerrant Word — the supreme authority for faith and practice.' },
+    { title: 'Salvation', description: 'Salvation is by grace through faith in Jesus Christ alone — not by works.' },
+    { title: 'The Church', description: 'The local church is the body of Christ, called to worship, fellowship, discipleship, and evangelism.' },
+    { title: 'Baptism & Communion', description: 'We practice believer\'s baptism by immersion and celebrate the Lord\'s Supper regularly.' },
+    { title: 'The Return of Christ', description: 'We believe in the literal, bodily return of Jesus Christ and the resurrection of the dead.' },
+  ];
+
+  const leadership = [
+    {
+      name: 'Pastor James Okonkwo',
+      role: 'Senior Pastor',
+      bio: 'Pastor James has been leading our congregation since 2008. He holds a Masters of Divinity from Trinity Seminary and is passionate about expository preaching and community transformation.',
+      initials: 'JO',
+    },
+    {
+      name: 'Pastor Grace Mensah',
+      role: 'Associate Pastor / Worship',
+      bio: 'Pastor Grace oversees our worship ministry and women\'s discipleship programs. She joined our team in 2014 and brings a deep heart for Spirit-led worship.',
+      initials: 'GM',
+    },
+    {
+      name: 'Elder David Boateng',
+      role: 'Elder & Outreach Director',
+      bio: 'Elder David leads our community outreach initiatives including the weekly food pantry, prison ministry, and our annual city-wide mission week.',
+      initials: 'DB',
+    },
+    {
+      name: 'Elder Sarah Yeboah',
+      role: 'Elder & Youth Director',
+      bio: 'Elder Sarah has a heart for the next generation. She oversees all youth and young adult ministries, including our thriving campus outreach program.',
+      initials: 'SY',
+    },
+  ];
+
+  const milestones = [
+    { year: '1995', event: 'Founded by 12 families in a living room with a vision to plant a Christ-centered church.' },
+    { year: '1998', event: 'Moved into our first church building on Faith Street with 75 members.' },
+    { year: '2003', event: 'Launched our first community food pantry, now serving 200+ families monthly.' },
+    { year: '2008', event: 'Completed major building expansion; membership surpasses 250.' },
+    { year: '2012', event: 'Planted our first daughter church across town with 40 members.' },
+    { year: '2018', event: 'Launched online services, reaching viewers in 12 countries.' },
+    { year: '2024', event: 'Celebrating 500+ members and 3 active campus ministry locations.' },
   ];
 
   return (
     <div className="relative">
-      {/* Background Image with Overlay - CHANGED FROM FIXED TO ABSOLUTE */}
+      {/* Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/30 via-white/95 to-white/98 z-10"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-white/30 to-white/80 z-10"></div>
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-70"
           style={{
             backgroundImage: "url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073')",
-            backgroundBlendMode: 'overlay'
           }}
         ></div>
       </div>
 
       <div className="relative z-20">
-        {/* Hero Section with Floating Elements */}
-        <section className="relative py-24 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-amber-500/10"></div>
-          
-          {/* Decorative Floating Elements */}
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/5 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-400/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          
+
+        {/* ── HERO ──────────────────────────────────────────────────── */}
+        <section className="relative py-28 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent"></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-orange-400/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+
           <div className="container mx-auto px-4 relative">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-block mb-6 p-3 bg-blue-100/80 backdrop-blur-sm rounded-full">
-                <FaCross className="text-4xl text-blue-900" />
+              <div className="inline-block mb-6 p-4 bg-orange-600/90 backdrop-blur-md rounded-full shadow-2xl">
+                <FaChurch className="text-5xl text-white" />
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-900 via-blue-700 to-amber-600 bg-clip-text text-transparent">
-                About Grace Church
+              <h1 className="text-6xl md:text-7xl font-extrabold mb-6 text-white drop-shadow-2xl">
+                About Our Church
               </h1>
-              <p className="text-2xl text-gray-700 font-light leading-relaxed">
+              <p className="text-2xl md:text-3xl text-white font-medium leading-relaxed drop-shadow-xl bg-black/30 backdrop-blur-sm inline-block px-8 py-4 rounded-2xl">
                 A community of believers dedicated to knowing Christ and making Him known
               </p>
-              <div className="mt-8 flex items-center justify-center gap-2 text-blue-900">
-                <FaUsers className="text-2xl" />
-                <span className="text-lg font-semibold">Founded in 1995 • 500+ Members</span>
+              <div className="mt-10 inline-flex items-center gap-3 bg-white/95 backdrop-blur-sm px-8 py-4 rounded-full shadow-2xl">
+                <FaUsers className="text-3xl text-red-900" />
+                <span className="text-xl font-bold text-red-900">Founded 1995 &bull; 500+ Members</span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Our Story with Glass Effect */}
-        <section className="py-20 relative">
+        {/* ── OUR STORY ─────────────────────────────────────────────── */}
+        <section className="py-12 relative">
           <div className="container mx-auto px-4">
-            <div className="max-w-5xl mx-auto">
-              <div className="bg-white/70 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12 border border-white/20">
-                <div className="flex items-center justify-center mb-8">
-                  <div className="h-1 w-20 bg-gradient-to-r from-transparent via-blue-600 to-transparent"></div>
-                  <h2 className="text-4xl font-bold text-gray-900 mx-4">Our Story</h2>
-                  <div className="h-1 w-20 bg-gradient-to-r from-transparent via-blue-600 to-transparent"></div>
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-14 border-2 border-white/50">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-red-800"></div>
+                  <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">Our Story</h2>
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-red-800"></div>
                 </div>
-                
-                <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                      1
-                    </div>
-                    <p className="text-lg leading-relaxed">
-                      Grace Church began in 1995 with a small group of families who had a vision to create 
-                      a church where people could experience authentic community and grow in their faith. 
-                      What started as 25 people meeting in a living room has grown into a vibrant community 
-                      of over 500 members.
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-700 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                      2
-                    </div>
-                    <p className="text-lg leading-relaxed">
-                      Throughout our journey, we've remained committed to our core mission: helping people 
-                      discover Jesus, grow in their faith, and make a difference in the world. We believe 
-                      that church is not just about Sunday services—it's about building a family where 
-                      everyone belongs, serves, and grows together.
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                      3
-                    </div>
-                    <p className="text-lg leading-relaxed">
-                      Today, we continue to be a place where people from all walks of life can come together 
-                      to worship, learn, and serve. Whether you're taking your first steps in faith or you've 
-                      been following Jesus for years, there's a place for you here at Grace Church.
-                    </p>
-                  </div>
+                <div className="w-20 h-1.5 bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 rounded-full mx-auto"></div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-10 items-center">
+                <div className="space-y-5 text-lg text-gray-700 leading-relaxed">
+                  <p>
+                    The Church of Christ the Risen Lord began in 1995 with a small group of 12 families who had a vision — to create a church where faith comes alive and community grows stronger. They gathered in a living room, prayed, and trusted God for something greater.
+                  </p>
+                  <p>
+                    Within three years, the congregation had grown enough to move into our first dedicated building on Faith Street. What started as a handful of committed believers became a vibrant, multi-generational family of faith.
+                  </p>
+                  <p>
+                    Today, nearly 30 years later, we are a congregation of over 500 members spanning every age and background — united by our love for Jesus Christ and our commitment to serving one another and our city.
+                  </p>
+                  <p className="font-semibold text-red-900 text-xl">
+                    "A place where faith comes alive and community grows stronger."
+                  </p>
+                </div>
+                <div className="bg-gradient-to-br from-red-900 via-red-800 to-orange-900 rounded-2xl p-8 text-white shadow-xl">
+                  <h3 className="text-2xl font-bold mb-6 text-amber-200">Our Mission</h3>
+                  <p className="text-lg text-white/90 leading-relaxed mb-6">
+                    To glorify God by making disciples of Jesus Christ through worship, community, service, and the proclamation of the Gospel.
+                  </p>
+                  <h3 className="text-2xl font-bold mb-4 text-amber-200">Our Vision</h3>
+                  <p className="text-lg text-white/90 leading-relaxed">
+                    To be a transformational church that brings the hope of Christ to every corner of our city and beyond.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Mission & Vision with Hover Effects */}
-        <section className="py-20">
+        {/* ── CORE VALUES ───────────────────────────────────────────── */}
+        <section className="py-12 relative">
           <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="group relative overflow-hidden rounded-3xl transition-all duration-500 hover:scale-105">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-blue-700 opacity-90 group-hover:opacity-95 transition-opacity"></div>
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974')] bg-cover bg-center opacity-10"></div>
-                  <div className="relative p-10 text-white">
-                    <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <FaCross className="text-3xl" />
-                    </div>
-                    <h3 className="text-3xl font-bold mb-4">Our Mission</h3>
-                    <p className="text-lg text-blue-50 leading-relaxed">
-                      To glorify God by making disciples of Jesus Christ who love God, 
-                      love people, and transform communities through the power of the Gospel.
-                    </p>
-                  </div>
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-14 border-2 border-white/50">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-red-800"></div>
+                  <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">Our Core Values</h2>
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-red-800"></div>
                 </div>
-                
-                <div className="group relative overflow-hidden rounded-3xl transition-all duration-500 hover:scale-105">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-600 to-amber-800 opacity-90 group-hover:opacity-95 transition-opacity"></div>
-                  <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070')] bg-cover bg-center opacity-10"></div>
-                  <div className="relative p-10 text-white">
-                    <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <FaGlobe className="text-3xl" />
-                    </div>
-                    <h3 className="text-3xl font-bold mb-4">Our Vision</h3>
-                    <p className="text-lg text-amber-50 leading-relaxed">
-                      To be a church where every person experiences authentic community, 
-                      grows in spiritual maturity, and discovers their unique purpose in 
-                      God's kingdom.
-                    </p>
-                  </div>
-                </div>
+                <div className="w-20 h-1.5 bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 rounded-full mx-auto"></div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Core Values with Modern Cards */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Core Values</h2>
-              <p className="text-xl text-gray-600">The principles that guide everything we do</p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-              {values.map((value, index) => (
-                <div 
-                  key={index} 
-                  className="group bg-white/60 backdrop-blur-lg rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/40"
-                >
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center mx-auto mb-6 text-4xl text-white group-hover:scale-110 group-hover:rotate-6 transition-transform shadow-lg">
-                    {value.icon}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900">{value.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{value.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Statement of Faith */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What We Believe</h2>
-                <p className="text-xl text-gray-600">Our foundational beliefs rooted in Scripture</p>
-              </div>
-              
-              <div className="space-y-6">
-                {[
-                  { title: 'The Bible', text: 'We believe the Bible is the inspired, infallible Word of God and our final authority for faith and life.', color: 'blue' },
-                  { title: 'God', text: 'We believe in one God, eternally existing in three persons: Father, Son, and Holy Spirit.', color: 'amber' },
-                  { title: 'Jesus Christ', text: 'We believe Jesus Christ is the Son of God, who died for our sins and rose from the dead, offering salvation to all who believe.', color: 'blue' },
-                  { title: 'Salvation', text: 'We believe salvation is a gift of God\'s grace, received through faith in Jesus Christ alone.', color: 'amber' },
-                  { title: 'The Church', text: 'We believe the Church is the body of Christ, called to worship, fellowship, discipleship, ministry, and mission.', color: 'blue' }
-                ].map((belief, index) => (
-                  <div 
-                    key={index}
-                    className="group bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-l-4 hover:border-l-8 border-blue-600"
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {coreValues.map((value, i) => (
+                  <div
+                    key={i}
+                    className={`p-6 rounded-2xl bg-gradient-to-br ${value.bg} border-2 ${value.border} shadow-lg hover:shadow-xl transition-all hover:-translate-y-1`}
                   >
-                    <h3 className={`text-2xl font-bold mb-3 bg-gradient-to-r ${belief.color === 'blue' ? 'from-blue-900 to-blue-600' : 'from-amber-700 to-amber-500'} bg-clip-text text-transparent`}>
-                      {belief.title}
-                    </h3>
-                    <p className="text-gray-700 text-lg leading-relaxed">{belief.text}</p>
+                    <div className={`w-14 h-14 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg text-white text-2xl`}>
+                      {value.icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{value.title}</h3>
+                    <p className="text-gray-700 text-sm leading-relaxed">{value.description}</p>
                   </div>
                 ))}
               </div>
@@ -243,60 +202,135 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Leadership Team */}
-        <section className="py-20">
+        {/* ── WHAT WE BELIEVE ───────────────────────────────────────── */}
+        <section className="py-12 relative">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Leadership Team</h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Meet the passionate leaders who shepherd our church family
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-              {leadership.map((leader, index) => (
-                <div 
-                  key={index} 
-                  className="group bg-white/70 backdrop-blur-lg rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-                >
-                  <div className="relative h-48 bg-gradient-to-br from-blue-600 to-blue-800 overflow-hidden">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-32 h-32 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-5xl font-bold border-4 border-white/30 group-hover:scale-110 transition-transform">
-                        {leader.name.split(' ').map(n => n[0]).join('')}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6 text-center">
-                    <h3 className="text-xl font-bold mb-1 text-gray-900">{leader.name}</h3>
-                    <p className="text-blue-700 font-semibold mb-4">{leader.role}</p>
-                    <p className="text-sm text-gray-600 leading-relaxed">{leader.bio}</p>
-                  </div>
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-14 border-2 border-white/50">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-red-800"></div>
+                  <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">What We Believe</h2>
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-red-800"></div>
                 </div>
-              ))}
+                <div className="w-20 h-1.5 bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 rounded-full mx-auto mb-4"></div>
+                <p className="text-xl text-gray-600">Our Statement of Faith</p>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {beliefs.map((belief, i) => (
+                  <div key={i} className="p-6 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 shadow-md hover:shadow-lg transition-all hover:-translate-y-1">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-8 h-8 bg-gradient-to-br from-red-800 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow">
+                        {i + 1}
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900">{belief.title}</h3>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed text-sm">{belief.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Call to Action with Gradient */}
-        <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-amber-700"></div>
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=2073')] bg-cover bg-center opacity-10"></div>
-          
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-12 border border-white/20">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">Want to Learn More?</h2>
-              <p className="text-xl text-blue-100 mb-10 leading-relaxed">
-                We'd love to connect with you and answer any questions you have about our church family.
-              </p>
-              <a 
-                href="/contact" 
-                className="inline-block bg-white text-blue-900 px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-50 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105"
-              >
-                Get In Touch
-              </a>
+        {/* ── LEADERSHIP ────────────────────────────────────────────── */}
+        <section className="py-12 relative">
+          <div className="container mx-auto px-4">
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-14 border-2 border-white/50">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-red-800"></div>
+                  <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">Our Leadership</h2>
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-red-800"></div>
+                </div>
+                <div className="w-20 h-1.5 bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 rounded-full mx-auto mb-4"></div>
+                <p className="text-xl text-gray-600">Servant leaders committed to shepherding our congregation</p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-8">
+                {leadership.map((person, i) => (
+                  <div key={i} className="flex gap-5 p-6 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 shadow-md hover:shadow-lg transition-all">
+                    <div className="w-16 h-16 bg-gradient-to-br from-red-800 to-orange-600 rounded-2xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg flex-shrink-0">
+                      {person.initials}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">{person.name}</h3>
+                      <p className="text-orange-700 font-semibold text-sm mb-2">{person.role}</p>
+                      <p className="text-gray-700 text-sm leading-relaxed">{person.bio}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
+
+        {/* ── OUR HISTORY TIMELINE ──────────────────────────────────── */}
+        <section className="py-12 relative">
+          <div className="container mx-auto px-4">
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-14 border-2 border-white/50">
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-red-800"></div>
+                  <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">Our Journey</h2>
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-red-800"></div>
+                </div>
+                <div className="w-20 h-1.5 bg-gradient-to-r from-red-800 via-orange-600 to-amber-500 rounded-full mx-auto"></div>
+              </div>
+              <div className="relative">
+                <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-red-800 via-orange-600 to-amber-500 transform md:-translate-x-1/2"></div>
+                <div className="space-y-8">
+                  {milestones.map((m, i) => (
+                    <div key={i} className={`relative flex items-start gap-6 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} md:gap-0`}>
+                      {/* Content */}
+                      <div className={`ml-16 md:ml-0 md:w-5/12 ${i % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12 md:ml-auto'}`}>
+                        <div className="p-5 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 shadow-md hover:shadow-lg transition-all">
+                          <span className="inline-block bg-gradient-to-r from-red-800 to-orange-600 text-white text-sm font-bold px-3 py-1 rounded-full mb-2">{m.year}</span>
+                          <p className="text-gray-800 font-medium leading-relaxed">{m.event}</p>
+                        </div>
+                      </div>
+                      {/* Dot */}
+                      <div className="absolute left-6 md:left-1/2 w-4 h-4 bg-gradient-to-br from-red-800 to-orange-600 rounded-full border-4 border-white shadow-lg transform md:-translate-x-1/2 mt-4"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── CALL TO ACTION ────────────────────────────────────────── */}
+        <section className="py-20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-900 via-red-700 to-amber-600"></div>
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070')] bg-cover bg-center opacity-15"></div>
+          <div className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl"></div>
+
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <div className="max-w-3xl mx-auto bg-white/15 backdrop-blur-xl rounded-3xl p-14 border-2 border-white/30 shadow-2xl">
+              <div className="inline-block mb-8 p-4 bg-white/25 backdrop-blur-md rounded-full shadow-xl">
+                <FaChurch className="text-5xl text-white" />
+              </div>
+              <h2 className="text-5xl md:text-6xl font-extrabold mb-8 text-white drop-shadow-2xl">Join Our Family</h2>
+              <p className="text-2xl text-white font-medium mb-12 leading-relaxed drop-shadow-lg">
+                We'd love to meet you. Come as you are — there's a place for you here.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/plan-visit"
+                  className="inline-block bg-white text-red-900 px-10 py-5 rounded-full font-bold text-xl hover:bg-orange-50 transition-all duration-300 shadow-2xl hover:scale-105"
+                >
+                  Plan Your Visit
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-block bg-transparent border-2 border-white text-white px-10 py-5 rounded-full font-bold text-xl hover:bg-white/20 transition-all duration-300 shadow-2xl hover:scale-105"
+                >
+                  Get In Touch
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </div>
     </div>
   );
