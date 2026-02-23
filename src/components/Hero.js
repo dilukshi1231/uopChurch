@@ -76,19 +76,7 @@ export default function Hero() {
               </button>
             </Link>
             
-            <Link href="/watch-live" className="group w-full sm:w-auto">
-              <button className="relative overflow-hidden bg-white/10 backdrop-blur-lg text-white px-12 py-6 rounded-2xl font-bold text-lg 
-                               border-2 border-white/40 shadow-2xl hover:shadow-3xl hover:bg-white/20
-                               transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 
-                               flex items-center gap-4 w-full justify-center">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                
-                <div className="relative z-10 w-10 h-10 bg-red-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                  <FaPlay className="text-white text-sm ml-1" />
-                </div>
-                <span className="relative z-10">Watch Live</span>
-              </button>
-            </Link>
+        
           </div>
 
           {/* Service Times Info - Enhanced Card */}
@@ -111,7 +99,7 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-sm text-amber-200 font-semibold mb-1 tracking-wide uppercase">Location</p>
-                <p className="text-xl md:text-2xl font-bold drop-shadow-lg">Main Sanctuary</p>
+                <p className="text-xl md:text-2xl font-bold drop-shadow-lg">The Chapel of Christ the Risen Lord</p>
               </div>
             </div>
           </div>
