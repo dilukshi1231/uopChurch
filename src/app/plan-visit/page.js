@@ -85,12 +85,7 @@ export default function PlanYourVisit() {
       description: 'Premium coffee, tea, and snacks available before and after all services.',
       details: 'Open 30 min before services'
     },
-    {
-      icon: <FaWifi />,
-      title: 'Fast WiFi',
-      description: 'High-speed internet throughout the building for studying between services.',
-      details: 'Network: GraceChurch_Students'
-    },
+    
     {
       icon: <FaBook />,
       title: 'Study Space',
@@ -108,7 +103,7 @@ export default function PlanYourVisit() {
     {
       icon: <FaBus />,
       title: 'Public Transit',
-      description: 'Bus routes 7, 12, and 45 stop right outside. University shuttle stops here too!'
+      description: 'Free transportation arrangements for students.'
     },
     {
       icon: <FaUsers />,
@@ -118,7 +113,7 @@ export default function PlanYourVisit() {
     {
       icon: <FaMusic />,
       title: 'Dress Code',
-      description: 'Come as you are! Jeans, hoodies, whatever you\'re comfortable in. We care about hearts, not clothes.'
+      description: 'Come as you are! ,whatever you\'re comfortable in. We care about hearts, not clothes.'
     }
   ];
 
@@ -692,7 +687,7 @@ export default function PlanYourVisit() {
                         <option value="">Select...</option>
                         <option value="sunday-11am">Sunday 11:00 AM</option>
                         <option value="wednesday-7pm">Wednesday 7:00 PM</option>
-                        <option value="friday-830pm">Friday 8:30 PM</option>
+                        
                       </select>
                     </div>
                     <div>
@@ -879,7 +874,7 @@ export default function PlanYourVisit() {
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-green-600 font-bold">✓</span>
-                      Free coffee and donuts
+                      Free refreshments
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-green-600 font-bold">✓</span>
@@ -1013,7 +1008,7 @@ export default function PlanYourVisit() {
               </a>
             </div>
             <p className="mt-8 text-amber-200 text-sm">
-              Or text "STUDENT" to (555) 123-4567 to join our GroupMe
+              Or text "STUDENT" to (071) 839-0715 to join our GroupMe
             </p>
           </div>
         </div>
